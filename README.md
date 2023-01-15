@@ -28,3 +28,4 @@ This package is still not added to the CTAN.
 - [ ] More CFS cross-sections to be added
 - [ ] Hot-rolled steel (HRS) cross-sections
 - [ ] 3D drawing of the profiles
+- [ ] Dimensions and annotations
