@@ -30,4 +30,3 @@ This package is still not added to the CTAN.
 - [ ] 3D drawing of the profiles
 - [ ] Dimensions and annotations
 - [ ] Readme and a guide for the package
-- [ ] 
