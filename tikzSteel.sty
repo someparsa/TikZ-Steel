@@ -1,18 +1,21 @@
 \usepackage{tikz}
 
-\newcommand{\csChannel}[5]{
-	\draw [line width=#4 mm, red] (#5,0) -- (#2-#5,0) ;
-	\draw [line width=#4 mm, red] (0,#5) -- (0,#1-#5) ;
-	\draw [line width=#4 mm, red] (#5,#1) -- (#2-#5,#1) ;
+\newcommand{\csChannel}[7]{
+	\draw [line width=#6 mm, red] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, red] (0,#7) -- (0,#1-#7) ;
+	\draw [line width=#6 mm, red] (#7,#1) -- (#2-#7,#1) ;
 
-	\draw [line width=#4 mm, blue] (0,#5) arc (180:270:#5);
-	\draw [line width=#4 mm, blue] (0,#1-#5) arc (180:90:#5);
+	\draw [line width=#6 mm, blue] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, blue] (0,#1-#7) arc (180:90:#7);
 
 	\ifnum #3 > 0
-    		\draw [line width=#4 mm, red] (#2,#5) -- (#2,#3) ;
-		\draw [line width=#4 mm, red] (#2,#1-#5) -- (#2,#1-#3) ;
-		\draw [line width=#4 mm, blue] (#2-#5,#1) arc (90:0:#5);
-		\draw [line width=#4 mm, blue] (#2-#5,0) arc (270:360:#5);
+    		\draw [line width=#6 mm, red] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, blue] (#2-#7,#1) arc (90:0:#7);
+	\fi
+
+	\ifnum #5 > 0
+    		\draw [line width=#6 mm, red] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, blue] (#4-#7,0) arc (270:360:#7);
 	\fi
 }
 
@@ -54,4 +57,8 @@
 
 	\draw [line width=#3 mm, blue] (0,#4) arc (180:270:#4);
 
+}
+
+\newcommand{\csTube}[2]{
+	\draw [line width=#2 mm, blue] (0,0) arc (0:360:#1);
 }

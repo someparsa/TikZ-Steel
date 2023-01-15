@@ -2,28 +2,25 @@
 
 \usepackage{tikzSteel}
 
-\newcommand\ibw{185}
-\newcommand\ibf{95}
-\newcommand\ibl{0}
-\newcommand\itk{2.5}
-\newcommand\ird{5}
-
+\newcommand\ibw{185}	% #1
 \newcommand\ibft{95}	% #2
 \newcommand\iblt{25}	% #3
 \newcommand\ibfb{42}	% #4
-\newcommand\iblb{25}	% #5
+\newcommand\iblb{0}	% #5
+\newcommand\itk{2.5}	% #6
+\newcommand\ird{5}	% #7
+
+
 
 \begin{document}
 
 \begin{tikzpicture}
 
 \iffalse
-\begin{scope}[scale=0.2,rotate=0]
-\csChannel{\ibw}{\ibf}{\ibl}{\itk}{\ird}
-\end{scope}
+
 
 \begin{scope}[scale=0.2,rotate=180,shift={({\itk},{-\ibw})}]
-\csChannel{\ibw}{\ibf}{\ibl}{\itk}{\ird}
+\csChannel{\ibw}{\ibft}{\iblt}{\ibfb}{\iblb}{\itk}{\ird}
 \end{scope}
 
 
@@ -39,12 +36,21 @@
 \begin{scope}[scale=0.2,rotate=0]
 \csZee{\ibw}{\ibft}{\iblt}{\ibfb}{\iblb}{\itk}{\ird}
 \end{scope}
-\fi
+
 
 \begin{scope}[scale=0.2,rotate=0]
 \csL{\ibw}{\ibft}{\itk}{\ird}
 \end{scope}
 
+
+\begin{scope}[scale=0.2,rotate=0]
+\csTube{\ibw}{\itk}
+\end{scope}
+\fi
+
+\begin{scope}[scale=0.2,rotate=0]
+\csChannel{\ibw}{\ibft}{\iblt}{\ibfb}{\iblb}{\itk}{\ird}
+\end{scope}
 
 \end{tikzpicture}
 
