@@ -1,5 +1,9 @@
 \usepackage{tikz}
 
+%
+% ===== ===== Channels
+%
+
 \newcommand{\csChannel}[7]{
 	\draw [line width=#6 mm, red] (#7,0) -- (#4-#7,0) ;
 	\draw [line width=#6 mm, red] (0,#7) -- (0,#1-#7) ;
@@ -19,6 +23,10 @@
 	\fi
 }
 
+%
+% ===== ===== Box
+%
+
 \newcommand{\csBox}[4]{
 	\draw [line width=#3 mm, red] (#4,0) -- (#2-#4,0) ;
 	\draw [line width=#3 mm, red] (#4,#1) -- (#2-#4,#1) ;	
@@ -31,6 +39,10 @@
 	\draw [line width=#3 mm, blue] (#2-#4,0) arc (270:360:#4);
 	\draw [line width=#3 mm, blue] (#2-#4,#1) arc (90:0:#4);
 }
+
+%
+% ===== ===== Zee
+%
 
 \newcommand{\csZee}[7]{
 	\draw [line width=#6 mm, red] (0,#7) -- (0,#1-#7) ;	
@@ -51,6 +63,10 @@
 	\fi
 }
 
+%
+% ===== ===== L
+%
+
 \newcommand{\csL}[4]{
 	\draw [line width=#3 mm, red] (0,#4) -- (0,#1) ;	
 	\draw [line width=#3 mm, red] (#4,0) -- (#2,0) ;
@@ -59,6 +75,9 @@
 
 }
 
+%
+% ===== ===== Tube
+%
 \newcommand{\csTube}[2]{
 	\draw [line width=#2 mm, blue] (0,0) arc (0:360:#1);
 }
