@@ -16,6 +16,8 @@ Put the .sty file in the directory where you save your LaTeX file. Then import t
 
 `\usepackage{tikzSteel}`
 
+This package is still not added to the CTAN.
+
 ## To-do list
 
 ### done
