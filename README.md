@@ -12,7 +12,7 @@ Clone this or download the latest version of this repository.
 
 `$ git clone https://github.com/someparsa/TikZ-Steel.git`
 
-Put the .sty file in the directory where you save your LaTeX file. Then import the package like any other standard packages in LaTeX system.
+Put the `.sty` file in the directory where you save your LaTeX file. Then import the package like any other standard packages in LaTeX system.
 
 `\usepackage{tikzSteel}`
 
