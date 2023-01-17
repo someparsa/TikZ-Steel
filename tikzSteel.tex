@@ -10,6 +10,19 @@
 \newcommand\itk{2.5}	% #6
 \newcommand\ird{5}	% #7
 
+\newcommand\hrsFWt{35}	% #1
+\newcommand\hrsFTt{2}		% #2
+\newcommand\hrsFWb{35}	% #3
+\newcommand\hrsFTb{2}		% #4
+\newcommand\hrsWW{95}	% #5
+\newcommand\hrsWT{1}		% #6
+
+\newcommand\hrsUd{61.2}	% #1
+\newcommand\hrsUbf{22.9}	% #2
+\newcommand\hrsUtf{1.96}	% #3
+\newcommand\hrsUtw{1.19}	% #4
+\newcommand\hrsUr{1.4}	% #5
+
 
 
 \begin{document}
@@ -45,10 +58,20 @@
 \begin{scope}[scale=0.2,rotate=0]
 \csTube{\ibw}{\itk}
 \end{scope}
-\fi
+
 
 \begin{scope}[scale=0.2,rotate=0]
 \csChannel{\ibw}{\ibft}{\iblt}{\ibfb}{\iblb}{\itk}{\ird}
+\end{scope}
+
+
+\begin{scope}[scale=0.2,rotate=0]
+\csWI{\hrsWW}{\hrsWT}{\hrsFWt}{\hrsFTt}{\hrsFWb}{\hrsFTb}
+\end{scope}
+\fi
+
+\begin{scope}[scale=0.5,rotate=0]
+\csUBC{\hrsUd}{\hrsUbf}{\hrsUtf}{\hrsUtw}{\hrsUr}
 \end{scope}
 
 \end{tikzpicture}

@@ -1,4 +1,5 @@
 \usepackage{tikz}
+\usetikzlibrary{calc}
 
 %
 % ===== ===== Channels
@@ -80,4 +81,28 @@
 %
 \newcommand{\csTube}[2]{
 	\draw [line width=#2 mm, blue] (0,0) arc (0:360:#1);
+}
+
+%
+% ===== ===== Welded I
+%
+\newcommand{\csWI}[6]{
+	\draw [line width=#2 mm, red] (0,-0.5*#1) -- (0,0.5*#1);
+	\draw [line width=#4 mm, blue] (-0.5*#3,-0.5*#1) -- (0.5*#3,-0.5*#1);
+	\draw [line width=#6 mm, blue] (-0.5*#5,0.5*#1) -- (0.5*#5,0.5*#1);
+}
+
+%
+% ===== ===== Universal beams and columns
+%
+\newcommand{\csUBC}[5]{
+	\draw [line width=1 mm, red] (0,0) -- (#2,0);
+	\draw [line width=1 mm, red] (0,#1) -- (#2,#1);
+
+	\draw [line width=1 mm, red] (0,#3) -- ({0.5*(#2-#4)-#5},#3);
+	\draw [line width=1 mm, red] ({0.5*(#2-#4)+#5},#3) -- (#2,#3);
+
+	\draw [line width=1 mm, red] (0,#1-#3) -- ({0.5*(#2-#4)-#5},#1-#3);
+	\draw [line width=1 mm, red] ({0.5*(#2-#4)+#5},#1-#3) -- (#2,#1-#3);
+			
 }
