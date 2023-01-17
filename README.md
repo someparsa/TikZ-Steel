@@ -22,14 +22,14 @@ This package is still not added to the CTAN.
 
 ### done
 - [x] Main cold-formed steel (CFS) cross-sections
+- [x] Hot-rolled steel (HRS) cross-sections
 
 ### under development
-- [ ] Hot-rolled steel (HRS) cross-sections
+- [ ] CFS cross-sections with stiffeners
 - [ ] Export the shapes to CAD DXF format
 
 ### undone
-- [ ] CFS cross-sections with stiffeners
-- [ ] More CFS cross-sections to be added
+<!-- - [ ] More CFS cross-sections to be added -->
 - [ ] 3D drawing of the profiles
 - [ ] Dimensions and annotations
 - [ ] Readme and a guide for the package
