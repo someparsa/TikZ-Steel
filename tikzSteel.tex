@@ -9,6 +9,8 @@
 \newcommand\iblb{25}	% #5
 \newcommand\itk{2.5}	% #6
 \newcommand\ird{5}	% #7
+\newcommand\irt{0.75}	% #8
+
 
 \newcommand\hrsFWt{35}	% #1
 \newcommand\hrsFTt{2}		% #2
@@ -78,12 +80,18 @@
 \begin{scope}[scale=0.5,rotate=0]
 \csEA{\hrsUd}{\hrsUbf}{\hrsUtf}{\hrsUtw}{\hrsUr}
 \end{scope}
+
+
+\begin{scope}[scale=0.2,rotate=0]
+\csChannelRS{\ibw}{\ibft}{\iblt}{\ibfb}{\iblb}{\itk}{\ird}{\irt}
+\end{scope}
 \fi
 
 \begin{scope}[scale=0.2,rotate=0]
-\csChannelTS{\ibw}{\ibft}{\iblt}{\ibfb}{\iblb}{\itk}{\ird}
-\end{scope}
 
+\csARB{(45,15), (45,0), (0,0), (0,190), (45, 190), (45, 175)}{2}
+
+\end{scope}
 
 \end{tikzpicture}
 
