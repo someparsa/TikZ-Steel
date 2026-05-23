@@ -18,21 +18,18 @@ Put the `.sty` file in the directory where you save your LaTeX file. Then import
 
 This package is still not added to the CTAN.
 
-## To-do list
+## Development roadmap
 
-### done
-- [x] Cold-formed steel (CFS) cross-sections
-- [x] Hot-rolled steel (HRS) cross-sections
-- [X] CFS cross-sections with stiffeners
-- [X] Cross-sections with general nodal points 
-### under development
+The development plan is tracked in [ROADMAP.md](ROADMAP.md). The current goal is
+to make the package ready for a first CTAN release with comprehensive
+cold-formed steel (CFS) and hot-rolled steel (HRS) cross-section drawings.
 
+Main planned work:
 
-### undone
-<!-- - [ ] More CFS cross-sections to be added -->
-
-- [ ] Export the shapes to CAD DXF format
-- [ ] 3D drawing of the profiles
-- [ ] Dimensions and annotations
-- [ ] Readme and a guide for the package
-- [ ] fill in the cross-sections shape with pattern or shading
+- [ ] Package metadata and CTAN-ready structure
+- [ ] Complete CFS section catalogue
+- [ ] Built-up and back-to-back CFS sections
+- [ ] Complete HRS section catalogue
+- [ ] Configurable TikZ styles for colors, line widths, fills, and labels
+- [ ] Documentation, examples, and smoke tests
+- [ ] Future roof, concrete, and standard-based dimensioning modules
