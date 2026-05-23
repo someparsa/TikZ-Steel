@@ -8,14 +8,14 @@ systems, concrete drawings, and standard-based dimensioning styles.
 
 ## Phase 1: Package Foundation
 
-- Add LaTeX package metadata:
+- [x] Add LaTeX package metadata:
   - `\NeedsTeXFormat{LaTeX2e}`
   - `\ProvidesPackage{tikzSteel}[date version description]`
-- Use package-safe dependency loading:
+- [x] Use package-safe dependency loading:
   - `\RequirePackage{tikz}`
   - `\usetikzlibrary{calc}`
   - remove `tkz-euclide` if it is not required
-- Add configurable TikZ styles:
+- [x] Add configurable TikZ styles:
   - straight steel segments
   - curved/radius segments
   - centerlines
@@ -23,13 +23,13 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - fill styles
   - labels
   - dimension lines
-- Refactor repeated geometry into internal helper macros:
+- [ ] Continue refactoring repeated geometry into internal helper macros:
   - straight segment
   - rounded corner
   - lip/stiffener segment
   - hollow/closed outline
   - mirrored/reversed section helpers
-- Keep a single `.sty` file for now, organized internally into:
+- [x] Keep a single `.sty` file for now, organized internally into:
   - metadata and dependencies
   - styles and options
   - helpers
@@ -40,7 +40,7 @@ systems, concrete drawings, and standard-based dimensioning styles.
 
 ## Phase 2: Cold-Formed Steel Sections
 
-- Add single open CFS sections:
+- [x] Add single open CFS sections:
   - unlipped channel
   - lipped channel
   - channel with edge stiffeners
@@ -52,12 +52,12 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - hat section
   - angle
   - lipped angle
-- Add hollow/closed CFS sections:
+- [x] Add hollow/closed CFS sections:
   - box section
   - rectangular hollow section
   - square hollow section
   - circular hollow section
-- Add built-up/compound CFS sections:
+- [x] Add built-up/compound CFS sections:
   - back-to-back channels
   - toe-to-toe channels
   - nested channels
@@ -68,10 +68,10 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - double angles
   - spaced built-up members with configurable gap
   - optional fastener/weld indicators
-- Add generic folded CFS sections:
+- [x] Add generic folded CFS sections:
   - arbitrary folded plate by nodal points
   - arbitrary built-up section by combining profiles
-- Standardize CFS inputs:
+- [ ] Continue standardizing and documenting CFS inputs:
   - depth
   - flange widths
   - lip/stiffener lengths
@@ -82,7 +82,7 @@ systems, concrete drawings, and standard-based dimensioning styles.
 
 ## Phase 3: Hot-Rolled Steel Sections
 
-- Add HRS sections:
+- [x] Add HRS sections:
   - universal beam/I-section
   - universal column
   - welded I-section
@@ -97,20 +97,20 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - plate
   - flat bar
   - round bar
-- Standardize HRS inputs:
+- [ ] Continue standardizing and documenting HRS inputs:
   - depth
   - width
   - flange thickness
   - web thickness
   - root radius
   - toe radius where applicable
-- Support drawing modes:
+- [ ] Support drawing modes:
   - simplified engineering mode
   - detailed rolled-radius mode
 
 ## Phase 4: Public API Upgrade
 
-- Add key-value commands for new usage:
+- [x] Add key-value commands for new usage:
 
 ```tex
 \TikZSteelChannel[
@@ -122,8 +122,8 @@ systems, concrete drawings, and standard-based dimensioning styles.
 ]
 ```
 
-- Keep existing positional commands as compatibility wrappers.
-- Add common package/user options:
+- [x] Keep existing positional commands as compatibility wrappers.
+- [ ] Continue adding common package/user options:
   - scale
   - color
   - monochrome
@@ -132,7 +132,7 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - dimensions
   - labels
   - simplified/detailed mode
-- Make colors and line widths configurable instead of hard-coded red/blue.
+- [x] Make colors and line widths configurable instead of hard-coded red/blue.
 
 ## Phase 5: Documentation and Examples
 

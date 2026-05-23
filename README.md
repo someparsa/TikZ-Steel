@@ -1,35 +1,273 @@
 # TikZ-Steel
-A TikZ-LaTeX package to draw steel cross-sections
+
+A TikZ-LaTeX package for drawing steel cross-sections.
 
 ## Aim
-It is a very tough work to prepare high-quality figures for papers and reports. The aim of the package is to make such time-consuming procedure, easier for the engineers and academics in the field of cold-formed and hot-rolled steel, structural engineering.
+
+Preparing high-quality structural engineering figures for papers and reports is
+time-consuming. TikZ-Steel aims to make this easier for engineers and academics
+working with cold-formed and hot-rolled steel sections.
 
 ## Tools
-This package is developed over the very useful and powerfull TikZ package. Therefor, all the great features of that library is accessible when using TikZ-Steel. Apparently you will need LaTeX and TikZ installed on your system in order to be able to use this package.
+
+This package is built on top of TikZ, so normal TikZ features can be used around
+and alongside TikZ-Steel drawings. A LaTeX distribution with TikZ/PGF is
+required.
 
 ## Installation
+
 Clone this or download the latest version of this repository.
 
-`$ git clone https://github.com/someparsa/TikZ-Steel.git`
+```sh
+git clone https://github.com/someparsa/TikZ-Steel.git
+```
 
 Put the `.sty` file in the directory where you save your LaTeX file. Then import the package like any other standard packages in LaTeX system.
 
-`\usepackage{tikzSteel}`
+```tex
+\usepackage{tikzSteel}
+```
 
 This package is still not added to the CTAN.
 
+## Quick example
+
+```tex
+\documentclass[margin=2mm]{standalone}
+\usepackage{tikzSteel}
+
+\begin{document}
+\begin{tikzpicture}
+  \TikZSteelLippedChannel[
+    depth=245,
+    flange=75,
+    lip=20,
+    thickness=2.5,
+    radius=5
+  ]
+\end{tikzpicture}
+\end{document}
+```
+
+The command above draws a lipped cold-formed channel using:
+
+```text
+\TikZSteelLippedChannel[depth=..., flange=..., lip=..., thickness=..., radius=...]
+```
+
+## Current status
+
+The package is being refactored gradually toward a documented CTAN-ready
+release. The current development version includes:
+
+- Package metadata and package-safe TikZ dependency loading.
+- Configurable TikZ styles for straight segments, curved segments, labels,
+  dimensions, hidden lines, and fills.
+- Legacy drawing commands such as `\csChannel`, `\csBox`, `\csZee`, `\csL`,
+  `\csTube`, `\csUBC`, and related HRS commands.
+- New explicit cold-formed steel commands with `\csCFS...` names.
+- New built-up CFS section commands.
+- New explicit hot-rolled steel commands with `\csHRS...` names.
+- Key-value public commands with `\TikZSteel...` names.
+
+## Key-value API
+
+The recommended public API is the newer key-value interface. These commands use
+readable option names and provide defaults for omitted values:
+
+```tex
+\TikZSteelChannel[
+  depth=245,
+  flange=75,
+  thickness=2.5,
+  radius=5,
+  scale=0.2,
+  rotate=0,
+  x=0,
+  y=0
+]
+```
+
+Common keys include:
+
+- `depth`
+- `width`
+- `flange`
+- `top flange`
+- `bottom flange`
+- `left flange`
+- `right flange`
+- `lip`
+- `top lip`
+- `bottom lip`
+- `thickness`
+- `radius`
+- `root radius`
+- `gap`
+- `offset`
+- `position`
+- `stiffener position`
+- `leg`
+- `vertical leg`
+- `horizontal leg`
+- `web depth`
+- `web thickness`
+- `flange thickness`
+- `top flange width`
+- `top flange thickness`
+- `bottom flange width`
+- `bottom flange thickness`
+- `reference line width`
+- `line width`
+- `scale`
+- `rotate`
+- `x`
+- `y`
+
+Current key-value commands:
+
+- `\TikZSteelChannel`
+- `\TikZSteelLippedChannel`
+- `\TikZSteelStiffenedChannel`
+- `\TikZSteelZee`
+- `\TikZSteelLippedZee`
+- `\TikZSteelSigma`
+- `\TikZSteelHat`
+- `\TikZSteelAngle`
+- `\TikZSteelLippedAngle`
+- `\TikZSteelRHS`
+- `\TikZSteelSHS`
+- `\TikZSteelCHS`
+- `\TikZSteelBackToBackChannels`
+- `\TikZSteelUniversalBeam`
+- `\TikZSteelUniversalColumn`
+- `\TikZSteelWeldedI`
+- `\TikZSteelTee`
+- `\TikZSteelHRSChannel`
+- `\TikZSteelEqualAngle`
+- `\TikZSteelUnequalAngle`
+- `\TikZSteelPlate`
+- `\TikZSteelRoundBar`
+
+The legacy positional commands remain available for compatibility and for
+lower-level drawing control.
+
+## Cold-formed steel commands
+
+Single open sections:
+
+- `\csCFSChannel{depth}{flange}{thickness}{radius}`
+- `\csCFSLippedChannel{depth}{flange}{lip}{thickness}{radius}`
+- `\csCFSEdgeStiffenedChannel{depth}{flange}{lip}{thickness}{radius}`
+- `\csCFSZee{depth}{flange}{thickness}{radius}`
+- `\csCFSLippedZee{depth}{flange}{lip}{thickness}{radius}`
+- `\csCFSSigma{depth}{top flange}{top lip}{bottom flange}{bottom lip}{thickness}{radius}`
+- `\csCFSHat{depth}{left flange}{web width}{right flange}{thickness}{radius}`
+- `\csCFSAngle{leg 1}{leg 2}{thickness}{radius}`
+- `\csCFSLippedAngle{leg 1}{leg 2}{thickness}{radius}{lip}`
+
+Stiffened channels:
+
+- `\csCFSChannelWithOneStiffener{depth}{top flange}{top lip}{bottom flange}{bottom lip}{thickness}{radius}{stiffener position}`
+- `\csCFSChannelWithTwoStiffeners{depth}{top flange}{top lip}{bottom flange}{bottom lip}{thickness}{radius}`
+- `\csCFSChannelWithThreeStiffeners{depth}{top flange}{top lip}{bottom flange}{bottom lip}{thickness}{radius}{middle stiffener position}`
+
+Hollow and closed sections:
+
+- `\csCFSBox{depth}{width}{thickness}{radius}`
+- `\csCFSRHS{depth}{width}{thickness}{radius}`
+- `\csCFSSHS{width}{thickness}{radius}`
+- `\csCFSCHS{radius}{thickness}`
+
+Built-up sections:
+
+- `\csCFSBackToBackChannels{depth}{flange}{lip}{thickness}{radius}{gap}`
+- `\csCFSToeToToeChannels{depth}{flange}{lip}{thickness}{radius}{gap}`
+- `\csCFSNestedChannels{depth}{flange}{lip}{thickness}{radius}{offset}`
+- `\csCFSBoxedChannels{depth}{flange}{lip}{thickness}{radius}{gap}`
+- `\csCFSBuiltUpIChannels{depth}{left flange}{right flange}{thickness}{radius}{gap}`
+- `\csCFSBackToBackZees{depth}{flange}{lip}{thickness}{radius}{gap}`
+- `\csCFSBackToBackAngles{leg 1}{leg 2}{thickness}{radius}{gap}`
+- `\csCFSFasteners{line width}{start}{step}{end}`
+
+Generic folded sections:
+
+- `\csCFSFoldedPlate{(x1,y1),(x2,y2),...}{thickness}`
+
+## Hot-rolled steel commands
+
+I, tee, and channel sections:
+
+- `\csHRSUniversalBeam{depth}{width}{flange thickness}{web thickness}{root radius}`
+- `\csHRSUniversalColumn{depth}{width}{flange thickness}{web thickness}{root radius}`
+- `\csHRSISection{depth}{width}{flange thickness}{web thickness}{root radius}`
+- `\csHRSWeldedI{web depth}{web thickness}{bottom flange width}{bottom flange thickness}{top flange width}{top flange thickness}`
+- `\csHRSTee{depth}{width}{flange thickness}{web thickness}{root radius}`
+- `\csHRSChannel{depth}{width}{flange thickness}{web thickness}{root radius}`
+
+Angles:
+
+- `\csHRSEqualAngle{leg}{thickness}{root radius}`
+- `\csHRSUnequalAngle{vertical leg}{horizontal leg}{thickness}{root radius}`
+- `\csHRSDoubleAngles{vertical leg}{horizontal leg}{thickness}{root radius}{gap}`
+
+Bars, plates, and hollow sections:
+
+- `\csHRSPlate{width}{thickness}{reference line width}`
+- `\csHRSFlatBar{width}{thickness}{reference line width}`
+- `\csHRSRoundBar{radius}{line width}`
+- `\csHRSCHS{radius}{thickness}`
+- `\csHRSRHS{depth}{width}{thickness}{radius}`
+- `\csHRSSHS{width}{thickness}{radius}`
+
+## Style customization
+
+The default drawing uses red straight segments and blue curved segments, but
+these can now be overridden with TikZ styles:
+
+```tex
+\TikZSteelSetup{
+  tikzSteel/straight/.style={tikzSteel/default, black},
+  tikzSteel/round/.style={tikzSteel/default, gray}
+}
+```
+
+Available style hooks include:
+
+- `tikzSteel/straight`
+- `tikzSteel/round`
+- `tikzSteel/centerline`
+- `tikzSteel/hidden`
+- `tikzSteel/dimension`
+- `tikzSteel/label`
+- `tikzSteel/fill`
+
+## Testing
+
+The current development version has been checked with MacTeX using:
+
+```sh
+/Library/TeX/texbin/pdflatex -interaction=nonstopmode -halt-on-error tikzSteel.tex
+```
+
+Temporary smoke tests have also been used during development to compile all new
+CFS, HRS, and key-value commands. Permanent test/example files are planned
+before CTAN release.
+
 ## Development roadmap
 
-The development plan is tracked in [ROADMAP.md](ROADMAP.md). The current goal is
-to make the package ready for a first CTAN release with comprehensive
-cold-formed steel (CFS) and hot-rolled steel (HRS) cross-section drawings.
+The development plan is tracked in [ROADMAP.md](ROADMAP.md), and development
+changes are tracked in [CHANGELOG.md](CHANGELOG.md). The current goal is to make
+the package ready for a first CTAN release with comprehensive cold-formed steel
+(CFS) and hot-rolled steel (HRS) cross-section drawings.
 
 Main planned work:
 
-- [ ] Package metadata and CTAN-ready structure
-- [ ] Complete CFS section catalogue
-- [ ] Built-up and back-to-back CFS sections
-- [ ] Complete HRS section catalogue
-- [ ] Configurable TikZ styles for colors, line widths, fills, and labels
+- [x] Package metadata and CTAN-ready structure foundation
+- [x] Initial CFS section catalogue
+- [x] Built-up and back-to-back CFS section commands
+- [x] Initial HRS section catalogue
+- [x] Initial key-value public API
+- [x] Configurable TikZ styles for colors, line widths, fills, and labels
 - [ ] Documentation, examples, and smoke tests
 - [ ] Future roof, concrete, and standard-based dimensioning modules

@@ -1,141 +1,172 @@
-\usepackage{tikz}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tikzSteel}[2026/05/23 v0.1.0 Draw steel cross-sections with TikZ]
+
+\RequirePackage{tikz}
 \usetikzlibrary{calc}
-\usepackage{tkz-euclide}
+
+%
+% ===== ===== Package styles
+%
+
+\tikzset{
+	tikzSteel/default/.style={line cap=round, line join=round},
+	tikzSteel/straight/.style={tikzSteel/default, red},
+	tikzSteel/round/.style={tikzSteel/default, blue},
+	tikzSteel/centerline/.style={tikzSteel/default, black, dashed},
+	tikzSteel/hidden/.style={tikzSteel/default, black!50, dashed},
+	tikzSteel/dimension/.style={tikzSteel/default, black, <->},
+	tikzSteel/label/.style={black},
+	tikzSteel/fill/.style={fill=gray!20}
+}
+
+%
+% ===== ===== Internal drawing helpers
+%
+
+\makeatletter
+\newcommand{\tikzSteel@straightSegment}[3]{%
+	\draw [tikzSteel/straight, line width=#1 mm] #2 -- #3;%
+}
+
+\newcommand{\tikzSteel@roundArc}[5]{%
+	\draw [tikzSteel/round, line width=#1 mm] #2 arc (#3:#4:#5);%
+}
+\makeatother
+
+%
+% ===== ===== Cold-formed steel sections
+%
 
 %
 % ===== ===== Channels
 %
 
 \newcommand{\csChannel}[7]{
-	\draw [line width=#6 mm, red] (#7,0) -- (#4-#7,0) ;
-	\draw [line width=#6 mm, red] (0,#7) -- (0,#1-#7) ;
-	\draw [line width=#6 mm, red] (#7,#1) -- (#2-#7,#1) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,#7) -- (0,#1-#7) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,#1) -- (#2-#7,#1) ;
 
-	\draw [line width=#6 mm, blue] (0,#7) arc (180:270:#7);
-	\draw [line width=#6 mm, blue] (0,#1-#7) arc (180:90:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#1-#7) arc (180:90:#7);
 
-	\ifnum #3 > 0
-    		\draw [line width=#6 mm, red] (#2,#1-#7) -- (#2,#1-#3) ;
-		\draw [line width=#6 mm, blue] (#2-#7,#1) arc (90:0:#7);
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#2-#7,#1) arc (90:0:#7);
 	\fi
 
-	\ifnum #5 > 0
-    		\draw [line width=#6 mm, red] (#4,#7) -- (#4,#5) ;
-		\draw [line width=#6 mm, blue] (#4-#7,0) arc (270:360:#7);
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#4-#7,0) arc (270:360:#7);
 	\fi
 }
 
 \newcommand{\csChannelOS}[7]{
-	\draw [line width=#6 mm, red] (#7,0) -- (#4-#7,0) ;
-	\draw [line width=#6 mm, red] (#7,#1) -- (#2-#7,#1) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,#1) -- (#2-#7,#1) ;
 	
-	\draw [line width=#6 mm, red] (0,#7) -- (0,{#7 + 0.45*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,#7) -- (0,{#7 + 0.45*(#1-2*#7)}) ;
 
-	\draw [line width=#6 mm, red] (0,{#7 + 0.45*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.5*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] ({0.05*(#1-2*#7)},{#7 + 0.5*(#1-2*#7)}) -- (0,{#7 + 0.55*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,{#7 + 0.55*(#1-2*#7)}) -- (0,#1-#7) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.45*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.5*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] ({0.05*(#1-2*#7)},{#7 + 0.5*(#1-2*#7)}) -- (0,{#7 + 0.55*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.55*(#1-2*#7)}) -- (0,#1-#7) ;
 
-	\draw [line width=#6 mm, blue] (0,#7) arc (180:270:#7);
-	\draw [line width=#6 mm, blue] (0,#1-#7) arc (180:90:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#1-#7) arc (180:90:#7);
 
-	\ifnum #3 > 0
-    		\draw [line width=#6 mm, red] (#2,#1-#7) -- (#2,#1-#3) ;
-		\draw [line width=#6 mm, blue] (#2-#7,#1) arc (90:0:#7);
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#2-#7,#1) arc (90:0:#7);
 	\fi
 
-	\ifnum #5 > 0
-    		\draw [line width=#6 mm, red] (#4,#7) -- (#4,#5) ;
-		\draw [line width=#6 mm, blue] (#4-#7,0) arc (270:360:#7);
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#4-#7,0) arc (270:360:#7);
 	\fi
 }
 
 
 \newcommand{\csChannelTS}[7]{
-	\draw [line width=#6 mm, red] (#7,0) -- (#4-#7,0) ;
-	\draw [line width=#6 mm, red] (#7,#1) -- (#2-#7,#1) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,#1) -- (#2-#7,#1) ;
 	
-	\draw [line width=#6 mm, red] (0,#7) -- (0,{#7 + 0.05*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,#1-#7) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,#7) -- (0,{#7 + 0.05*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,#1-#7) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
 	
-	\draw [line width=#6 mm, red] (0,{#7 + 0.05*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) -- (0,{#7 + 0.15*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,{#7 + 0.15*(#1-2*#7)}) -- (0,{#7 + 0.85*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,{#7 + 0.85*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,{#7 + 0.95*(#1-2*#7)}) -- (0,#1-2*#7) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.05*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) -- (0,{#7 + 0.15*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.15*(#1-2*#7)}) -- (0,{#7 + 0.85*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.85*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.95*(#1-2*#7)}) -- (0,#1-2*#7) ;
 	
-	\draw [line width=#6 mm, blue] (0,#7) arc (180:270:#7);
-	\draw [line width=#6 mm, blue] (0,#1-#7) arc (180:90:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#1-#7) arc (180:90:#7);
 
-	\ifnum #3 > 0
-    		\draw [line width=#6 mm, red] (#2,#1-#7) -- (#2,#1-#3) ;
-		\draw [line width=#6 mm, blue] (#2-#7,#1) arc (90:0:#7);
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#2-#7,#1) arc (90:0:#7);
 	\fi
 
-	\ifnum #5 > 0
-    		\draw [line width=#6 mm, red] (#4,#7) -- (#4,#5) ;
-		\draw [line width=#6 mm, blue] (#4-#7,0) arc (270:360:#7);
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#4-#7,0) arc (270:360:#7);
 	\fi
 }
 
 \newcommand{\csChannelFS}[8]{
-	\draw [line width=#6 mm, red] (#7,0) -- (#4-#7,0) ;
-	\draw [line width=#6 mm, red] (#7,#1) -- (#2-#7,#1) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,#1) -- (#2-#7,#1) ;
 	
-	\draw [line width=#6 mm, red] (0,#7) -- (0,{#7 + (#8-0.05)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,#7) -- (0,{#7 + (#8-0.05)*(#1-2*#7)}) ;
 
-	\draw [line width=#6 mm, red] (0,{#7 + (#8-0.05)*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) -- (0,{#7 + (#8+0.05)*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,{#7 + (#8+0.05)*(#1-2*#7)}) -- (0,#1-#7) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + (#8-0.05)*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) -- (0,{#7 + (#8+0.05)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + (#8+0.05)*(#1-2*#7)}) -- (0,#1-#7) ;
 
-	\draw [line width=#6 mm, blue] (0,#7) arc (180:270:#7);
-	\draw [line width=#6 mm, blue] (0,#1-#7) arc (180:90:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#1-#7) arc (180:90:#7);
 
-	\ifnum #3 > 0
-    		\draw [line width=#6 mm, red] (#2,#1-#7) -- (#2,#1-#3) ;
-		\draw [line width=#6 mm, blue] (#2-#7,#1) arc (90:0:#7);
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#2-#7,#1) arc (90:0:#7);
 	\fi
 
-	\ifnum #5 > 0
-    		\draw [line width=#6 mm, red] (#4,#7) -- (#4,#5) ;
-		\draw [line width=#6 mm, blue] (#4-#7,0) arc (270:360:#7);
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#4-#7,0) arc (270:360:#7);
 	\fi
 }
 
 \newcommand{\csChannelRS}[8]{
-%	\tkzInit[xmin=-1, xmax=#2 + 1, ymin = -1, ymax=#1 + 1]
-%	\tkzGrid
-%	\tkzClip
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,#1) -- (#2-#7,#1) ;
 	
-	\draw [line width=#6 mm, red] (#7,0) -- (#4-#7,0) ;
-	\draw [line width=#6 mm, red] (#7,#1) -- (#2-#7,#1) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,#7) -- (0,{#7 + 0.05*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,#1-#7) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
 	
-	\draw [line width=#6 mm, red] (0,#7) -- (0,{#7 + 0.05*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,#1-#7) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.05*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) -- (0,{#7 + 0.15*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.15*(#1-2*#7)}) -- (0,{#7 + (#8-0.05)*(#1-2*#7)}) ;
 	
-	\draw [line width=#6 mm, red] (0,{#7 + 0.05*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) -- (0,{#7 + 0.15*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,{#7 + 0.15*(#1-2*#7)}) -- (0,{#7 + (#8-0.05)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + (#8-0.05)*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) -- (0,{#7 + (#8+0.05)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + (#8+0.05)*(#1-2*#7)}) -- (0,{#7 + 0.85*(#1-2*#7)}) ;
 	
-	\draw [line width=#6 mm, red] (0,{#7 + (#8-0.05)*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) -- (0,{#7 + (#8+0.05)*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,{#7 + (#8+0.05)*(#1-2*#7)}) -- (0,{#7 + 0.85*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.85*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,{#7 + 0.95*(#1-2*#7)}) -- (0,#1-2*#7) ;
 	
-	\draw [line width=#6 mm, red] (0,{#7 + 0.85*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
-	\draw [line width=#6 mm, red] (0,{#7 + 0.95*(#1-2*#7)}) -- (0,#1-2*#7) ;
-	
-	\draw [line width=#6 mm, blue] (0,#7) arc (180:270:#7);
-	\draw [line width=#6 mm, blue] (0,#1-#7) arc (180:90:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#1-#7) arc (180:90:#7);
 
-	\ifnum #3 > 0
-    		\draw [line width=#6 mm, red] (#2,#1-#7) -- (#2,#1-#3) ;
-		\draw [line width=#6 mm, blue] (#2-#7,#1) arc (90:0:#7);
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#2-#7,#1) arc (90:0:#7);
 	\fi
 
-	\ifnum #5 > 0
-    		\draw [line width=#6 mm, red] (#4,#7) -- (#4,#5) ;
-		\draw [line width=#6 mm, blue] (#4-#7,0) arc (270:360:#7);
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSteel/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#4-#7,0) arc (270:360:#7);
 	\fi
 }
 
@@ -144,16 +175,16 @@
 %
 
 \newcommand{\csBox}[4]{
-	\draw [line width=#3 mm, red] (#4,0) -- (#2-#4,0) ;
-	\draw [line width=#3 mm, red] (#4,#1) -- (#2-#4,#1) ;	
-	\draw [line width=#3 mm, red] (0,#4) -- (0,#1-#4) ;
-	\draw [line width=#3 mm, red] (#2,#4) -- (#2,#1-#4) ;
+	\draw [line width=#3 mm, tikzSteel/straight] (#4,0) -- (#2-#4,0) ;
+	\draw [line width=#3 mm, tikzSteel/straight] (#4,#1) -- (#2-#4,#1) ;	
+	\draw [line width=#3 mm, tikzSteel/straight] (0,#4) -- (0,#1-#4) ;
+	\draw [line width=#3 mm, tikzSteel/straight] (#2,#4) -- (#2,#1-#4) ;
 	
-	\draw [line width=#3 mm, blue] (0,#4) arc (180:270:#4);
-	\draw [line width=#3 mm, blue] (0,#1-#4) arc (180:90:#4);
+	\draw [line width=#3 mm, tikzSteel/round] (0,#4) arc (180:270:#4);
+	\draw [line width=#3 mm, tikzSteel/round] (0,#1-#4) arc (180:90:#4);
 
-	\draw [line width=#3 mm, blue] (#2-#4,0) arc (270:360:#4);
-	\draw [line width=#3 mm, blue] (#2-#4,#1) arc (90:0:#4);
+	\draw [line width=#3 mm, tikzSteel/round] (#2-#4,0) arc (270:360:#4);
+	\draw [line width=#3 mm, tikzSteel/round] (#2-#4,#1) arc (90:0:#4);
 }
 
 %
@@ -161,21 +192,21 @@
 %
 
 \newcommand{\csZee}[7]{
-	\draw [line width=#6 mm, red] (0,#7) -- (0,#1-#7) ;	
-	\draw [line width=#6 mm, red] (#7,#1) -- (#2-#7,#1) ;
-	\draw [line width=#6 mm, red] (-#7,0) -- (#7-#4,0) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (0,#7) -- (0,#1-#7) ;	
+	\draw [line width=#6 mm, tikzSteel/straight] (#7,#1) -- (#2-#7,#1) ;
+	\draw [line width=#6 mm, tikzSteel/straight] (-#7,0) -- (#7-#4,0) ;
 
-	\draw [line width=#6 mm, blue] (0,#1-#7) arc (180:90:#7);
-	\draw [line width=#6 mm, blue] (0,#7) arc (0:-90:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#1-#7) arc (180:90:#7);
+	\draw [line width=#6 mm, tikzSteel/round] (0,#7) arc (0:-90:#7);
 
-	\ifnum #3 > 0
-		\draw [line width=#6 mm, red] (#2,#1-#7) -- (#2,#1-#3) ;
-		\draw [line width=#6 mm, blue] (#2-#7,#1) arc (90:0:#7);
+	\ifdim #3 pt > 0pt
+		\draw [line width=#6 mm, tikzSteel/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#2-#7,#1) arc (90:0:#7);
 	\fi
 
-	\ifnum #5 > 0
-		\draw [line width=#6 mm, red] (-#4,#7) -- (-#4,#5) ;
-		\draw [line width=#6 mm, blue] (#7-#4,0) arc (270:180:#7);
+	\ifdim #5 pt > 0pt
+		\draw [line width=#6 mm, tikzSteel/straight] (-#4,#7) -- (-#4,#5) ;
+		\draw [line width=#6 mm, tikzSteel/round] (#7-#4,0) arc (270:180:#7);
 	\fi
 }
 
@@ -184,10 +215,10 @@
 %
 
 \newcommand{\csL}[4]{
-	\draw [line width=#3 mm, red] (0,#4) -- (0,#1) ;	
-	\draw [line width=#3 mm, red] (#4,0) -- (#2,0) ;
+	\draw [line width=#3 mm, tikzSteel/straight] (0,#4) -- (0,#1) ;	
+	\draw [line width=#3 mm, tikzSteel/straight] (#4,0) -- (#2,0) ;
 
-	\draw [line width=#3 mm, blue] (0,#4) arc (180:270:#4);
+	\draw [line width=#3 mm, tikzSteel/round] (0,#4) arc (180:270:#4);
 
 }
 
@@ -195,121 +226,617 @@
 % ===== ===== Tube
 %
 \newcommand{\csTube}[2]{
-	\draw [line width=#2 mm, blue] (0,0) arc (0:360:#1);
+	\draw [line width=#2 mm, tikzSteel/round] (0,0) arc (0:360:#1);
 }
+
+%
+% ===== ===== CFS public wrappers and additional sections
+%
+
+\newcommand{\csCFSChannel}[4]{
+	\csChannel{#1}{#2}{0}{#2}{0}{#3}{#4}
+}
+
+\newcommand{\csCFSLippedChannel}[5]{
+	\csChannel{#1}{#2}{#3}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csCFSEdgeStiffenedChannel}[5]{
+	\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csCFSChannelWithOneStiffener}[8]{
+	\csChannelFS{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}
+}
+
+\newcommand{\csCFSChannelWithTwoStiffeners}[7]{
+	\csChannelTS{#1}{#2}{#3}{#4}{#5}{#6}{#7}
+}
+
+\newcommand{\csCFSChannelWithThreeStiffeners}[8]{
+	\csChannelRS{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}
+}
+
+\newcommand{\csCFSZee}[4]{
+	\csZee{#1}{#2}{0}{#2}{0}{#3}{#4}
+}
+
+\newcommand{\csCFSLippedZee}[5]{
+	\csZee{#1}{#2}{#3}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csCFSSigma}[7]{
+	\csChannelTS{#1}{#2}{#3}{#4}{#5}{#6}{#7}
+}
+
+\newcommand{\csCFSHat}[6]{
+	\draw [line width=#5 mm, tikzSteel/straight] (0,#6) -- (0,#1-#6) ;
+	\draw [line width=#5 mm, tikzSteel/straight] (0,#1) -- (#2,#1) ;
+	\draw [line width=#5 mm, tikzSteel/straight] (#2,#1-#6) -- (#2,#6) ;
+	\draw [line width=#5 mm, tikzSteel/straight] (#2+#6,0) -- (#2+#3-#6,0) ;
+	\draw [line width=#5 mm, tikzSteel/straight] (#2+#3,#6) -- (#2+#3,#1-#6) ;
+	\draw [line width=#5 mm, tikzSteel/straight] (#2+#3,#1) -- (#2+#3+#4,#1) ;
+
+	\draw [line width=#5 mm, tikzSteel/round] (0,#1-#6) arc (180:90:#6);
+	\draw [line width=#5 mm, tikzSteel/round] (#2,#1-#6) arc (0:90:#6);
+	\draw [line width=#5 mm, tikzSteel/round] (#2,#6) arc (180:270:#6);
+	\draw [line width=#5 mm, tikzSteel/round] (#2+#3,#6) arc (0:-90:#6);
+	\draw [line width=#5 mm, tikzSteel/round] (#2+#3,#1-#6) arc (180:90:#6);
+}
+
+\newcommand{\csCFSAngle}[4]{
+	\csL{#1}{#2}{#3}{#4}
+}
+
+\newcommand{\csCFSLippedAngle}[5]{
+	\draw [line width=#3 mm, tikzSteel/straight] (0,#4) -- (0,#1) ;
+	\draw [line width=#3 mm, tikzSteel/straight] (#4,0) -- (#2-#4,0) ;
+	\draw [line width=#3 mm, tikzSteel/straight] (#2,#4) -- (#2,#5) ;
+
+	\draw [line width=#3 mm, tikzSteel/round] (0,#4) arc (180:270:#4);
+	\draw [line width=#3 mm, tikzSteel/round] (#2-#4,0) arc (270:360:#4);
+}
+
+\newcommand{\csCFSBox}[4]{
+	\csBox{#1}{#2}{#3}{#4}
+}
+
+\newcommand{\csCFSRHS}[4]{
+	\csBox{#1}{#2}{#3}{#4}
+}
+
+\newcommand{\csCFSSHS}[3]{
+	\csBox{#1}{#1}{#2}{#3}
+}
+
+\newcommand{\csCFSCHS}[2]{
+	\csTube{#1}{#2}
+}
+
+\newcommand{\csCFSFoldedPlate}[2]{
+	\def\points{#1}
+	\foreach \p [count=\i,remember=\p as \lastp] in \points{
+		\ifnum\i>1\relax
+			\draw [line width=#2 mm, tikzSteel/straight] \lastp -- \p;
+		\fi
+	}
+}
+
+%
+% ===== ===== CFS built-up sections
+%
+
+\newcommand{\csCFSBackToBackChannels}[6]{
+	\scope
+		\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+	\endscope
+	\scope[shift={({#6 + 2*#2},0)}, xscale=-1]
+		\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+	\endscope
+}
+
+\newcommand{\csCFSToeToToeChannels}[6]{
+	\scope
+		\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+	\endscope
+	\scope[shift={({#6 - 2*#2},0)}, xscale=-1]
+		\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+	\endscope
+}
+
+\newcommand{\csCFSNestedChannels}[6]{
+	\scope
+		\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+	\endscope
+	\scope[shift={(#6,0)}]
+		\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+	\endscope
+}
+
+\newcommand{\csCFSBoxedChannels}[6]{
+	\scope
+		\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+	\endscope
+	\scope[shift={({#6 + #2},0)}, xscale=-1]
+		\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+	\endscope
+}
+
+\newcommand{\csCFSBuiltUpIChannels}[6]{
+	\scope
+		\csCFSChannel{#1}{#2}{#4}{#5}
+	\endscope
+	\scope[shift={({#6 + #2},0)}, xscale=-1]
+		\csCFSChannel{#1}{#3}{#4}{#5}
+	\endscope
+}
+
+\newcommand{\csCFSBackToBackZees}[6]{
+	\scope
+		\csCFSLippedZee{#1}{#2}{#3}{#4}{#5}
+	\endscope
+	\scope[shift={({#6 + 2*#2},0)}, xscale=-1]
+		\csCFSLippedZee{#1}{#2}{#3}{#4}{#5}
+	\endscope
+}
+
+\newcommand{\csCFSBackToBackAngles}[5]{
+	\scope
+		\csCFSAngle{#1}{#2}{#3}{#4}
+	\endscope
+	\scope[shift={({#5 + 2*#2},0)}, xscale=-1]
+		\csCFSAngle{#1}{#2}{#3}{#4}
+	\endscope
+}
+
+% Simple fastener indicators for built-up CFS section sketches.
+\newcommand{\csCFSFasteners}[4]{
+	\foreach \y in {#2,#3,...,#4}{
+		\draw [tikzSteel/round, line width=#1 mm] (0,\y) circle [radius={2*#1}];
+	}
+}
+
+%
+% ===== ===== Hot-rolled steel sections
+%
 
 %
 % ===== ===== Welded I
 %
 \newcommand{\csWI}[6]{
-	\draw [line width=#2 mm, red] (0,-0.5*#1) -- (0,0.5*#1);
-	\draw [line width=#4 mm, blue] (-0.5*#3,-0.5*#1) -- (0.5*#3,-0.5*#1);
-	\draw [line width=#6 mm, blue] (-0.5*#5,0.5*#1) -- (0.5*#5,0.5*#1);
+	\draw [line width=#2 mm, tikzSteel/straight] (0,-0.5*#1) -- (0,0.5*#1);
+	\draw [line width=#4 mm, tikzSteel/round] (-0.5*#3,-0.5*#1) -- (0.5*#3,-0.5*#1);
+	\draw [line width=#6 mm, tikzSteel/round] (-0.5*#5,0.5*#1) -- (0.5*#5,0.5*#1);
 }
 
 %
 % ===== ===== Universal beams and columns
 %
 \newcommand{\csUBC}[5]{
-	\draw [line width=1 mm, red] (0,0) -- (#2,0);
-	\draw [line width=1 mm, red] (0,#1) -- (#2,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (0,0) -- (#2,0);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#1) -- (#2,#1);
 
-	\draw [line width=1 mm, red] (0,#3) -- (0.5*#2-0.5*#4-#5,#3);
-	\draw [line width=1 mm, red] (0.5*#2+0.5*#4+#5,#3) -- (#2,#3);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#3) -- (0.5*#2-0.5*#4-#5,#3);
+	\draw [line width=1 mm, tikzSteel/straight] (0.5*#2+0.5*#4+#5,#3) -- (#2,#3);
 
-	\draw [line width=1 mm, red] (0,#1-#3) -- (0.5*#2-0.5*#4-#5,#1-#3);
-	\draw [line width=1 mm, red] (0.5*#2+0.5*#4+#5,#1-#3) -- (#2,#1-#3);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#1-#3) -- (0.5*#2-0.5*#4-#5,#1-#3);
+	\draw [line width=1 mm, tikzSteel/straight] (0.5*#2+0.5*#4+#5,#1-#3) -- (#2,#1-#3);
 	
-%	\draw [line width=0.5 mm, black, dashed] (0.5*#2,-1) -- (0.5*#2,#1+1);
-
-	\draw [line width=1 mm, red] (0.5*#2-0.5*#4,#3+#5) -- (0.5*#2-0.5*#4,{#1 - (#3+#5)});
-	\draw [line width=1 mm, red] (0.5*#2+0.5*#4,#3+#5) -- (0.5*#2+0.5*#4,{#1 - (#3+#5)});
+	\draw [line width=1 mm, tikzSteel/straight] (0.5*#2-0.5*#4,#3+#5) -- (0.5*#2-0.5*#4,{#1 - (#3+#5)});
+	\draw [line width=1 mm, tikzSteel/straight] (0.5*#2+0.5*#4,#3+#5) -- (0.5*#2+0.5*#4,{#1 - (#3+#5)});
 	
-	\draw [line width=1 mm, blue] (0.5*#2-0.5*#4-#5,#3) arc (270:360:#5);
-	\draw [line width=1 mm, blue] (0.5*#2+0.5*#4+#5,#3) arc (270:180:#5);
+	\draw [line width=1 mm, tikzSteel/round] (0.5*#2-0.5*#4-#5,#3) arc (270:360:#5);
+	\draw [line width=1 mm, tikzSteel/round] (0.5*#2+0.5*#4+#5,#3) arc (270:180:#5);
 
-	\draw [line width=1 mm, blue] (0.5*#2-0.5*#4-#5,#1-#3) arc (90:0:#5);
-	\draw [line width=1 mm, blue] (0.5*#2+0.5*#4+#5,#1-#3) arc (90:180:#5);
+	\draw [line width=1 mm, tikzSteel/round] (0.5*#2-0.5*#4-#5,#1-#3) arc (90:0:#5);
+	\draw [line width=1 mm, tikzSteel/round] (0.5*#2+0.5*#4+#5,#1-#3) arc (90:180:#5);
 	
-	\draw [line width=1 mm, red] (0,0) -- (0,#3);
-	\draw [line width=1 mm, red] (#2,0) -- (#2,#3);
+	\draw [line width=1 mm, tikzSteel/straight] (0,0) -- (0,#3);
+	\draw [line width=1 mm, tikzSteel/straight] (#2,0) -- (#2,#3);
 
-	\draw [line width=1 mm, red] (0,#1-#3) -- (0,#1);
-	\draw [line width=1 mm, red] (#2,#1-#3) -- (#2,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#1-#3) -- (0,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (#2,#1-#3) -- (#2,#1);
 }
 
 %
 % ===== ===== Tees cut from universal beams and columns
 %
 \newcommand{\csTU}[5]{
-	\draw [line width=1 mm, red] (0,#1) -- (#2,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#1) -- (#2,#1);
 
-	\draw [line width=1 mm, red] (0.5*#2-0.5*#4,0) -- (0.5*#2+0.5*#4,0);
+	\draw [line width=1 mm, tikzSteel/straight] (0.5*#2-0.5*#4,0) -- (0.5*#2+0.5*#4,0);
 
-	\draw [line width=1 mm, red] (0,#1-#3) -- (0.5*#2-0.5*#4-#5,#1-#3);
-	\draw [line width=1 mm, red] (0.5*#2+0.5*#4+#5,#1-#3) -- (#2,#1-#3);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#1-#3) -- (0.5*#2-0.5*#4-#5,#1-#3);
+	\draw [line width=1 mm, tikzSteel/straight] (0.5*#2+0.5*#4+#5,#1-#3) -- (#2,#1-#3);
 
-	\draw [line width=1 mm, red] (0.5*#2-0.5*#4,0) -- (0.5*#2-0.5*#4,{#1 - (#3+#5)});
-	\draw [line width=1 mm, red] (0.5*#2+0.5*#4,0) -- (0.5*#2+0.5*#4,{#1 - (#3+#5)});
+	\draw [line width=1 mm, tikzSteel/straight] (0.5*#2-0.5*#4,0) -- (0.5*#2-0.5*#4,{#1 - (#3+#5)});
+	\draw [line width=1 mm, tikzSteel/straight] (0.5*#2+0.5*#4,0) -- (0.5*#2+0.5*#4,{#1 - (#3+#5)});
 
-	\draw [line width=1 mm, blue] (0.5*#2-0.5*#4-#5,#1-#3) arc (90:0:#5);
-	\draw [line width=1 mm, blue] (0.5*#2+0.5*#4+#5,#1-#3) arc (90:180:#5);
+	\draw [line width=1 mm, tikzSteel/round] (0.5*#2-0.5*#4-#5,#1-#3) arc (90:0:#5);
+	\draw [line width=1 mm, tikzSteel/round] (0.5*#2+0.5*#4+#5,#1-#3) arc (90:180:#5);
 
-	\draw [line width=1 mm, red] (0,#1-#3) -- (0,#1);
-	\draw [line width=1 mm, red] (#2,#1-#3) -- (#2,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#1-#3) -- (0,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (#2,#1-#3) -- (#2,#1);
 }
 
 %
 % ===== ===== HRS Channels
 %
 \newcommand{\csHCH}[5]{
-	\draw [line width=1 mm, red] (0,0) -- (0,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (0,0) -- (0,#1);
 	
-	\draw [line width=1 mm, red] (0,0) -- (#2,0);
-	\draw [line width=1 mm, red] (0,#1) -- (#2,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (0,0) -- (#2,0);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#1) -- (#2,#1);
 
-	\draw [line width=1 mm, red] (#4+#5,#3) -- (#2,#3);
+	\draw [line width=1 mm, tikzSteel/straight] (#4+#5,#3) -- (#2,#3);
 
-	\draw [line width=1 mm, red] (#4+#5,#1-#3) -- (#2,#1-#3);
+	\draw [line width=1 mm, tikzSteel/straight] (#4+#5,#1-#3) -- (#2,#1-#3);
 	
-	\draw [line width=1 mm, red] (#4,#3+#5) -- (#4,{#1 - (#3+#5)});
+	\draw [line width=1 mm, tikzSteel/straight] (#4,#3+#5) -- (#4,{#1 - (#3+#5)});
 	
-	\draw [line width=1 mm, blue] (#4+#5,#3) arc (270:180:#5);
+	\draw [line width=1 mm, tikzSteel/round] (#4+#5,#3) arc (270:180:#5);
 
-	\draw [line width=1 mm, blue] (#4+#5,#1-#3) arc (90:180:#5);
+	\draw [line width=1 mm, tikzSteel/round] (#4+#5,#1-#3) arc (90:180:#5);
 	
-	\draw [line width=1 mm, red] (#2,0) -- (#2,#3);
+	\draw [line width=1 mm, tikzSteel/straight] (#2,0) -- (#2,#3);
 
-	\draw [line width=1 mm, red] (#2,#1-#3) -- (#2,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (#2,#1-#3) -- (#2,#1);
 }
 
 %
 % ===== ===== HRS Angles
 %
 \newcommand{\csEA}[5]{
-	\draw [line width=1 mm, red] (0,0) -- (0,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (0,0) -- (0,#1);
 	
-	\draw [line width=1 mm, red] (0,0) -- (#2,0);
-	\draw [line width=1 mm, red] (0,#1) -- (#4,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (0,0) -- (#2,0);
+	\draw [line width=1 mm, tikzSteel/straight] (0,#1) -- (#4,#1);
 
-	\draw [line width=1 mm, red] (#4+#5,#3) -- (#2,#3);
+	\draw [line width=1 mm, tikzSteel/straight] (#4+#5,#3) -- (#2,#3);
 
-	\draw [line width=1 mm, red] (#4,#3+#5) -- (#4,#1);
+	\draw [line width=1 mm, tikzSteel/straight] (#4,#3+#5) -- (#4,#1);
 	
-	\draw [line width=1 mm, blue] (#4+#5,#3) arc (270:180:#5);
+	\draw [line width=1 mm, tikzSteel/round] (#4+#5,#3) arc (270:180:#5);
 
 	
-	\draw [line width=1 mm, red] (#2,0) -- (#2,#3);
+	\draw [line width=1 mm, tikzSteel/straight] (#2,0) -- (#2,#3);
 
 }
 
+%
+% ===== ===== HRS public wrappers and additional sections
+%
 
+\newcommand{\csHRSUniversalBeam}[5]{
+	\csUBC{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSUniversalColumn}[5]{
+	\csUBC{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSISection}[5]{
+	\csUBC{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSWeldedI}[6]{
+	\csWI{#1}{#2}{#3}{#4}{#5}{#6}
+}
+
+\newcommand{\csHRSTee}[5]{
+	\csTU{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSChannel}[5]{
+	\csHCH{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSEqualAngle}[3]{
+	\csEA{#1}{#1}{#2}{#2}{#3}
+}
+
+\newcommand{\csHRSUnequalAngle}[4]{
+	\csEA{#1}{#2}{#3}{#3}{#4}
+}
+
+\newcommand{\csHRSDoubleAngles}[5]{
+	\scope
+		\csHRSUnequalAngle{#1}{#2}{#3}{#4}
+	\endscope
+	\scope[shift={({#5 + 2*#2},0)}, xscale=-1]
+		\csHRSUnequalAngle{#1}{#2}{#3}{#4}
+	\endscope
+}
+
+\newcommand{\csHRSPlate}[3]{
+	\draw [tikzSteel/straight, line width=1 mm] (0,0) rectangle (#1,#2);
+	\ifdim #3 pt > 0pt
+		\draw [tikzSteel/hidden, line width=#3 mm] (0,0) -- (#1,0);
+	\fi
+}
+
+\newcommand{\csHRSFlatBar}[3]{
+	\csHRSPlate{#1}{#2}{#3}
+}
+
+\newcommand{\csHRSRoundBar}[2]{
+	\draw [tikzSteel/round, line width=#2 mm] (0,0) circle [radius=#1];
+}
+
+\newcommand{\csHRSCHS}[2]{
+	\csTube{#1}{#2}
+}
+
+\newcommand{\csHRSRHS}[4]{
+	\csBox{#1}{#2}{#3}{#4}
+}
+
+\newcommand{\csHRSSHS}[3]{
+	\csBox{#1}{#1}{#2}{#3}
+}
+
+%
+% ===== ===== Key-value public API
+%
+
+\makeatletter
+\pgfkeys{
+	/tikzSteel/section/.is family,
+	/tikzSteel/section,
+	depth/.store in=\tikzSteel@depth,
+	height/.store in=\tikzSteel@depth,
+	width/.store in=\tikzSteel@width,
+	flange/.store in=\tikzSteel@flange,
+	top flange/.store in=\tikzSteel@topFlange,
+	bottom flange/.store in=\tikzSteel@bottomFlange,
+	left flange/.store in=\tikzSteel@leftFlange,
+	right flange/.store in=\tikzSteel@rightFlange,
+	lip/.store in=\tikzSteel@lip,
+	top lip/.store in=\tikzSteel@topLip,
+	bottom lip/.store in=\tikzSteel@bottomLip,
+	thickness/.store in=\tikzSteel@thickness,
+	radius/.store in=\tikzSteel@radius,
+	root radius/.store in=\tikzSteel@radius,
+	gap/.store in=\tikzSteel@gap,
+	offset/.store in=\tikzSteel@offset,
+	position/.store in=\tikzSteel@position,
+	stiffener position/.store in=\tikzSteel@position,
+	leg/.store in=\tikzSteel@leg,
+	vertical leg/.store in=\tikzSteel@verticalLeg,
+	horizontal leg/.store in=\tikzSteel@horizontalLeg,
+	web depth/.store in=\tikzSteel@webDepth,
+	web thickness/.store in=\tikzSteel@webThickness,
+	flange thickness/.store in=\tikzSteel@flangeThickness,
+	top flange width/.store in=\tikzSteel@topFlangeWidth,
+	top flange thickness/.store in=\tikzSteel@topFlangeThickness,
+	bottom flange width/.store in=\tikzSteel@bottomFlangeWidth,
+	bottom flange thickness/.store in=\tikzSteel@bottomFlangeThickness,
+	reference line width/.store in=\tikzSteel@referenceLineWidth,
+	line width/.store in=\tikzSteel@lineWidth,
+	scale/.store in=\tikzSteel@scale,
+	rotate/.store in=\tikzSteel@rotate,
+	x/.store in=\tikzSteel@x,
+	y/.store in=\tikzSteel@y
+}
+
+\newcommand{\tikzSteel@setDefaults}{%
+	\pgfkeys{/tikzSteel/section,
+		depth=245,
+		width=75,
+		flange=75,
+		top flange=75,
+		bottom flange=75,
+		left flange=35,
+		right flange=35,
+		lip=20,
+		top lip=20,
+		bottom lip=20,
+		thickness=2.5,
+		radius=5,
+		gap=10,
+		offset=20,
+		position=0.5,
+		leg=60,
+		vertical leg=60,
+		horizontal leg=40,
+		web depth=95,
+		web thickness=1,
+		flange thickness=2,
+		top flange width=35,
+		top flange thickness=2,
+		bottom flange width=35,
+		bottom flange thickness=2,
+		reference line width=0,
+		line width=1,
+		scale=1,
+		rotate=0,
+		x=0,
+		y=0}%
+}
+
+\newcommand{\tikzSteel@applyKeys}[1]{%
+	\tikzSteel@setDefaults
+	\pgfkeys{/tikzSteel/section,#1}%
+}
+
+\newcommand{\tikzSteel@scopeBegin}{%
+	\scope[shift={({\tikzSteel@x},{\tikzSteel@y})}, scale=\tikzSteel@scale, rotate=\tikzSteel@rotate]%
+}
+
+\newcommand{\tikzSteel@scopeEnd}{%
+	\endscope
+}
+
+\newcommand{\TikZSteelSetup}[1]{%
+	\tikzset{#1}%
+}
+
+\newcommand{\TikZSteelChannel}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSChannel{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelLippedChannel}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSLippedChannel{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelStiffenedChannel}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSChannelWithOneStiffener{\tikzSteel@depth}{\tikzSteel@topFlange}{\tikzSteel@topLip}{\tikzSteel@bottomFlange}{\tikzSteel@bottomLip}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@position}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelZee}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSZee{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelLippedZee}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSLippedZee{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelSigma}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSSigma{\tikzSteel@depth}{\tikzSteel@topFlange}{\tikzSteel@topLip}{\tikzSteel@bottomFlange}{\tikzSteel@bottomLip}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelHat}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSHat{\tikzSteel@depth}{\tikzSteel@leftFlange}{\tikzSteel@width}{\tikzSteel@rightFlange}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelAngle}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSAngle{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelLippedAngle}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSLippedAngle{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@lip}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelRHS}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSRHS{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelSHS}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSSHS{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelCHS}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSCHS{\tikzSteel@radius}{\tikzSteel@thickness}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelBackToBackChannels}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSBackToBackChannels{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@gap}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelUniversalBeam}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSUniversalBeam{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@flangeThickness}{\tikzSteel@webThickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelUniversalColumn}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSUniversalColumn{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@flangeThickness}{\tikzSteel@webThickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelWeldedI}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSWeldedI{\tikzSteel@webDepth}{\tikzSteel@webThickness}{\tikzSteel@bottomFlangeWidth}{\tikzSteel@bottomFlangeThickness}{\tikzSteel@topFlangeWidth}{\tikzSteel@topFlangeThickness}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelTee}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSTee{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@flangeThickness}{\tikzSteel@webThickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelHRSChannel}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSChannel{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@flangeThickness}{\tikzSteel@webThickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelEqualAngle}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSEqualAngle{\tikzSteel@leg}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelUnequalAngle}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSUnequalAngle{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}{\tikzSteel@thickness}{\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelPlate}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSPlate{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@referenceLineWidth}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelRoundBar}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSRoundBar{\tikzSteel@radius}{\tikzSteel@lineWidth}%
+	\tikzSteel@scopeEnd
+}
+\makeatother
+
+
+
+%
+% ===== ===== Generic sections
+%
 
 \newcommand{\csARB}[2]{
 	\def\points{#1}
 	\foreach \p [count=\i,remember=\p as \lastp] in \points{
 		\ifnum\i>1\relax
-			\draw [line width=#2 mm, blue] \lastp -- \p;
+			\draw [line width=#2 mm, tikzSteel/round] \lastp -- \p;
 		\fi
 	}
 }
