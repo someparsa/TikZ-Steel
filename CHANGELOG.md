@@ -4,10 +4,14 @@ All notable development changes for TikZ-Steel are recorded here.
 
 ## Unreleased
 
+## v0.1.1 - 2026-05-23
+
 ### Changed
 
 - Changed the package license to the LaTeX Project Public License, version
   1.3c or later.
+
+## v0.1.0 - 2026-05-23
 
 ### Added
 

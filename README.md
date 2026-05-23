@@ -58,7 +58,7 @@ The command above draws a lipped cold-formed channel using:
 ## Current status
 
 The package is being refactored gradually toward a documented CTAN-ready
-release. The current development version includes:
+release. Version 0.1.1 includes:
 
 - Package metadata and package-safe TikZ dependency loading.
 - Configurable TikZ styles for straight segments, curved segments, labels,
@@ -353,7 +353,7 @@ Available style hooks include:
 
 ## Testing
 
-The current development version has been checked with MacTeX using:
+Version 0.1.1 has been checked with MacTeX using:
 
 ```sh
 /Library/TeX/texbin/pdflatex -interaction=nonstopmode -halt-on-error tikzSteel.tex
