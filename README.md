@@ -2,6 +2,15 @@
 
 A TikZ-LaTeX package for drawing steel cross-sections.
 
+## Package information
+
+- Version: 0.1.1
+- Author: Parsa Yazdi
+- Maintainer: Parsa Yazdi
+- License: LaTeX Project Public License 1.3c or later
+- Repository: <https://github.com/someparsa/TikZ-Steel>
+- Bug tracker: <https://github.com/someparsa/TikZ-Steel/issues>
+
 ## Aim
 
 Preparing high-quality structural engineering figures for papers and reports is
@@ -16,7 +25,7 @@ required.
 
 ## Installation
 
-Clone this or download the latest version of this repository.
+Clone this repository or download a release archive.
 
 ```sh
 git clone https://github.com/someparsa/TikZ-Steel.git
@@ -27,8 +36,6 @@ Put the `.sty` file in the directory where you save your LaTeX file. Then import
 ```tex
 \usepackage{tikzSteel}
 ```
-
-This package is still not added to the CTAN.
 
 ## Quick example
 
