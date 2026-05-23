@@ -170,7 +170,7 @@ systems, concrete drawings, and standard-based dimensioning styles.
 
 ## Phase 6: CTAN Release Preparation
 
-- Add release files:
+- [ ] Finalize release files:
   - `README.md`
   - `LICENSE`
   - `CHANGELOG.md`
@@ -178,17 +178,35 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - documentation source
   - documentation PDF
   - examples
-- Clean generated files from the source archive except the intended
+- [ ] Clean generated files from the source archive except the intended
   documentation PDF.
-- Add versioning:
+- [ ] Confirm versioning:
   - start with `v0.1.0`
   - document breaking and non-breaking changes
-- Validate:
+- [ ] Validate:
   - package loads cleanly
   - documentation compiles cleanly
   - all examples compile
   - no unused dependencies
   - no undocumented public commands
+- [ ] Prepare package archive:
+  - include only source files, examples, tests, documentation source, release
+    PDF, README, changelog, and license
+  - exclude local system files and ordinary LaTeX auxiliary outputs
+  - check that the archive can be unpacked and compiled independently
+- [ ] Prepare release notes:
+  - summarize the public key-value API
+  - state that positional commands are retained for compatibility
+  - state known limitations for dimensions and detailed drawing modes
+- [ ] Create a tagged GitHub release:
+  - tag `v0.1.0`
+  - attach the release archive and documentation PDF
+  - link to the examples and smoke-test status
+- [ ] Submit to CTAN after the release archive is verified:
+  - choose the package topic/category metadata
+  - provide maintainer, license, summary, and package description
+  - confirm that the package name, file layout, and documentation follow CTAN
+    expectations
 
 ## Phase 7: Future Extensions
 
@@ -228,6 +246,14 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - AS/NZS-style dimensions
   - Eurocode-style dimensions
   - custom units, labels, arrows, and notation presets
+- Later drawing-quality improvements:
+  - improve geometric consistency across CFS and HRS shapes
+  - normalize scale, orientation, and bounding boxes for all section sketches
+  - refine bend and rolled-radius drawing behavior
+  - improve closed-section fill behavior and line joins
+  - add visual regression examples before changing existing shapes
+  - review engineering terminology and parameter names against common steel
+    section notation
 
 ## Recommended First Release Scope
 
