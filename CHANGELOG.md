@@ -4,6 +4,11 @@ All notable development changes for TikZ-Steel are recorded here.
 
 ## Unreleased
 
+### Changed
+
+- Changed the package license to the LaTeX Project Public License, version
+  1.3c or later.
+
 ### Added
 
 - Added LaTeX package metadata with `\NeedsTeXFormat` and `\ProvidesPackage`.

@@ -388,6 +388,11 @@ TEXINPUTS="$(pwd)//:" /Library/TeX/texbin/pdflatex \
 During development, the documentation, examples, and smoke tests were compiled
 successfully with MacTeX.
 
+## License
+
+TikZ-Steel is distributed under the LaTeX Project Public License, version 1.3c
+or later. See [LICENSE](LICENSE) for the full license text.
+
 ## Development roadmap
 
 The development plan is tracked in [ROADMAP.md](ROADMAP.md), and development
