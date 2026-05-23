@@ -1,0 +1,17 @@
+\documentclass[margin=3mm]{standalone}
+\usepackage{tikzSteel}
+
+\begin{document}
+\begin{tikzpicture}
+\TikZSteelSetup{
+  tikzSteel/straight/.style={tikzSteel/default, black},
+  tikzSteel/round/.style={tikzSteel/default, gray},
+  tikzSteel/dimension/.style={tikzSteel/default, gray, <->},
+  tikzSteel/label/.style={font=\small}
+}
+
+\TikZSteelLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, label x=30, label y=95, scale=0.05]
+\TikZSteelUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=28, scale=0.25, monochrome=true, label=UB, label x=12, label y=68]
+\TikZSteelRHS[depth=80, width=50, thickness=3, radius=5, x=50, scale=0.08, filled=true]
+\end{tikzpicture}
+\end{document}

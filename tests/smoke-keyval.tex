@@ -1,0 +1,44 @@
+\documentclass[margin=2mm]{standalone}
+\usepackage{tikzSteel}
+
+\begin{document}
+\begin{tikzpicture}
+\TikZSteelSetup{
+  tikzSteel/straight/.style={tikzSteel/default, black},
+  tikzSteel/round/.style={tikzSteel/default, gray}
+}
+
+\TikZSteelChannel[depth=180, flange=55, thickness=2, radius=4, x=0, scale=0.025, centerline=true, dimensions=true, label=C, label x=25, label y=95]
+\TikZSteelLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, x=8, scale=0.025]
+\TikZSteelStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=48, bottom lip=14, thickness=2, radius=4, position=0.45, x=16, scale=0.025]
+\TikZSteelZee[depth=180, flange=55, thickness=2, radius=4, x=24, scale=0.025]
+\TikZSteelLippedZee[depth=180, flange=55, lip=18, thickness=2, radius=4, x=32, scale=0.025]
+\TikZSteelSigma[depth=180, top flange=55, top lip=18, bottom flange=48, bottom lip=14, thickness=2, radius=4, x=40, scale=0.025]
+\TikZSteelHat[depth=40, width=90, left flange=25, right flange=25, thickness=2, radius=4, x=48, scale=0.05]
+\TikZSteelAngle[vertical leg=70, horizontal leg=50, thickness=2, radius=4, x=56, scale=0.05]
+\TikZSteelLippedAngle[vertical leg=70, horizontal leg=50, lip=15, thickness=2, radius=4, x=64, scale=0.05]
+\TikZSteelRHS[depth=80, width=50, thickness=3, radius=5, x=72, scale=0.05, filled=true]
+\TikZSteelSHS[width=60, thickness=3, radius=5, x=80, scale=0.05, filled=true]
+\TikZSteelCHS[radius=30, thickness=3, x=88, scale=0.05, filled=true]
+\TikZSteelBackToBackChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, x=0, y=-8, scale=0.025]
+\TikZSteelToeToToeChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, x=10, y=-8, scale=0.025]
+\TikZSteelNestedChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, offset=20, x=20, y=-8, scale=0.025]
+\TikZSteelBoxedChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, x=30, y=-8, scale=0.025]
+\TikZSteelBuiltUpIChannels[depth=180, left flange=45, right flange=35, thickness=2, radius=4, gap=10, x=40, y=-8, scale=0.025]
+\TikZSteelBackToBackZees[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, x=50, y=-8, scale=0.025]
+\TikZSteelUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=0, y=-17, scale=0.12, monochrome=true]
+\TikZSteelUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=8, y=-17, scale=0.12]
+\TikZSteelWeldedI[web depth=60, web thickness=2, top flange width=40, top flange thickness=5, bottom flange width=50, bottom flange thickness=6, x=16, y=-17, scale=0.12]
+\TikZSteelTee[depth=60, width=40, flange thickness=5, web thickness=2, root radius=4, x=24, y=-17, scale=0.12]
+\TikZSteelHRSChannel[depth=60, width=35, flange thickness=5, web thickness=2, root radius=4, x=32, y=-17, scale=0.12]
+\TikZSteelEqualAngle[leg=40, thickness=4, root radius=3, x=40, y=-17, scale=0.12]
+\TikZSteelUnequalAngle[vertical leg=50, horizontal leg=35, thickness=4, root radius=3, x=48, y=-17, scale=0.12]
+\TikZSteelDoubleAngles[vertical leg=50, horizontal leg=35, thickness=4, root radius=3, gap=10, x=56, y=-17, scale=0.12]
+\TikZSteelPlate[width=40, thickness=8, x=64, y=-17, scale=0.12, filled=true]
+\TikZSteelFlatBar[width=40, thickness=8, x=72, y=-17, scale=0.12, filled=true]
+\TikZSteelRoundBar[radius=12, line width=1, x=80, y=-17, scale=0.12, filled=true]
+\TikZSteelHRSCHS[radius=20, thickness=3, x=88, y=-17, scale=0.12]
+\TikZSteelHRSRHS[depth=50, width=35, thickness=3, root radius=4, x=96, y=-17, scale=0.12]
+\TikZSteelHRSSHS[width=40, thickness=3, root radius=4, x=104, y=-17, scale=0.12]
+\end{tikzpicture}
+\end{document}

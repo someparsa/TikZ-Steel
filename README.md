@@ -81,6 +81,11 @@ readable option names and provide defaults for omitted values:
   flange=75,
   thickness=2.5,
   radius=5,
+  centerline=true,
+  dimensions=true,
+  label=C245,
+  label x=35,
+  label y=130,
   scale=0.2,
   rotate=0,
   x=0,
@@ -119,6 +124,16 @@ Common keys include:
 - `bottom flange thickness`
 - `reference line width`
 - `line width`
+- `label`
+- `label x`
+- `label y`
+- `mode`
+- `simplified`
+- `detailed`
+- `filled`
+- `centerline`
+- `dimensions`
+- `monochrome`
 - `scale`
 - `rotate`
 - `x`
@@ -139,6 +154,11 @@ Current key-value commands:
 - `\TikZSteelSHS`
 - `\TikZSteelCHS`
 - `\TikZSteelBackToBackChannels`
+- `\TikZSteelToeToToeChannels`
+- `\TikZSteelNestedChannels`
+- `\TikZSteelBoxedChannels`
+- `\TikZSteelBuiltUpIChannels`
+- `\TikZSteelBackToBackZees`
 - `\TikZSteelUniversalBeam`
 - `\TikZSteelUniversalColumn`
 - `\TikZSteelWeldedI`
@@ -146,8 +166,13 @@ Current key-value commands:
 - `\TikZSteelHRSChannel`
 - `\TikZSteelEqualAngle`
 - `\TikZSteelUnequalAngle`
+- `\TikZSteelDoubleAngles`
 - `\TikZSteelPlate`
+- `\TikZSteelFlatBar`
 - `\TikZSteelRoundBar`
+- `\TikZSteelHRSCHS`
+- `\TikZSteelHRSRHS`
+- `\TikZSteelHRSSHS`
 
 The legacy positional commands remain available for compatibility and for
 lower-level drawing control.
@@ -250,9 +275,32 @@ The current development version has been checked with MacTeX using:
 /Library/TeX/texbin/pdflatex -interaction=nonstopmode -halt-on-error tikzSteel.tex
 ```
 
-Temporary smoke tests have also been used during development to compile all new
-CFS, HRS, and key-value commands. Permanent test/example files are planned
-before CTAN release.
+The repository now includes permanent source files for documentation, examples,
+and smoke tests:
+
+```text
+docs/tikzSteel-doc.tex
+examples/cfs-gallery.tex
+examples/hrs-gallery.tex
+examples/style-customization.tex
+tests/smoke-cfs.tex
+tests/smoke-hrs.tex
+tests/smoke-keyval.tex
+```
+
+To compile any of these files while keeping generated outputs outside the repo:
+
+```sh
+mkdir -p /private/tmp/tikzsteel-build
+TEXINPUTS="$(pwd)//:" /Library/TeX/texbin/pdflatex \
+  -interaction=nonstopmode \
+  -halt-on-error \
+  -output-directory=/private/tmp/tikzsteel-build \
+  docs/tikzSteel-doc.tex
+```
+
+During development, the documentation, examples, and smoke tests were compiled
+successfully with MacTeX.
 
 ## Development roadmap
 
@@ -269,5 +317,5 @@ Main planned work:
 - [x] Initial HRS section catalogue
 - [x] Initial key-value public API
 - [x] Configurable TikZ styles for colors, line widths, fills, and labels
-- [ ] Documentation, examples, and smoke tests
+- [x] Initial documentation, examples, and smoke tests
 - [ ] Future roof, concrete, and standard-based dimensioning modules

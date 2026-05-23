@@ -1,0 +1,185 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tikzSteel}
+
+\title{TikZ-Steel Manual}
+\author{TikZ-Steel contributors}
+\date{Development version}
+
+\newcommand{\command}[1]{\texttt{\textbackslash #1}}
+
+\begin{document}
+
+\maketitle
+
+\section{Overview}
+
+TikZ-Steel is a TikZ-based package for drawing structural steel cross-sections.
+The package currently focuses on cold-formed steel (CFS) and hot-rolled steel
+(HRS) sections. It provides legacy positional commands, explicit CFS/HRS
+positional wrappers, and a newer key-value interface.
+
+\section{Loading the Package}
+
+\begin{verbatim}
+\usepackage{tikzSteel}
+\end{verbatim}
+
+The package loads TikZ and the TikZ \texttt{calc} library.
+
+\section{Recommended Key-Value Interface}
+
+The recommended public API uses commands named \command{TikZSteel...} with
+readable keys:
+
+\begin{verbatim}
+\begin{tikzpicture}
+  \TikZSteelLippedChannel[
+    depth=245,
+    flange=75,
+    lip=20,
+    thickness=2.5,
+    radius=5,
+    centerline=true,
+    dimensions=true,
+    label=C245,
+    label x=35,
+    label y=130,
+    scale=0.2
+  ]
+\end{tikzpicture}
+\end{verbatim}
+
+\subsection{Common Keys}
+
+\begin{longtable}{p{0.36\linewidth}p{0.56\linewidth}}
+\toprule
+Key & Meaning \\
+\midrule
+\texttt{depth} & Section depth or vertical size \\
+\texttt{width} & Section width or horizontal size \\
+\texttt{flange} & Common flange width \\
+\texttt{top flange}, \texttt{bottom flange} & Asymmetric flange widths \\
+\texttt{left flange}, \texttt{right flange} & Hat-section flange widths \\
+\texttt{lip}, \texttt{top lip}, \texttt{bottom lip} & Lip lengths \\
+\texttt{thickness} & Section thickness or line width in millimetres \\
+\texttt{radius}, \texttt{root radius} & Bend or root radius \\
+\texttt{gap} & Spacing between built-up members \\
+\texttt{offset} & Offset between nested members \\
+\texttt{position}, \texttt{stiffener position} & Relative stiffener position \\
+\texttt{leg}, \texttt{vertical leg}, \texttt{horizontal leg} & Angle leg dimensions \\
+\texttt{web depth}, \texttt{web thickness} & Welded section web dimensions \\
+\texttt{flange thickness} & Rolled flange thickness \\
+\texttt{top flange width}, \texttt{bottom flange width} & Welded section flange widths \\
+\texttt{top flange thickness}, \texttt{bottom flange thickness} & Welded section flange thicknesses \\
+\texttt{reference line width}, \texttt{line width} & Plate/bar reference line settings \\
+\texttt{label}, \texttt{label x}, \texttt{label y} & Optional label and label position \\
+\texttt{filled}, \texttt{centerline}, \texttt{dimensions}, \texttt{monochrome} & Optional drawing overlays and modes \\
+\texttt{mode}, \texttt{simplified}, \texttt{detailed} & Accepted drawing-mode keys for future detail levels \\
+\texttt{scale}, \texttt{rotate} & Local drawing transform \\
+\texttt{x}, \texttt{y} & Local drawing offset \\
+\bottomrule
+\end{longtable}
+
+\section{Cold-Formed Steel Commands}
+
+\begin{longtable}{ll}
+\toprule
+Command & Purpose \\
+\midrule
+\command{TikZSteelChannel} & Unlipped channel \\
+\command{TikZSteelLippedChannel} & Lipped channel \\
+\command{TikZSteelStiffenedChannel} & Channel with an intermediate stiffener \\
+\command{TikZSteelZee} & Zee section \\
+\command{TikZSteelLippedZee} & Lipped zee section \\
+\command{TikZSteelSigma} & Sigma-style stiffened channel \\
+\command{TikZSteelHat} & Hat section \\
+\command{TikZSteelAngle} & Angle section \\
+\command{TikZSteelLippedAngle} & Lipped angle section \\
+\command{TikZSteelRHS} & Rectangular hollow section \\
+\command{TikZSteelSHS} & Square hollow section \\
+\command{TikZSteelCHS} & Circular hollow section \\
+\command{TikZSteelBackToBackChannels} & Built-up back-to-back channels \\
+\command{TikZSteelToeToToeChannels} & Built-up toe-to-toe channels \\
+\command{TikZSteelNestedChannels} & Nested channels \\
+\command{TikZSteelBoxedChannels} & Boxed channels \\
+\command{TikZSteelBuiltUpIChannels} & Built-up I from channels \\
+\command{TikZSteelBackToBackZees} & Built-up back-to-back zees \\
+\bottomrule
+\end{longtable}
+
+\section{Hot-Rolled Steel Commands}
+
+\begin{longtable}{ll}
+\toprule
+Command & Purpose \\
+\midrule
+\command{TikZSteelUniversalBeam} & Universal beam/I-section \\
+\command{TikZSteelUniversalColumn} & Universal column/I-section \\
+\command{TikZSteelWeldedI} & Welded I-section \\
+\command{TikZSteelTee} & Tee section \\
+\command{TikZSteelHRSChannel} & Hot-rolled channel \\
+\command{TikZSteelEqualAngle} & Equal angle \\
+\command{TikZSteelUnequalAngle} & Unequal angle \\
+\command{TikZSteelDoubleAngles} & Double angles \\
+\command{TikZSteelPlate} & Plate or flat rectangle \\
+\command{TikZSteelFlatBar} & Flat bar \\
+\command{TikZSteelRoundBar} & Round bar \\
+\command{TikZSteelHRSCHS} & Hot-rolled circular hollow section \\
+\command{TikZSteelHRSRHS} & Hot-rolled rectangular hollow section \\
+\command{TikZSteelHRSSHS} & Hot-rolled square hollow section \\
+\bottomrule
+\end{longtable}
+
+\section{Style Customization}
+
+The default styles use red for straight segments and blue for curved segments.
+They can be changed with \command{TikZSteelSetup}:
+
+\begin{verbatim}
+\TikZSteelSetup{
+  tikzSteel/straight/.style={tikzSteel/default, black},
+  tikzSteel/round/.style={tikzSteel/default, gray}
+}
+\end{verbatim}
+
+\section{Examples}
+
+\begin{center}
+\begin{tikzpicture}
+  \TikZSteelLippedChannel[
+    depth=180,
+    flange=55,
+    lip=18,
+    thickness=2,
+    radius=4,
+    centerline=true,
+    dimensions=true,
+    label=CFS,
+    label x=30,
+    label y=95,
+    scale=0.04
+  ]
+  \TikZSteelUniversalBeam[
+    depth=61.2,
+    width=22.9,
+    flange thickness=1.96,
+    web thickness=1.19,
+    root radius=1.4,
+    x=9,
+    scale=0.18
+  ]
+\end{tikzpicture}
+\end{center}
+
+\section{Development Status}
+
+This manual is an initial development document. The next documentation milestone
+is a full visual gallery with rendered examples, argument tables for every
+legacy and key-value command, and a stable release-oriented API reference.
+
+\end{document}

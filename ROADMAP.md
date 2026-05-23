@@ -123,7 +123,7 @@ systems, concrete drawings, and standard-based dimensioning styles.
 ```
 
 - [x] Keep existing positional commands as compatibility wrappers.
-- [ ] Continue adding common package/user options:
+- [x] Continue adding common package/user options:
   - scale
   - color
   - monochrome
@@ -136,7 +136,7 @@ systems, concrete drawings, and standard-based dimensioning styles.
 
 ## Phase 5: Documentation and Examples
 
-- Convert the demo file into a real manual:
+- [x] Add an initial manual source:
   - installation
   - dependencies
   - quick start
@@ -147,16 +147,21 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - built-up section examples
   - style customization
   - known limitations
-- Add an example gallery:
+- [x] Add an example gallery:
   - all CFS sections
   - all built-up CFS sections
   - all HRS sections
   - custom style examples
-- Add smoke-test documents:
+- [x] Add smoke-test documents:
   - CFS smoke test
   - built-up CFS smoke test
   - HRS smoke test
   - style customization smoke test
+- [ ] Expand the manual before release:
+  - complete argument tables for all positional commands
+  - rendered visual gallery inside the manual
+  - explicit compatibility notes for legacy commands
+  - stable release-oriented API reference
 
 ## Phase 6: CTAN Release Preparation
 

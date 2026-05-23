@@ -1,0 +1,20 @@
+\documentclass[margin=3mm]{standalone}
+\usepackage{tikzSteel}
+
+\begin{document}
+\begin{tikzpicture}
+\TikZSteelUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.22]
+\TikZSteelUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=18, scale=0.22]
+\TikZSteelWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, x=36, scale=0.18]
+\TikZSteelTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=56, scale=0.24]
+\TikZSteelHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=74, scale=0.22]
+
+\TikZSteelEqualAngle[leg=35, thickness=3, root radius=2, y=-22, scale=0.18]
+\TikZSteelUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, x=18, y=-22, scale=0.18]
+\begin{scope}[shift={(36,-22)}, scale=0.18]
+  \csHRSDoubleAngles{45}{30}{3}{2}{8}
+\end{scope}
+\TikZSteelPlate[width=40, thickness=8, x=58, y=-22, scale=0.2]
+\TikZSteelRoundBar[radius=10, line width=1, x=74, y=-22, scale=0.2]
+\end{tikzpicture}
+\end{document}

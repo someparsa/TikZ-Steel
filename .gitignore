@@ -1,4 +1,9 @@
+*.aux
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.out
+build/
+
 tikzSteel.pdf
-tikzSteel.log
-tikzSteel.aux
-tikzSteel.synctex.gz

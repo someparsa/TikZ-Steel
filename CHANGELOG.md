@@ -83,6 +83,30 @@ All notable development changes for TikZ-Steel are recorded here.
   - `\TikZSteelUnequalAngle`
   - `\TikZSteelPlate`
   - `\TikZSteelRoundBar`
+- Expanded the key-value public API with built-up and remaining bar/hollow
+  wrappers:
+  - `\TikZSteelToeToToeChannels`
+  - `\TikZSteelNestedChannels`
+  - `\TikZSteelBoxedChannels`
+  - `\TikZSteelBuiltUpIChannels`
+  - `\TikZSteelBackToBackZees`
+  - `\TikZSteelDoubleAngles`
+  - `\TikZSteelFlatBar`
+  - `\TikZSteelHRSCHS`
+  - `\TikZSteelHRSRHS`
+  - `\TikZSteelHRSSHS`
+- Added key-value drawing options for `filled`, `centerline`, `dimensions`,
+  `monochrome`, `label`, `label x`, `label y`, `mode`, `simplified`, and
+  `detailed`.
+- Added initial documentation and example sources:
+  - `docs/tikzSteel-doc.tex`
+  - `examples/cfs-gallery.tex`
+  - `examples/hrs-gallery.tex`
+  - `examples/style-customization.tex`
+- Added permanent smoke-test sources:
+  - `tests/smoke-cfs.tex`
+  - `tests/smoke-hrs.tex`
+  - `tests/smoke-keyval.tex`
 
 ### Changed
 
@@ -93,6 +117,12 @@ All notable development changes for TikZ-Steel are recorded here.
 - Changed legacy lip/stiffener checks from integer-only `\ifnum` tests to
   decimal-safe `\ifdim` tests.
 - Kept all legacy positional commands available while adding key-value wrappers.
+- Expanded the key-value smoke test to cover all current key-value wrappers and
+  common overlay/style options.
+- Expanded `.gitignore` for common LaTeX build products and local build
+  directories.
+- Added a `Makefile` for repeatable documentation, example, and smoke-test
+  compilation.
 
 ### Verified
 
@@ -102,3 +132,7 @@ All notable development changes for TikZ-Steel are recorded here.
 - A temporary Phase 3 HRS smoke test compiles all new HRS wrapper commands.
 - A temporary Phase 4 key-value smoke test compiles the new `\TikZSteel...`
   commands.
+- The documentation, examples, and permanent smoke-test sources compile with
+  MacTeX using `pdflatex`.
+- `make all` compiles the manual, example gallery files, and smoke-test
+  documents with MacTeX using `pdflatex`.

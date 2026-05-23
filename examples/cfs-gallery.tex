@@ -1,0 +1,22 @@
+\documentclass[margin=3mm]{standalone}
+\usepackage{tikzSteel}
+
+\begin{document}
+\begin{tikzpicture}
+\TikZSteelChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.035]
+\TikZSteelLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, x=18, scale=0.035]
+\TikZSteelStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, stiffener position=0.55, x=36, scale=0.035]
+\TikZSteelZee[depth=180, flange=55, thickness=2, radius=4, x=54, scale=0.035]
+\TikZSteelLippedZee[depth=180, flange=55, lip=18, thickness=2, radius=4, x=72, scale=0.035]
+\TikZSteelSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, x=90, scale=0.035]
+
+\TikZSteelHat[depth=100, width=45, left flange=25, right flange=25, thickness=2, radius=4, y=-20, scale=0.045]
+\TikZSteelAngle[vertical leg=100, horizontal leg=60, thickness=2, radius=4, x=22, y=-20, scale=0.045]
+\TikZSteelLippedAngle[vertical leg=100, horizontal leg=60, lip=20, thickness=2, radius=4, x=42, y=-20, scale=0.045]
+\TikZSteelRHS[depth=120, width=70, thickness=2, radius=4, x=62, y=-20, scale=0.045]
+\TikZSteelSHS[width=80, thickness=2, radius=4, x=84, y=-20, scale=0.045]
+\TikZSteelCHS[radius=35, thickness=2, x=104, y=-20, scale=0.045]
+
+\TikZSteelBackToBackChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, y=-45, scale=0.03]
+\end{tikzpicture}
+\end{document}

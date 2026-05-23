@@ -580,6 +580,11 @@
 %
 
 \makeatletter
+\newif\iftikzSteel@filled
+\newif\iftikzSteel@centerline
+\newif\iftikzSteel@dimensions
+\newif\iftikzSteel@monochrome
+
 \pgfkeys{
 	/tikzSteel/section/.is family,
 	/tikzSteel/section,
@@ -613,6 +618,16 @@
 	bottom flange thickness/.store in=\tikzSteel@bottomFlangeThickness,
 	reference line width/.store in=\tikzSteel@referenceLineWidth,
 	line width/.store in=\tikzSteel@lineWidth,
+	label/.store in=\tikzSteel@label,
+	label x/.store in=\tikzSteel@labelX,
+	label y/.store in=\tikzSteel@labelY,
+	mode/.store in=\tikzSteel@mode,
+	simplified/.style={mode=simplified},
+	detailed/.style={mode=detailed},
+	filled/.is if=tikzSteel@filled,
+	centerline/.is if=tikzSteel@centerline,
+	dimensions/.is if=tikzSteel@dimensions,
+	monochrome/.is if=tikzSteel@monochrome,
 	scale/.store in=\tikzSteel@scale,
 	rotate/.store in=\tikzSteel@rotate,
 	x/.store in=\tikzSteel@x,
@@ -648,6 +663,14 @@
 		bottom flange thickness=2,
 		reference line width=0,
 		line width=1,
+		label=,
+		label x=0,
+		label y=0,
+		mode=simplified,
+		filled=false,
+		centerline=false,
+		dimensions=false,
+		monochrome=false,
 		scale=1,
 		rotate=0,
 		x=0,
@@ -661,10 +684,43 @@
 
 \newcommand{\tikzSteel@scopeBegin}{%
 	\scope[shift={({\tikzSteel@x},{\tikzSteel@y})}, scale=\tikzSteel@scale, rotate=\tikzSteel@rotate]%
+	\iftikzSteel@monochrome
+		\tikzset{
+			tikzSteel/straight/.style={tikzSteel/default, black},
+			tikzSteel/round/.style={tikzSteel/default, black}
+		}%
+	\fi
 }
 
 \newcommand{\tikzSteel@scopeEnd}{%
 	\endscope
+}
+
+\newcommand{\tikzSteel@postDraw}[2]{%
+	\iftikzSteel@centerline
+		\draw [tikzSteel/centerline, line width=0.2 mm] (-0.05*#2,0.5*#1) -- (1.05*#2,0.5*#1);
+		\draw [tikzSteel/centerline, line width=0.2 mm] (0.5*#2,-0.05*#1) -- (0.5*#2,1.05*#1);
+	\fi
+	\iftikzSteel@dimensions
+		\draw [tikzSteel/dimension, line width=0.15 mm] (0,-0.1*#1) -- (#2,-0.1*#1);
+		\draw [tikzSteel/dimension, line width=0.15 mm] (-0.1*#2,0) -- (-0.1*#2,#1);
+	\fi
+	\ifx\tikzSteel@label\@empty
+	\else
+		\node [tikzSteel/label] at (\tikzSteel@labelX,\tikzSteel@labelY) {\tikzSteel@label};
+	\fi
+}
+
+\newcommand{\tikzSteel@fillRectangle}[2]{%
+	\iftikzSteel@filled
+		\fill [tikzSteel/fill] (0,0) rectangle (#2,#1);
+	\fi
+}
+
+\newcommand{\tikzSteel@fillCircle}[1]{%
+	\iftikzSteel@filled
+		\fill [tikzSteel/fill] (0,0) circle [radius=#1];
+	\fi
 }
 
 \newcommand{\TikZSteelSetup}[1]{%
@@ -675,6 +731,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSChannel{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@flange}%
 	\tikzSteel@scopeEnd
 }
 
@@ -682,6 +739,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSLippedChannel{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@flange}%
 	\tikzSteel@scopeEnd
 }
 
@@ -689,6 +747,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSChannelWithOneStiffener{\tikzSteel@depth}{\tikzSteel@topFlange}{\tikzSteel@topLip}{\tikzSteel@bottomFlange}{\tikzSteel@bottomLip}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@position}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@topFlange}%
 	\tikzSteel@scopeEnd
 }
 
@@ -696,6 +755,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSZee{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@flange}%
 	\tikzSteel@scopeEnd
 }
 
@@ -703,6 +763,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSLippedZee{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@flange}%
 	\tikzSteel@scopeEnd
 }
 
@@ -710,6 +771,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSSigma{\tikzSteel@depth}{\tikzSteel@topFlange}{\tikzSteel@topLip}{\tikzSteel@bottomFlange}{\tikzSteel@bottomLip}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@topFlange}%
 	\tikzSteel@scopeEnd
 }
 
@@ -717,6 +779,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSHat{\tikzSteel@depth}{\tikzSteel@leftFlange}{\tikzSteel@width}{\tikzSteel@rightFlange}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 
@@ -724,6 +787,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSAngle{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}%
 	\tikzSteel@scopeEnd
 }
 
@@ -731,27 +795,34 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSLippedAngle{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@lip}%
+		\tikzSteel@postDraw{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}%
 	\tikzSteel@scopeEnd
 }
 
 \newcommand{\TikZSteelRHS}[1][]{%
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
+		\tikzSteel@fillRectangle{\tikzSteel@depth}{\tikzSteel@width}%
 		\csCFSRHS{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 
 \newcommand{\TikZSteelSHS}[1][]{%
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
+		\tikzSteel@fillRectangle{\tikzSteel@width}{\tikzSteel@width}%
 		\csCFSSHS{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@width}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 
 \newcommand{\TikZSteelCHS}[1][]{%
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
+		\tikzSteel@fillCircle{\tikzSteel@radius}%
 		\csCFSCHS{\tikzSteel@radius}{\tikzSteel@thickness}%
+		\tikzSteel@postDraw{2*\tikzSteel@radius}{2*\tikzSteel@radius}%
 	\tikzSteel@scopeEnd
 }
 
@@ -759,6 +830,47 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csCFSBackToBackChannels{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@gap}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{2*\tikzSteel@flange+\tikzSteel@gap}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelToeToToeChannels}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSToeToToeChannels{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@gap}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{2*\tikzSteel@flange+\tikzSteel@gap}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelNestedChannels}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSNestedChannels{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@offset}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@flange+\tikzSteel@offset}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelBoxedChannels}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSBoxedChannels{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@gap}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{2*\tikzSteel@flange+\tikzSteel@gap}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelBuiltUpIChannels}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSBuiltUpIChannels{\tikzSteel@depth}{\tikzSteel@leftFlange}{\tikzSteel@rightFlange}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@gap}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@leftFlange+\tikzSteel@rightFlange+\tikzSteel@gap}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelBackToBackZees}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csCFSBackToBackZees{\tikzSteel@depth}{\tikzSteel@flange}{\tikzSteel@lip}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@gap}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{2*\tikzSteel@flange+\tikzSteel@gap}%
 	\tikzSteel@scopeEnd
 }
 
@@ -766,6 +878,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csHRSUniversalBeam{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@flangeThickness}{\tikzSteel@webThickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 
@@ -773,6 +886,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csHRSUniversalColumn{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@flangeThickness}{\tikzSteel@webThickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 
@@ -780,6 +894,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csHRSWeldedI{\tikzSteel@webDepth}{\tikzSteel@webThickness}{\tikzSteel@bottomFlangeWidth}{\tikzSteel@bottomFlangeThickness}{\tikzSteel@topFlangeWidth}{\tikzSteel@topFlangeThickness}%
+		\tikzSteel@postDraw{\tikzSteel@webDepth}{\tikzSteel@topFlangeWidth}%
 	\tikzSteel@scopeEnd
 }
 
@@ -787,6 +902,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csHRSTee{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@flangeThickness}{\tikzSteel@webThickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 
@@ -794,6 +910,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csHRSChannel{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@flangeThickness}{\tikzSteel@webThickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 
@@ -801,6 +918,7 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csHRSEqualAngle{\tikzSteel@leg}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@leg}{\tikzSteel@leg}%
 	\tikzSteel@scopeEnd
 }
 
@@ -808,20 +926,69 @@
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
 		\csHRSUnequalAngle{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelDoubleAngles}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\csHRSDoubleAngles{\tikzSteel@verticalLeg}{\tikzSteel@horizontalLeg}{\tikzSteel@thickness}{\tikzSteel@radius}{\tikzSteel@gap}%
+		\tikzSteel@postDraw{\tikzSteel@verticalLeg}{2*\tikzSteel@horizontalLeg+\tikzSteel@gap}%
 	\tikzSteel@scopeEnd
 }
 
 \newcommand{\TikZSteelPlate}[1][]{%
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
+		\tikzSteel@fillRectangle{\tikzSteel@thickness}{\tikzSteel@width}%
 		\csHRSPlate{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@referenceLineWidth}%
+		\tikzSteel@postDraw{\tikzSteel@thickness}{\tikzSteel@width}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelFlatBar}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\tikzSteel@fillRectangle{\tikzSteel@thickness}{\tikzSteel@width}%
+		\csHRSFlatBar{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@referenceLineWidth}%
+		\tikzSteel@postDraw{\tikzSteel@thickness}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 
 \newcommand{\TikZSteelRoundBar}[1][]{%
 	\tikzSteel@applyKeys{#1}%
 	\tikzSteel@scopeBegin
+		\tikzSteel@fillCircle{\tikzSteel@radius}%
 		\csHRSRoundBar{\tikzSteel@radius}{\tikzSteel@lineWidth}%
+		\tikzSteel@postDraw{2*\tikzSteel@radius}{2*\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelHRSCHS}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\tikzSteel@fillCircle{\tikzSteel@radius}%
+		\csHRSCHS{\tikzSteel@radius}{\tikzSteel@thickness}%
+		\tikzSteel@postDraw{2*\tikzSteel@radius}{2*\tikzSteel@radius}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelHRSRHS}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\tikzSteel@fillRectangle{\tikzSteel@depth}{\tikzSteel@width}%
+		\csHRSRHS{\tikzSteel@depth}{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@width}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZSteelHRSSHS}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\tikzSteel@fillRectangle{\tikzSteel@width}{\tikzSteel@width}%
+		\csHRSSHS{\tikzSteel@width}{\tikzSteel@thickness}{\tikzSteel@radius}%
+		\tikzSteel@postDraw{\tikzSteel@width}{\tikzSteel@width}%
 	\tikzSteel@scopeEnd
 }
 \makeatother
