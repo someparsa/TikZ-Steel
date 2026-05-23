@@ -400,21 +400,34 @@ successfully with MacTeX.
 TikZ-Steel is distributed under the LaTeX Project Public License, version 1.3c
 or later. See [LICENSE](LICENSE) for the full license text.
 
-## Development roadmap
+## Version history and milestones
 
-The development plan is tracked in [ROADMAP.md](ROADMAP.md), and development
-changes are tracked in [CHANGELOG.md](CHANGELOG.md). The current goal is to make
-the package ready for a first CTAN release with comprehensive cold-formed steel
-(CFS) and hot-rolled steel (HRS) cross-section drawings.
+Active work is tracked in [ROADMAP.md](ROADMAP.md). Detailed release-level
+changes are tracked in [CHANGELOG.md](CHANGELOG.md).
 
-Main planned work:
+### v0.1.2
 
-- [x] Package metadata and CTAN-ready structure foundation
-- [x] Initial CFS section catalogue
-- [x] Built-up and back-to-back CFS section commands
-- [x] Initial HRS section catalogue
-- [x] Initial reinforced-concrete cross-section sketches
-- [x] Initial key-value public API
-- [x] Configurable TikZ styles for colors, line widths, fills, and labels
-- [x] Initial documentation, examples, and smoke tests
-- [ ] Future roof and standard-based dimensioning modules
+- Added CTAN-facing package metadata to the README.
+- Removed tracked macOS metadata and ignored future `.DS_Store` files.
+- Set the manual author to the current maintainer.
+- Rebuilt and verified a clean CTAN upload archive.
+
+### v0.1.1
+
+- Changed the package license to the LaTeX Project Public License, version
+  1.3c or later.
+- Added the LPPL package notice to `tikzSteel.sty`.
+
+### v0.1.0
+
+- Added package metadata and package-safe TikZ dependency loading.
+- Added configurable TikZ styles for steel segments, dimensions, labels, fills,
+  concrete, rebar, and ties.
+- Added CFS, built-up CFS, HRS, and RC command groups.
+- Added the public key-value API with `\TikZSteel...` and `\TikZRC...`
+  commands.
+- Added manual source, examples, smoke tests, and build targets.
+
+Current focus areas include input standardization, parameter documentation,
+example-gallery polish, CTAN submission, and future standard-based
+dimensioning.

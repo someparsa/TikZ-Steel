@@ -1,76 +1,17 @@
 # TikZ-Steel Roadmap
 
-This roadmap records the planned development path for making TikZ-Steel a
-well-documented, CTAN-ready package for drawing structural engineering figures.
-The first major goal is comprehensive support for cold-formed steel and
-hot-rolled steel cross-sections. Later releases can extend the package to roof
-systems, concrete drawings, and standard-based dimensioning styles.
+This file tracks active and future work only. Completed features and release
+history are summarized in [README.md](README.md), with detailed release notes in
+[CHANGELOG.md](CHANGELOG.md).
 
-## Phase 1: Package Foundation
+## Near-Term Polish
 
-- [x] Add LaTeX package metadata:
-  - `\NeedsTeXFormat{LaTeX2e}`
-  - `\ProvidesPackage{tikzSteel}[date version description]`
-- [x] Use package-safe dependency loading:
-  - `\RequirePackage{tikz}`
-  - `\usetikzlibrary{calc}`
-  - remove `tkz-euclide` if it is not required
-- [x] Add configurable TikZ styles:
-  - straight steel segments
-  - curved/radius segments
-  - centerlines
-  - hidden/reference lines
-  - fill styles
-  - labels
-  - dimension lines
 - [ ] Continue refactoring repeated geometry into internal helper macros:
   - straight segment
   - rounded corner
   - lip/stiffener segment
   - hollow/closed outline
   - mirrored/reversed section helpers
-- [x] Keep a single `.sty` file for now, organized internally into:
-  - metadata and dependencies
-  - styles and options
-  - helpers
-  - CFS sections
-  - HRS sections
-  - generic sections
-  - compatibility aliases
-
-## Phase 2: Cold-Formed Steel Sections
-
-- [x] Add single open CFS sections:
-  - unlipped channel
-  - lipped channel
-  - channel with edge stiffeners
-  - channel with intermediate stiffeners
-  - channel with multiple stiffeners
-  - zee section
-  - lipped zee
-  - sigma section
-  - hat section
-  - angle
-  - lipped angle
-- [x] Add hollow/closed CFS sections:
-  - box section
-  - rectangular hollow section
-  - square hollow section
-  - circular hollow section
-- [x] Add built-up/compound CFS sections:
-  - back-to-back channels
-  - toe-to-toe channels
-  - nested channels
-  - back-to-back lipped channels
-  - boxed channels
-  - I-shaped built-up channels
-  - built-up zee combinations
-  - double angles
-  - spaced built-up members with configurable gap
-  - optional fastener/weld indicators
-- [x] Add generic folded CFS sections:
-  - arbitrary folded plate by nodal points
-  - arbitrary built-up section by combining profiles
 - [ ] Continue standardizing and documenting CFS inputs:
   - depth
   - flange widths
@@ -79,24 +20,6 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - inside bend radius
   - gap/spacing for built-up sections
   - optional drawing style
-
-## Phase 3: Hot-Rolled Steel Sections
-
-- [x] Add HRS sections:
-  - universal beam/I-section
-  - universal column
-  - welded I-section
-  - tee section
-  - channel
-  - equal angle
-  - unequal angle
-  - double angle
-  - circular hollow section
-  - square hollow section
-  - rectangular hollow section
-  - plate
-  - flat bar
-  - round bar
 - [ ] Continue standardizing and documenting HRS inputs:
   - depth
   - width
@@ -108,136 +31,44 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - simplified engineering mode
   - detailed rolled-radius mode
 
-## Phase 4: Public API Upgrade
+## Documentation
 
-- [x] Add key-value commands for new usage:
-
-```tex
-\TikZSteelChannel[
-  depth=245,
-  flange=75,
-  lip=25,
-  thickness=2.5,
-  radius=5
-]
-```
-
-- [x] Keep existing positional commands as compatibility wrappers.
-- [x] Continue adding common package/user options:
-  - scale
-  - color
-  - monochrome
-  - filled
-  - centerline
-  - dimensions
-  - labels
-  - simplified/detailed mode
-- [x] Make colors and line widths configurable instead of hard-coded red/blue.
-
-## Phase 5: Documentation and Examples
-
-- [x] Add an initial manual source:
-  - installation
-  - dependencies
-  - quick start
-  - command reference
-  - argument tables
-  - CFS examples
-  - HRS examples
-  - built-up section examples
-  - style customization
-  - known limitations
-- [x] Add an example gallery:
-  - all CFS sections
-  - all built-up CFS sections
-  - all HRS sections
-  - custom style examples
-- [x] Add smoke-test documents:
-  - CFS smoke test
-  - built-up CFS smoke test
-  - HRS smoke test
-  - style customization smoke test
-- [ ] Expand the manual before release:
+- [ ] Expand the manual:
   - complete argument tables for all positional commands
   - rendered visual gallery inside the manual
   - explicit compatibility notes for legacy commands
   - stable release-oriented API reference
-- [ ] Polish example gallery layout before release:
+- [ ] Polish example gallery layout:
   - prevent sketch/parameter text overlaps in row-based galleries
   - normalize sketch bounding boxes and scales across examples
   - reduce long-command overfull warnings
   - keep parameter text readable beside each sketch
 
-## Phase 6: CTAN Release Preparation
+## CTAN Submission
 
-- [ ] Finalize release files:
-  - `README.md`
-  - `LICENSE`
-  - `CHANGELOG.md`
-  - package source
-  - documentation source
-  - documentation PDF
-  - examples
-- [ ] Clean generated files from the source archive except the intended
-  documentation PDF.
-- [ ] Confirm versioning:
-  - start with `v0.1.0`
-  - document breaking and non-breaking changes
-- [ ] Validate:
-  - package loads cleanly
-  - documentation compiles cleanly
-  - all examples compile
-  - no unused dependencies
-  - no undocumented public commands
-- [ ] Prepare package archive:
-  - include only source files, examples, tests, documentation source, release
-    PDF, README, changelog, and license
-  - exclude local system files and ordinary LaTeX auxiliary outputs
-  - check that the archive can be unpacked and compiled independently
-- [ ] Prepare release notes:
-  - summarize the public key-value API
-  - state that positional commands are retained for compatibility
-  - state known limitations for dimensions and detailed drawing modes
-- [ ] Create a tagged GitHub release:
-  - tag `v0.1.0`
-  - attach the release archive and documentation PDF
-  - link to the examples and smoke-test status
-- [ ] Submit to CTAN after the release archive is verified:
+- [ ] Submit to CTAN after final review:
   - choose the package topic/category metadata
   - provide maintainer, license, summary, and package description
   - confirm that the package name, file layout, and documentation follow CTAN
     expectations
 
-## Phase 7: Future Extensions
+## Future Extensions
 
-- Reserve later module groups for:
-  - roof drawings
-  - expanded concrete drawings
-  - standard-based dimensioning styles
-- [x] Add initial reinforced-concrete cross-section sketches:
-  - rectangular sections
-  - circular sections
-  - top and bottom rebar groups
-  - side-edge rebar groups
-  - one or two reinforcement layers through configurable layer count
-  - perimeter bars in circular sections
-  - configurable cover, bar diameter, and tie visibility
-- Later roof drawing features:
+- [ ] Add roof drawing features:
   - trusses
   - rafters
   - purlins
   - sheeting
   - ridge/eave details
-- Later concrete drawing features:
+- [ ] Expand concrete drawing features:
   - beam elevations
   - column elevations
   - slabs
   - walls
   - reinforcement detailing beyond simple cross-sections
   - stirrup/tie spacing along member length
-- Later dimensioning styles:
-  - expand the current `dimensions=true` placeholder into a real dimensioning
-    subsystem
+- [ ] Expand the current `dimensions=true` placeholder into a real
+  dimensioning subsystem:
   - dimension value labels
   - extension lines and configurable offsets
   - unit formatting
@@ -246,7 +77,7 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - AS/NZS-style dimensions
   - Eurocode-style dimensions
   - custom units, labels, arrows, and notation presets
-- Later drawing-quality improvements:
+- [ ] Improve drawing quality:
   - improve geometric consistency across CFS and HRS shapes
   - normalize scale, orientation, and bounding boxes for all section sketches
   - refine bend and rolled-radius drawing behavior
@@ -254,17 +85,3 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - add visual regression examples before changing existing shapes
   - review engineering terminology and parameter names against common steel
     section notation
-
-## Recommended First Release Scope
-
-```text
-v0.1.0:
-  - CTAN-ready metadata
-  - clean single-file internal structure
-  - complete basic CFS sections
-  - complete built-up CFS section group
-  - complete basic HRS sections
-  - configurable TikZ styles
-  - documented examples
-  - smoke tests
-```
