@@ -15,6 +15,9 @@ All notable development changes for TikZ-Steel are recorded here.
   - `tikzSteel/dimension`
   - `tikzSteel/label`
   - `tikzSteel/fill`
+  - `tikzSteel/concrete`
+  - `tikzSteel/rebar`
+  - `tikzSteel/tie`
 - Added initial internal drawing helper macros.
 - Added explicit cold-formed steel command wrappers:
   - `\csCFSChannel`
@@ -101,15 +104,20 @@ All notable development changes for TikZ-Steel are recorded here.
 - Documented that `dimensions=true` is currently a basic overlay placeholder,
   with full dimension labels and standard-based notation reserved for later
   development.
+- Added initial reinforced-concrete cross-section commands:
+  - `\TikZRCRectangular`
+  - `\TikZRCCircular`
 - Added initial documentation and example sources:
   - `docs/tikzSteel-doc.tex`
   - `examples/cfs-gallery.tex`
   - `examples/hrs-gallery.tex`
+  - `examples/rc-gallery.tex`
   - `examples/style-customization.tex`
 - Added permanent smoke-test sources:
   - `tests/smoke-cfs.tex`
   - `tests/smoke-hrs.tex`
   - `tests/smoke-keyval.tex`
+  - `tests/smoke-rc.tex`
 
 ### Changed
 

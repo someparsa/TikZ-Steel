@@ -68,6 +68,7 @@ release. The current development version includes:
 - New explicit cold-formed steel commands with `\csCFS...` names.
 - New built-up CFS section commands.
 - New explicit hot-rolled steel commands with `\csHRS...` names.
+- Initial reinforced-concrete cross-section commands with `\TikZRC...` names.
 - Key-value public commands with `\TikZSteel...` names.
 
 ## Key-value API
@@ -97,6 +98,7 @@ Common keys include:
 
 - `depth`
 - `width`
+- `diameter`
 - `flange`
 - `top flange`
 - `bottom flange`
@@ -124,6 +126,17 @@ Common keys include:
 - `bottom flange thickness`
 - `reference line width`
 - `line width`
+- `cover`
+- `bar diameter`
+- `top bars`
+- `bottom bars`
+- `left bars`
+- `right bars`
+- `top layers`
+- `bottom layers`
+- `side layers`
+- `layer spacing`
+- `perimeter bars`
 - `label`
 - `label x`
 - `label y`
@@ -134,6 +147,7 @@ Common keys include:
 - `centerline`
 - `dimensions`
 - `monochrome`
+- `tie`
 - `scale`
 - `rotate`
 - `x`
@@ -185,6 +199,8 @@ Current key-value commands:
 - `\TikZSteelHRSCHS`
 - `\TikZSteelHRSRHS`
 - `\TikZSteelHRSSHS`
+- `\TikZRCRectangular`
+- `\TikZRCCircular`
 
 The legacy positional commands remain available for compatibility and for
 lower-level drawing control.
@@ -257,6 +273,59 @@ Bars, plates, and hollow sections:
 - `\csHRSRHS{depth}{width}{thickness}{radius}`
 - `\csHRSSHS{width}{thickness}{radius}`
 
+## Reinforced concrete commands
+
+The initial reinforced-concrete API focuses on simple cross-section sketches.
+Rebars are drawn as filled circles and `cover` is currently interpreted as the
+distance from the concrete face to the rebar centerline or tie centerline used
+for the sketch.
+
+```tex
+\TikZRCRectangular[
+  width=300,
+  depth=500,
+  cover=40,
+  bar diameter=18,
+  top bars=2,
+  bottom bars=3,
+  bottom layers=2,
+  layer spacing=28
+]
+```
+
+```tex
+\TikZRCCircular[
+  diameter=450,
+  cover=45,
+  bar diameter=20,
+  perimeter bars=10
+]
+```
+
+Rectangular RC keys include:
+
+- `width`
+- `depth`
+- `cover`
+- `bar diameter`
+- `top bars`
+- `bottom bars`
+- `left bars`
+- `right bars`
+- `top layers`
+- `bottom layers`
+- `side layers`
+- `layer spacing`
+- `tie`
+
+Circular RC keys include:
+
+- `diameter`
+- `cover`
+- `bar diameter`
+- `perimeter bars`
+- `tie`
+
 ## Style customization
 
 The default drawing uses red straight segments and blue curved segments, but
@@ -278,6 +347,9 @@ Available style hooks include:
 - `tikzSteel/dimension`
 - `tikzSteel/label`
 - `tikzSteel/fill`
+- `tikzSteel/concrete`
+- `tikzSteel/rebar`
+- `tikzSteel/tie`
 
 ## Testing
 
@@ -294,10 +366,12 @@ and smoke tests:
 docs/tikzSteel-doc.tex
 examples/cfs-gallery.tex
 examples/hrs-gallery.tex
+examples/rc-gallery.tex
 examples/style-customization.tex
 tests/smoke-cfs.tex
 tests/smoke-hrs.tex
 tests/smoke-keyval.tex
+tests/smoke-rc.tex
 ```
 
 To compile any of these files while keeping generated outputs outside the repo:
@@ -327,7 +401,8 @@ Main planned work:
 - [x] Initial CFS section catalogue
 - [x] Built-up and back-to-back CFS section commands
 - [x] Initial HRS section catalogue
+- [x] Initial reinforced-concrete cross-section sketches
 - [x] Initial key-value public API
 - [x] Configurable TikZ styles for colors, line widths, fills, and labels
 - [x] Initial documentation, examples, and smoke tests
-- [ ] Future roof, concrete, and standard-based dimensioning modules
+- [ ] Future roof and standard-based dimensioning modules

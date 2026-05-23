@@ -1,0 +1,46 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,landscape,margin=14mm]{geometry}
+\usepackage{array}
+\usepackage{tikzSteel}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\renewcommand{\arraystretch}{1.15}
+
+\newcommand{\ExampleRow}[3]{%
+  \begin{tabular}{@{}m{0.22\linewidth}m{0.74\linewidth}@{}}
+    \begin{tikzpicture}[baseline=(current bounding box.center)]
+      #3
+    \end{tikzpicture}
+    &
+    \textbf{#1}\par
+    \vspace{2pt}
+    {\raggedright\ttfamily\scriptsize\detokenize{#2}\par}
+  \end{tabular}
+  \par\vspace{8mm}
+}
+
+\begin{document}
+
+\ExampleRow
+  {Rectangular RC beam with top and bottom bars}
+  {\TikZRCRectangular[width=300, depth=500, cover=40, bar diameter=18, top bars=2, bottom bars=3, scale=0.025]}
+  {\TikZRCRectangular[width=300, depth=500, cover=40, bar diameter=18, top bars=2, bottom bars=3, scale=0.025]}
+
+\ExampleRow
+  {Rectangular RC beam with two bottom layers}
+  {\TikZRCRectangular[width=300, depth=550, cover=40, bar diameter=18, top bars=2, bottom bars=3, bottom layers=2, layer spacing=28, scale=0.025]}
+  {\TikZRCRectangular[width=300, depth=550, cover=40, bar diameter=18, top bars=2, bottom bars=3, bottom layers=2, layer spacing=28, scale=0.025]}
+
+\ExampleRow
+  {Rectangular RC column with side bars}
+  {\TikZRCRectangular[width=400, depth=400, cover=45, bar diameter=20, top bars=3, bottom bars=3, left bars=2, right bars=2, scale=0.025]}
+  {\TikZRCRectangular[width=400, depth=400, cover=45, bar diameter=20, top bars=3, bottom bars=3, left bars=2, right bars=2, scale=0.025]}
+
+\ExampleRow
+  {Circular RC column with perimeter bars}
+  {\TikZRCCircular[diameter=450, cover=45, bar diameter=20, perimeter bars=10, scale=0.025]}
+  {\TikZRCCircular[diameter=450, cover=45, bar diameter=20, perimeter bars=10, scale=0.025]}
+
+\end{document}

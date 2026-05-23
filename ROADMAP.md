@@ -162,6 +162,11 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - rendered visual gallery inside the manual
   - explicit compatibility notes for legacy commands
   - stable release-oriented API reference
+- [ ] Polish example gallery layout before release:
+  - prevent sketch/parameter text overlaps in row-based galleries
+  - normalize sketch bounding boxes and scales across examples
+  - reduce long-command overfull warnings
+  - keep parameter text readable beside each sketch
 
 ## Phase 6: CTAN Release Preparation
 
@@ -189,8 +194,16 @@ systems, concrete drawings, and standard-based dimensioning styles.
 
 - Reserve later module groups for:
   - roof drawings
-  - concrete drawings
+  - expanded concrete drawings
   - standard-based dimensioning styles
+- [x] Add initial reinforced-concrete cross-section sketches:
+  - rectangular sections
+  - circular sections
+  - top and bottom rebar groups
+  - side-edge rebar groups
+  - one or two reinforcement layers through configurable layer count
+  - perimeter bars in circular sections
+  - configurable cover, bar diameter, and tie visibility
 - Later roof drawing features:
   - trusses
   - rafters
@@ -198,12 +211,12 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - sheeting
   - ridge/eave details
 - Later concrete drawing features:
-  - beams
-  - columns
+  - beam elevations
+  - column elevations
   - slabs
   - walls
-  - reinforcement bars
-  - stirrups/ties
+  - reinforcement detailing beyond simple cross-sections
+  - stirrup/tie spacing along member length
 - Later dimensioning styles:
   - expand the current `dimensions=true` placeholder into a real dimensioning
     subsystem

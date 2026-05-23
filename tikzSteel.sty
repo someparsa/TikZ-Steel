@@ -16,7 +16,10 @@
 	tikzSteel/hidden/.style={tikzSteel/default, black!50, dashed},
 	tikzSteel/dimension/.style={tikzSteel/default, black, <->},
 	tikzSteel/label/.style={black},
-	tikzSteel/fill/.style={fill=gray!20}
+	tikzSteel/fill/.style={fill=gray!20},
+	tikzSteel/concrete/.style={tikzSteel/default, draw=black, fill=gray!10},
+	tikzSteel/rebar/.style={draw=black, fill=black},
+	tikzSteel/tie/.style={tikzSteel/default, draw=black!70}
 }
 
 %
@@ -584,6 +587,7 @@
 \newif\iftikzSteel@centerline
 \newif\iftikzSteel@dimensions
 \newif\iftikzSteel@monochrome
+\newif\iftikzSteel@tie
 
 \pgfkeys{
 	/tikzSteel/section/.is family,
@@ -591,6 +595,7 @@
 	depth/.store in=\tikzSteel@depth,
 	height/.store in=\tikzSteel@depth,
 	width/.store in=\tikzSteel@width,
+	diameter/.store in=\tikzSteel@width,
 	flange/.store in=\tikzSteel@flange,
 	top flange/.store in=\tikzSteel@topFlange,
 	bottom flange/.store in=\tikzSteel@bottomFlange,
@@ -618,6 +623,17 @@
 	bottom flange thickness/.store in=\tikzSteel@bottomFlangeThickness,
 	reference line width/.store in=\tikzSteel@referenceLineWidth,
 	line width/.store in=\tikzSteel@lineWidth,
+	cover/.store in=\tikzSteel@cover,
+	bar diameter/.store in=\tikzSteel@barDiameter,
+	top bars/.store in=\tikzSteel@topBars,
+	bottom bars/.store in=\tikzSteel@bottomBars,
+	left bars/.store in=\tikzSteel@leftBars,
+	right bars/.store in=\tikzSteel@rightBars,
+	top layers/.store in=\tikzSteel@topLayers,
+	bottom layers/.store in=\tikzSteel@bottomLayers,
+	side layers/.store in=\tikzSteel@sideLayers,
+	layer spacing/.store in=\tikzSteel@layerSpacing,
+	perimeter bars/.store in=\tikzSteel@perimeterBars,
 	label/.store in=\tikzSteel@label,
 	label x/.store in=\tikzSteel@labelX,
 	label y/.store in=\tikzSteel@labelY,
@@ -628,6 +644,7 @@
 	centerline/.is if=tikzSteel@centerline,
 	dimensions/.is if=tikzSteel@dimensions,
 	monochrome/.is if=tikzSteel@monochrome,
+	tie/.is if=tikzSteel@tie,
 	scale/.store in=\tikzSteel@scale,
 	rotate/.store in=\tikzSteel@rotate,
 	x/.store in=\tikzSteel@x,
@@ -663,6 +680,17 @@
 		bottom flange thickness=2,
 		reference line width=0,
 		line width=1,
+		cover=40,
+		bar diameter=16,
+		top bars=2,
+		bottom bars=2,
+		left bars=0,
+		right bars=0,
+		top layers=1,
+		bottom layers=1,
+		side layers=1,
+		layer spacing=25,
+		perimeter bars=8,
 		label=,
 		label x=0,
 		label y=0,
@@ -671,6 +699,7 @@
 		centerline=false,
 		dimensions=false,
 		monochrome=false,
+		tie=true,
 		scale=1,
 		rotate=0,
 		x=0,
@@ -721,6 +750,81 @@
 	\iftikzSteel@filled
 		\fill [tikzSteel/fill] (0,0) circle [radius=#1];
 	\fi
+}
+
+\newcommand{\tikzSteel@rebar}[2]{%
+	\filldraw [tikzSteel/rebar] ({#1},{#2}) circle [radius={0.5*\tikzSteel@barDiameter}];
+}
+
+\newcommand{\tikzSteel@horizontalRebarLine}[4]{%
+	\ifnum#1>0
+		\ifnum#1=1
+			\tikzSteel@rebar{0.5*(#2+#3)}{#4}%
+		\else
+			\foreach \tikzSteel@barIndex in {1,...,#1}{%
+				\tikzSteel@rebar{#2+(\tikzSteel@barIndex-1)*(#3-#2)/(#1-1)}{#4}%
+			}%
+		\fi
+	\fi
+}
+
+\newcommand{\tikzSteel@verticalRebarLine}[4]{%
+	\ifnum#1>0
+		\ifnum#1=1
+			\tikzSteel@rebar{#2}{0.5*(#3+#4)}%
+		\else
+			\foreach \tikzSteel@barIndex in {1,...,#1}{%
+				\tikzSteel@rebar{#2}{#3+\tikzSteel@barIndex*(#4-#3)/(#1+1)}%
+			}%
+		\fi
+	\fi
+}
+
+\newcommand{\TikZRCRectangular}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\path [tikzSteel/concrete] (0,0) rectangle (\tikzSteel@width,\tikzSteel@depth);
+		\iftikzSteel@tie
+			\draw [tikzSteel/tie] (\tikzSteel@cover,\tikzSteel@cover) rectangle ({\tikzSteel@width-\tikzSteel@cover},{\tikzSteel@depth-\tikzSteel@cover});
+		\fi
+		\ifnum\tikzSteel@topBars>0
+			\foreach \tikzSteel@layerIndex in {1,...,\tikzSteel@topLayers}{%
+				\tikzSteel@horizontalRebarLine{\tikzSteel@topBars}{\tikzSteel@cover}{\tikzSteel@width-\tikzSteel@cover}{\tikzSteel@depth-\tikzSteel@cover-(\tikzSteel@layerIndex-1)*\tikzSteel@layerSpacing}%
+			}%
+		\fi
+		\ifnum\tikzSteel@bottomBars>0
+			\foreach \tikzSteel@layerIndex in {1,...,\tikzSteel@bottomLayers}{%
+				\tikzSteel@horizontalRebarLine{\tikzSteel@bottomBars}{\tikzSteel@cover}{\tikzSteel@width-\tikzSteel@cover}{\tikzSteel@cover+(\tikzSteel@layerIndex-1)*\tikzSteel@layerSpacing}%
+			}%
+		\fi
+		\ifnum\tikzSteel@leftBars>0
+			\foreach \tikzSteel@layerIndex in {1,...,\tikzSteel@sideLayers}{%
+				\tikzSteel@verticalRebarLine{\tikzSteel@leftBars}{\tikzSteel@cover+(\tikzSteel@layerIndex-1)*\tikzSteel@layerSpacing}{\tikzSteel@cover}{\tikzSteel@depth-\tikzSteel@cover}%
+			}%
+		\fi
+		\ifnum\tikzSteel@rightBars>0
+			\foreach \tikzSteel@layerIndex in {1,...,\tikzSteel@sideLayers}{%
+				\tikzSteel@verticalRebarLine{\tikzSteel@rightBars}{\tikzSteel@width-\tikzSteel@cover-(\tikzSteel@layerIndex-1)*\tikzSteel@layerSpacing}{\tikzSteel@cover}{\tikzSteel@depth-\tikzSteel@cover}%
+			}%
+		\fi
+		\tikzSteel@postDraw{\tikzSteel@depth}{\tikzSteel@width}%
+	\tikzSteel@scopeEnd
+}
+
+\newcommand{\TikZRCCircular}[1][]{%
+	\tikzSteel@applyKeys{#1}%
+	\tikzSteel@scopeBegin
+		\path [tikzSteel/concrete] (0.5*\tikzSteel@width,0.5*\tikzSteel@width) circle [radius=0.5*\tikzSteel@width];
+		\iftikzSteel@tie
+			\draw [tikzSteel/tie] (0.5*\tikzSteel@width,0.5*\tikzSteel@width) circle [radius=0.5*\tikzSteel@width-\tikzSteel@cover];
+		\fi
+		\ifnum\tikzSteel@perimeterBars>0
+			\foreach \tikzSteel@barIndex in {1,...,\tikzSteel@perimeterBars}{%
+				\tikzSteel@rebar{0.5*\tikzSteel@width+(0.5*\tikzSteel@width-\tikzSteel@cover)*cos(360*(\tikzSteel@barIndex-1)/\tikzSteel@perimeterBars)}{0.5*\tikzSteel@width+(0.5*\tikzSteel@width-\tikzSteel@cover)*sin(360*(\tikzSteel@barIndex-1)/\tikzSteel@perimeterBars)}%
+			}%
+		\fi
+		\tikzSteel@postDraw{\tikzSteel@width}{\tikzSteel@width}%
+	\tikzSteel@scopeEnd
 }
 
 \newcommand{\TikZSteelSetup}[1]{%

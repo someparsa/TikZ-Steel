@@ -62,6 +62,7 @@ Key & Meaning \\
 \midrule
 \texttt{depth} & Section depth or vertical size \\
 \texttt{width} & Section width or horizontal size \\
+\texttt{diameter} & Circular RC section diameter \\
 \texttt{flange} & Common flange width \\
 \texttt{top flange}, \texttt{bottom flange} & Asymmetric flange widths \\
 \texttt{left flange}, \texttt{right flange} & Hat-section flange widths \\
@@ -77,8 +78,12 @@ Key & Meaning \\
 \texttt{top flange width}, \texttt{bottom flange width} & Welded section flange widths \\
 \texttt{top flange thickness}, \texttt{bottom flange thickness} & Welded section flange thicknesses \\
 \texttt{reference line width}, \texttt{line width} & Plate/bar reference line settings \\
+\texttt{cover}, \texttt{bar diameter} & RC cover and reinforcement bar size \\
+\texttt{top bars}, \texttt{bottom bars}, \texttt{left bars}, \texttt{right bars} & Rectangular RC bar counts \\
+\texttt{top layers}, \texttt{bottom layers}, \texttt{side layers} & Rectangular RC reinforcement layers \\
+\texttt{layer spacing}, \texttt{perimeter bars} & RC layer spacing and circular bar count \\
 \texttt{label}, \texttt{label x}, \texttt{label y} & Optional label and label position \\
-\texttt{filled}, \texttt{centerline}, \texttt{dimensions}, \texttt{monochrome} & Optional drawing overlays and modes \\
+\texttt{filled}, \texttt{centerline}, \texttt{dimensions}, \texttt{monochrome}, \texttt{tie} & Optional drawing overlays and modes \\
 \texttt{mode}, \texttt{simplified}, \texttt{detailed} & Accepted drawing-mode keys for future detail levels \\
 \texttt{scale}, \texttt{rotate} & Local drawing transform \\
 \texttt{x}, \texttt{y} & Local drawing offset \\
@@ -146,6 +151,42 @@ Command & Purpose \\
 \command{TikZSteelHRSSHS} & Hot-rolled square hollow section \\
 \bottomrule
 \end{longtable}
+
+\section{Reinforced Concrete Commands}
+
+The initial RC commands draw simple rectangular and circular concrete
+cross-sections with longitudinal rebars shown as filled circles. In this
+development version, \texttt{cover} is interpreted as the sketch distance from
+the concrete face to the rebar centerline or tie centerline.
+
+\begin{longtable}{ll}
+\toprule
+Command & Purpose \\
+\midrule
+\command{TikZRCRectangular} & Rectangular RC section with top, bottom, and side bars \\
+\command{TikZRCCircular} & Circular RC section with perimeter bars \\
+\bottomrule
+\end{longtable}
+
+\begin{verbatim}
+\TikZRCRectangular[
+  width=300,
+  depth=500,
+  cover=40,
+  bar diameter=18,
+  top bars=2,
+  bottom bars=3,
+  bottom layers=2,
+  layer spacing=28
+]
+
+\TikZRCCircular[
+  diameter=450,
+  cover=45,
+  bar diameter=20,
+  perimeter bars=10
+]
+\end{verbatim}
 
 \section{Style Customization}
 
