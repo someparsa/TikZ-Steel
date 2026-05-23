@@ -4,6 +4,13 @@ All notable development changes for TikZ-Steel are recorded here.
 
 ## Unreleased
 
+## v0.1.2 - 2026-05-23
+
+### Changed
+
+- Prepared CTAN-facing metadata by adding package information to the README,
+  naming the manual maintainer, and removing tracked macOS metadata.
+
 ## v0.1.1 - 2026-05-23
 
 ### Changed
