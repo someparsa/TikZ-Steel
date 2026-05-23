@@ -139,6 +139,18 @@ Common keys include:
 - `x`
 - `y`
 
+### Current dimension overlay
+
+The `dimensions=true` key currently enables a basic visual overlay using the
+`tikzSteel/dimension` style. It is intended as an early placeholder for showing
+generic horizontal and vertical dimension guide lines around a section.
+
+This is not yet a full engineering dimensioning system. It does not currently
+place dimension values, extension lines, standard offsets, unit formatting, or
+standard-specific notation. The current example galleries intentionally show the
+actual command parameters beside each sketch, which is the preferred
+documentation style until the dimensioning system is developed further.
+
 Current key-value commands:
 
 - `\TikZSteelChannel`

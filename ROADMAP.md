@@ -205,6 +205,11 @@ systems, concrete drawings, and standard-based dimensioning styles.
   - reinforcement bars
   - stirrups/ties
 - Later dimensioning styles:
+  - expand the current `dimensions=true` placeholder into a real dimensioning
+    subsystem
+  - dimension value labels
+  - extension lines and configurable offsets
+  - unit formatting
   - ISO-style dimensions
   - AISC-style dimensions
   - AS/NZS-style dimensions

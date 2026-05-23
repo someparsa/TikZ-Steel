@@ -98,6 +98,9 @@ All notable development changes for TikZ-Steel are recorded here.
 - Added key-value drawing options for `filled`, `centerline`, `dimensions`,
   `monochrome`, `label`, `label x`, `label y`, `mode`, `simplified`, and
   `detailed`.
+- Documented that `dimensions=true` is currently a basic overlay placeholder,
+  with full dimension labels and standard-based notation reserved for later
+  development.
 - Added initial documentation and example sources:
   - `docs/tikzSteel-doc.tex`
   - `examples/cfs-gallery.tex`
