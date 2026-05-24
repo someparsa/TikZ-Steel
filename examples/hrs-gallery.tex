@@ -2,7 +2,7 @@
 
 \usepackage[a4paper,landscape,margin=14mm]{geometry}
 \usepackage{array}
-\usepackage{tikzSteel}
+\usepackage{tikz-sections}
 
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
@@ -25,72 +25,67 @@
 
 \ExampleRow
   {Universal beam}
-  {\TikZSteelUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
-  {\TikZSteelUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
+  {\TikZSectionsUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
+  {\TikZSectionsUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
 
 \ExampleRow
   {Universal column}
-  {\TikZSteelUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
-  {\TikZSteelUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
+  {\TikZSectionsUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
+  {\TikZSectionsUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
 
 \ExampleRow
   {Welded I-section}
-  {\TikZSteelWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, scale=0.08]}
-  {\TikZSteelWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, scale=0.08]}
+  {\TikZSectionsWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, scale=0.08]}
+  {\TikZSectionsWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, scale=0.08]}
 
 \ExampleRow
   {Tee section}
-  {\TikZSteelTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}
-  {\TikZSteelTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}
+  {\TikZSectionsTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}
+  {\TikZSectionsTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}
 
 \ExampleRow
   {Hot-rolled channel}
-  {\TikZSteelHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
-  {\TikZSteelHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
+  {\TikZSectionsHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
+  {\TikZSectionsHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.12]}
 
 \ExampleRow
   {Equal angle}
-  {\TikZSteelEqualAngle[leg=35, thickness=3, root radius=2, scale=0.14]}
-  {\TikZSteelEqualAngle[leg=35, thickness=3, root radius=2, scale=0.14]}
+  {\TikZSectionsEqualAngle[leg=35, thickness=3, root radius=2, scale=0.14]}
+  {\TikZSectionsEqualAngle[leg=35, thickness=3, root radius=2, scale=0.14]}
 
 \ExampleRow
   {Unequal angle}
-  {\TikZSteelUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, scale=0.14]}
-  {\TikZSteelUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, scale=0.14]}
-
-\ExampleRow
-  {Double angles}
-  {\TikZSteelDoubleAngles[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, gap=8, scale=0.14]}
-  {\TikZSteelDoubleAngles[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, gap=8, scale=0.14]}
+  {\TikZSectionsUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, scale=0.14]}
+  {\TikZSectionsUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, scale=0.14]}
 
 \ExampleRow
   {Plate}
-  {\TikZSteelPlate[width=40, thickness=8, scale=0.18]}
-  {\TikZSteelPlate[width=40, thickness=8, scale=0.18]}
+  {\TikZSectionsPlate[width=40, thickness=8, scale=0.18]}
+  {\TikZSectionsPlate[width=40, thickness=8, scale=0.18]}
 
 \ExampleRow
   {Flat bar}
-  {\TikZSteelFlatBar[width=40, thickness=8, scale=0.18]}
-  {\TikZSteelFlatBar[width=40, thickness=8, scale=0.18]}
+  {\TikZSectionsFlatBar[width=40, thickness=8, scale=0.18]}
+  {\TikZSectionsFlatBar[width=40, thickness=8, scale=0.18]}
 
 \ExampleRow
   {Round bar}
-  {\TikZSteelRoundBar[radius=10, line width=1, scale=0.18]}
-  {\TikZSteelRoundBar[radius=10, line width=1, scale=0.18]}
+  {\TikZSectionsRoundBar[radius=10, line width=1, scale=0.18]}
+  {\TikZSectionsRoundBar[radius=10, line width=1, scale=0.18]}
 
 \ExampleRow
   {Hot-rolled circular hollow section}
-  {\TikZSteelHRSCHS[radius=20, thickness=3, scale=0.14]}
-  {\TikZSteelHRSCHS[radius=20, thickness=3, scale=0.14]}
+  {\TikZSectionsHRSCHS[radius=20, thickness=3, scale=0.14]}
+  {\TikZSectionsHRSCHS[radius=20, thickness=3, scale=0.14]}
 
 \ExampleRow
   {Hot-rolled rectangular hollow section}
-  {\TikZSteelHRSRHS[depth=50, width=35, thickness=3, root radius=4, scale=0.14]}
-  {\TikZSteelHRSRHS[depth=50, width=35, thickness=3, root radius=4, scale=0.14]}
+  {\TikZSectionsHRSRHS[depth=50, width=35, thickness=3, root radius=4, scale=0.14]}
+  {\TikZSectionsHRSRHS[depth=50, width=35, thickness=3, root radius=4, scale=0.14]}
 
 \ExampleRow
   {Hot-rolled square hollow section}
-  {\TikZSteelHRSSHS[width=40, thickness=3, root radius=4, scale=0.14]}
-  {\TikZSteelHRSSHS[width=40, thickness=3, root radius=4, scale=0.14]}
+  {\TikZSectionsHRSSHS[width=40, thickness=3, root radius=4, scale=0.14]}
+  {\TikZSectionsHRSSHS[width=40, thickness=3, root radius=4, scale=0.14]}
 
 \end{document}

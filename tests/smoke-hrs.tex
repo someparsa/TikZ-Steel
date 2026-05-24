@@ -1,16 +1,16 @@
 \documentclass[margin=2mm]{standalone}
-\usepackage{tikzSteel}
+\usepackage{tikz-sections}
 
 \begin{document}
 \begin{tikzpicture}
-\TikZSteelUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.15]
-\TikZSteelUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=18, scale=0.15]
-\TikZSteelWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, x=36, scale=0.15]
-\TikZSteelTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=54, scale=0.15]
-\TikZSteelHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=72, scale=0.15]
-\TikZSteelEqualAngle[leg=35, thickness=3, root radius=2, y=-22, scale=0.15]
-\TikZSteelUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, x=18, y=-22, scale=0.15]
-\TikZSteelPlate[width=40, thickness=8, x=36, y=-22, scale=0.15]
-\TikZSteelRoundBar[radius=10, line width=1, x=54, y=-22, scale=0.15]
+\TikZSectionsUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.15]
+\TikZSectionsUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=18, scale=0.15]
+\TikZSectionsWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, x=36, scale=0.15]
+\TikZSectionsTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=54, scale=0.15]
+\TikZSectionsHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, x=72, scale=0.15]
+\TikZSectionsEqualAngle[leg=35, thickness=3, root radius=2, y=-22, scale=0.15]
+\TikZSectionsUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, x=18, y=-22, scale=0.15]
+\TikZSectionsPlate[width=40, thickness=8, x=36, y=-22, scale=0.15]
+\TikZSectionsRoundBar[radius=10, line width=1, x=54, y=-22, scale=0.15]
 \end{tikzpicture}
 \end{document}

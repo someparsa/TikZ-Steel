@@ -2,9 +2,9 @@ TEX = /Library/TeX/texbin/pdflatex
 BUILD_DIR = build
 TEXINPUTS = $(CURDIR)//:
 
-DOCS = docs/tikzSteel-doc.tex
+DOCS = docs/tikz-sections-doc.tex
 EXAMPLES = examples/cfs-gallery.tex examples/hrs-gallery.tex examples/rc-gallery.tex examples/style-customization.tex
-TESTS = tests/smoke-cfs.tex tests/smoke-hrs.tex tests/smoke-keyval.tex tests/smoke-rc.tex
+TESTS = tests/smoke-cfs.tex tests/smoke-hrs.tex tests/smoke-keyval.tex tests/smoke-rc.tex tests/smoke-tikz-integration.tex
 SOURCES = $(DOCS) $(EXAMPLES) $(TESTS)
 
 .PHONY: all docs examples tests clean

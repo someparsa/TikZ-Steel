@@ -2,7 +2,7 @@
 
 \usepackage[a4paper,landscape,margin=14mm]{geometry}
 \usepackage{array}
-\usepackage{tikzSteel}
+\usepackage{tikz-sections}
 
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
@@ -25,92 +25,62 @@
 
 \ExampleRow
   {CFS channel}
-  {\TikZSteelChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.025]}
-  {\TikZSteelChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.025]}
 
 \ExampleRow
   {CFS lipped channel}
-  {\TikZSteelLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.025]}
-  {\TikZSteelLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsLippedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsLippedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.025]}
 
 \ExampleRow
   {CFS stiffened channel}
-  {\TikZSteelStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, stiffener position=0.55, scale=0.025]}
-  {\TikZSteelStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, stiffener position=0.55, scale=0.025]}
+  {\TikZSectionsStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, stiffener position=0.55, scale=0.025]}
+  {\TikZSectionsStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, stiffener position=0.55, scale=0.025]}
 
 \ExampleRow
   {CFS zee}
-  {\TikZSteelZee[depth=180, flange=55, thickness=2, radius=4, scale=0.025]}
-  {\TikZSteelZee[depth=180, flange=55, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsZee[depth=180, flange=55, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsZee[depth=180, flange=55, thickness=2, radius=4, scale=0.025]}
 
 \ExampleRow
   {CFS lipped zee}
-  {\TikZSteelLippedZee[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.025]}
-  {\TikZSteelLippedZee[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsLippedZee[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsLippedZee[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.025]}
 
 \ExampleRow
   {CFS sigma}
-  {\TikZSteelSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.025]}
-  {\TikZSteelSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.025]}
+  {\TikZSectionsSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.025]}
 
 \ExampleRow
   {CFS hat}
-  {\TikZSteelHat[depth=100, width=45, left flange=25, right flange=25, thickness=2, radius=4, scale=0.035]}
-  {\TikZSteelHat[depth=100, width=45, left flange=25, right flange=25, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsHat[depth=100, width=45, left flange=25, right flange=25, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsHat[depth=100, width=45, left flange=25, right flange=25, thickness=2, radius=4, scale=0.035]}
 
 \ExampleRow
   {CFS angle}
-  {\TikZSteelAngle[vertical leg=100, horizontal leg=60, thickness=2, radius=4, scale=0.035]}
-  {\TikZSteelAngle[vertical leg=100, horizontal leg=60, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsAngle[vertical leg=100, horizontal leg=60, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsAngle[vertical leg=100, horizontal leg=60, thickness=2, radius=4, scale=0.035]}
 
 \ExampleRow
   {CFS lipped angle}
-  {\TikZSteelLippedAngle[vertical leg=100, horizontal leg=60, lip=20, thickness=2, radius=4, scale=0.035]}
-  {\TikZSteelLippedAngle[vertical leg=100, horizontal leg=60, lip=20, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsLippedAngle[vertical leg=100, horizontal leg=60, lip=20, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsLippedAngle[vertical leg=100, horizontal leg=60, lip=20, thickness=2, radius=4, scale=0.035]}
 
 \ExampleRow
   {CFS rectangular hollow section}
-  {\TikZSteelRHS[depth=120, width=70, thickness=2, radius=4, scale=0.035]}
-  {\TikZSteelRHS[depth=120, width=70, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsRHS[depth=120, width=70, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsRHS[depth=120, width=70, thickness=2, radius=4, scale=0.035]}
 
 \ExampleRow
   {CFS square hollow section}
-  {\TikZSteelSHS[width=80, thickness=2, radius=4, scale=0.035]}
-  {\TikZSteelSHS[width=80, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsSHS[width=80, thickness=2, radius=4, scale=0.035]}
+  {\TikZSectionsSHS[width=80, thickness=2, radius=4, scale=0.035]}
 
 \ExampleRow
   {CFS circular hollow section}
-  {\TikZSteelCHS[radius=35, thickness=2, scale=0.035]}
-  {\TikZSteelCHS[radius=35, thickness=2, scale=0.035]}
-
-\ExampleRow
-  {Back-to-back channels}
-  {\TikZSteelBackToBackChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, scale=0.025]}
-  {\TikZSteelBackToBackChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, scale=0.025]}
-
-\ExampleRow
-  {Toe-to-toe channels}
-  {\TikZSteelToeToToeChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, scale=0.025]}
-  {\TikZSteelToeToToeChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, scale=0.025]}
-
-\ExampleRow
-  {Nested channels}
-  {\TikZSteelNestedChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, offset=20, scale=0.025]}
-  {\TikZSteelNestedChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, offset=20, scale=0.025]}
-
-\ExampleRow
-  {Boxed channels}
-  {\TikZSteelBoxedChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, scale=0.025]}
-  {\TikZSteelBoxedChannels[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, scale=0.025]}
-
-\ExampleRow
-  {Built-up I channels}
-  {\TikZSteelBuiltUpIChannels[depth=180, left flange=45, right flange=35, thickness=2, radius=4, gap=10, scale=0.025]}
-  {\TikZSteelBuiltUpIChannels[depth=180, left flange=45, right flange=35, thickness=2, radius=4, gap=10, scale=0.025]}
-
-\ExampleRow
-  {Back-to-back zees}
-  {\TikZSteelBackToBackZees[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, scale=0.025]}
-  {\TikZSteelBackToBackZees[depth=180, flange=55, lip=18, thickness=2, radius=4, gap=12, scale=0.025]}
+  {\TikZSectionsCHS[radius=35, thickness=2, scale=0.035]}
+  {\TikZSectionsCHS[radius=35, thickness=2, scale=0.035]}
 
 \end{document}

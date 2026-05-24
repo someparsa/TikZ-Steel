@@ -1,146 +1,102 @@
-# TikZ-Steel Roadmap
+# TikZ-Sections Roadmap
 
-This file tracks active and future work only. Completed features and release
-history are summarized in [README.md](README.md), with detailed release notes in
+This file tracks remaining work only. Completed features and improvements are
+summarized in [README.md](README.md), with release-level notes in
 [CHANGELOG.md](CHANGELOG.md).
 
 ## Near-Term Polish
 
-- [ ] Decide whether to rename the package from `tikzSteel` to `tikzSections`.
-- [ ] If renamed, make `tikzSections.sty` the main package file.
-- [ ] Keep `tikzSteel.sty` as a compatibility shim for at least one release
-  cycle.
-- [ ] Rename the primary public command prefix from `\TikZSteel...` to a
-  section-oriented prefix, likely `\TikZSection...`.
-- [ ] Keep old `\TikZSteel...` commands as compatibility aliases.
-- [ ] Rename the internal style namespace from `tikzSteel/...` to
-  `tikzSections/...`.
 - [ ] Continue refactoring repeated geometry into internal helper macros:
-  - straight segment
-  - rounded corner
-  - lip/stiffener segment
-  - hollow/closed outline
-  - mirrored/reversed section helpers
-- [ ] Define `simplified` and `detailed` drawing modes.
+  - straight segment helpers
+  - rounded corner helpers
+  - lip and stiffener helpers
+  - hollow and closed-outline helpers
+  - mirrored or reversed section helpers
+- [ ] Define the behavior of `simplified` and `detailed` drawing modes.
 - [ ] Decide what detailed mode means for:
   - CFS bends
   - HRS rolled radii
   - toe radii
-- [ ] Add examples showing simplified and detailed modes.
+- [ ] Add examples showing simplified and detailed modes after the behavior is
+  defined.
 
-## TikZ Integration And Coordinate Standardization
+## Coordinate And Bounding-Box Standardization
 
-- [ ] Ensure public drawing commands are designed for use inside an existing
-  `tikzpicture`.
-- [ ] Confirm no public section command creates a `tikzpicture` internally.
-- [ ] Ensure section commands respect surrounding TikZ scopes:
-  - `shift`
-  - `scale`
-  - `rotate`
-  - `xscale`
-  - `yscale`
-  - style settings
-- [ ] Define a predictable coordinate convention for every section command.
-- [ ] Define a default anchor for every section, such as `south west` or
-  `center`.
-- [ ] Add or standardize placement keys:
-  - `at={(x,y)}`
-  - `anchor=...`
-  - `scale=...`
-  - `rotate=...`
-- [ ] Verify predictable bounding box behavior for:
+- [ ] Define the public coordinate origin for every section command.
+- [ ] Define a predictable coordinate convention for every section family.
+- [ ] Confirm whether additional public anchor choices are needed.
+- [ ] Document lower-level helper placement expectations.
+- [ ] Verify predictable bounding-box behavior for:
   - plain sections
   - filled sections
   - labeled sections
   - dimensioned sections
-- [ ] Document how package section commands can be mixed with ordinary TikZ code
-  in the same `tikzpicture`.
+  - transformed sections
 
 ## API And Parameter Standardization
 
-- [ ] Define canonical parameter names for all section families.
-- [ ] Confirm whether `radius` always means inside bend/root radius.
-- [ ] Continue standardizing and documenting CFS inputs:
-  - depth
-  - flange widths
-  - lip/stiffener lengths
-  - thickness
-  - inside bend radius
-  - gap/spacing for built-up sections
-  - optional drawing style
-- [ ] Continue standardizing and documenting HRS inputs:
+- [ ] Define canonical parameter names for all remaining section families.
+- [ ] Confirm whether `radius` always means inside bend radius or root radius,
+  depending on section family.
+- [ ] Finish CFS input standardization:
+  - angle lip naming and direction
+  - stiffener length and position naming
+  - folded-plate parameter naming
+  - optional drawing-style parameters
+- [ ] Continue standardizing HRS inputs:
   - depth
   - width
   - flange thickness
   - web thickness
   - root radius
   - toe radius where applicable
-- [ ] Decide how legacy positional commands map to the standardized key-value
+- [ ] Decide how positional helper commands map to the standardized key-value
   API.
-- [ ] Document compatibility expectations and deprecation policy.
+- [ ] Document public API stability expectations before the first CTAN release.
 
 ## Built-Up Sections As TikZ Composition
 
-- [ ] Reframe built-up sections as TikZ composition examples rather than
-  separate core geometry implementations.
-- [ ] Prioritize robust single-section primitives over specialized built-up
-  APIs.
-- [ ] Ensure single-section commands compose cleanly with TikZ scopes and
-  transforms:
-  - `scope`
-  - `shift`
-  - `rotate`
-  - `xscale`
-  - `yscale`
-- [ ] Add documentation examples for composing:
+- [ ] Expand documentation examples for user-composed built-up sections:
   - back-to-back channels
   - toe-to-toe channels
   - nested channels
   - boxed channels
   - double angles
   - built-up sections with fasteners
-- [ ] Show fasteners/welds as ordinary TikZ additions where practical.
-- [ ] Keep existing built-up commands for compatibility.
-- [ ] Avoid expanding the built-up command family unless a command provides
-  clear value beyond normal TikZ composition.
-- [ ] Decide whether existing built-up-specific commands should be documented as
-  legacy convenience wrappers.
+- [ ] Show fasteners and welds as ordinary TikZ additions where practical.
+- [ ] Keep built-up command families out of the public API unless a future
+  command provides clear value beyond normal TikZ composition.
 
 ## Documentation
 
 - [ ] Expand the manual:
   - complete argument tables for all positional commands
   - rendered visual gallery inside the manual
-  - explicit compatibility notes for legacy commands
+  - clearer notes on lower-level positional helper commands
   - stable release-oriented API reference
 - [ ] Polish example gallery layout:
-  - prevent sketch/parameter text overlaps in row-based galleries
+  - prevent sketch and parameter text overlaps in row-based galleries
   - normalize sketch bounding boxes and scales across examples
   - reduce long-command overfull warnings
   - keep parameter text readable beside each sketch
-- [ ] Add a manual section titled `Composing Sections With TikZ`.
-- [ ] Demonstrate placing multiple sections in one `tikzpicture`.
-- [ ] Demonstrate combining section commands with normal TikZ commands:
+- [ ] Add more composed TikZ examples showing:
+  - multiple sections in one `tikzpicture`
   - `\draw`
   - `\fill`
   - `\node`
   - `\foreach`
-  - `scope`
-- [ ] Add examples showing user-created built-up sections using normal TikZ
-  transforms.
-- [ ] Add examples showing labels, dimensions, and custom styling in composed
-  drawings.
-- [ ] Explain coordinate origin, anchor behavior, and bounding box behavior.
+  - nested `scope` transforms
+  - labels, dimensions, and custom styling in composed drawings
+- [ ] Explain coordinate origin and bounding-box behavior after those
+  conventions are finalized.
 
 ## CTAN Submission
 
-- [ ] Delay CTAN submission until the package name, public command prefix,
-  parameter names, and TikZ composition behavior are stable.
-- [ ] Submit to CTAN after final review:
-  - choose the package topic/category metadata
-  - provide maintainer, license, summary, and package description
-  - confirm that the package name, file layout, and documentation follow CTAN
-    expectations
+- [ ] Delay CTAN submission until parameter names, coordinate conventions,
+  documentation, and examples are stable.
+- [ ] Before submission, choose CTAN topic/category metadata.
+- [ ] Confirm maintainer, license, summary, package description, file layout,
+  documentation, and upload archive contents.
 
 ## Future Extensions
 

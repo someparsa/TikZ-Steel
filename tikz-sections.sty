@@ -1,0 +1,1038 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tikz-sections}[2026/05/23 v0.1.2 Draw structural cross-sections with TikZ]
+% Copyright 2026 Parsa Yazdi
+%
+% This work may be distributed and/or modified under the conditions of the
+% LaTeX Project Public License, either version 1.3c of this license or
+% (at your option) any later version. The latest version of this license is in
+%   https://www.latex-project.org/lppl.txt
+% and version 1.3c or later is part of all distributions of LaTeX version 2008
+% or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+% The Current Maintainer of this work is Parsa Yazdi.
+% This work consists of the files in the TikZ-Sections package repository.
+
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+
+%
+% ===== ===== Package styles
+%
+
+\tikzset{
+	tikzSections/default/.style={line cap=round, line join=round},
+	tikzSections/straight/.style={tikzSections/default, red},
+	tikzSections/round/.style={tikzSections/default, blue},
+	tikzSections/centerline/.style={tikzSections/default, black, dashed},
+	tikzSections/hidden/.style={tikzSections/default, black!50, dashed},
+	tikzSections/dimension/.style={tikzSections/default, black, <->},
+	tikzSections/label/.style={black},
+	tikzSections/fill/.style={fill=gray!20},
+	tikzSections/concrete/.style={tikzSections/default, draw=black, fill=gray!10},
+	tikzSections/rebar/.style={draw=black, fill=black},
+	tikzSections/tie/.style={tikzSections/default, draw=black!70}
+}
+
+%
+% ===== ===== Internal drawing helpers
+%
+
+\makeatletter
+\newcommand{\tikzSections@straightSegment}[3]{%
+	\draw [tikzSections/straight, line width=#1 mm] #2 -- #3;%
+}
+
+\newcommand{\tikzSections@roundArc}[5]{%
+	\draw [tikzSections/round, line width=#1 mm] #2 arc (#3:#4:#5);%
+}
+\makeatother
+
+%
+% ===== ===== Cold-formed steel sections
+%
+
+%
+% ===== ===== Channels
+%
+
+\newcommand{\csChannel}[7]{
+	\draw [line width=#6 mm, tikzSections/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,#7) -- (0,#1-#7) ;
+	\draw [line width=#6 mm, tikzSections/straight] (#7,#1) -- (#2-#7,#1) ;
+
+	\draw [line width=#6 mm, tikzSections/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSections/round] (0,#1-#7) arc (180:90:#7);
+
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSections/round] (#2-#7,#1) arc (90:0:#7);
+	\fi
+
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSections/round] (#4-#7,0) arc (270:360:#7);
+	\fi
+}
+
+\newcommand{\csChannelOS}[7]{
+	\draw [line width=#6 mm, tikzSections/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSections/straight] (#7,#1) -- (#2-#7,#1) ;
+	
+	\draw [line width=#6 mm, tikzSections/straight] (0,#7) -- (0,{#7 + 0.45*(#1-2*#7)}) ;
+
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.45*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.5*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] ({0.05*(#1-2*#7)},{#7 + 0.5*(#1-2*#7)}) -- (0,{#7 + 0.55*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.55*(#1-2*#7)}) -- (0,#1-#7) ;
+
+	\draw [line width=#6 mm, tikzSections/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSections/round] (0,#1-#7) arc (180:90:#7);
+
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSections/round] (#2-#7,#1) arc (90:0:#7);
+	\fi
+
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSections/round] (#4-#7,0) arc (270:360:#7);
+	\fi
+}
+
+
+\newcommand{\csChannelTS}[7]{
+	\draw [line width=#6 mm, tikzSections/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSections/straight] (#7,#1) -- (#2-#7,#1) ;
+	
+	\draw [line width=#6 mm, tikzSections/straight] (0,#7) -- (0,{#7 + 0.05*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,#1-#7) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
+	
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.05*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) -- (0,{#7 + 0.15*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.15*(#1-2*#7)}) -- (0,{#7 + 0.85*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.85*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.95*(#1-2*#7)}) -- (0,#1-2*#7) ;
+	
+	\draw [line width=#6 mm, tikzSections/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSections/round] (0,#1-#7) arc (180:90:#7);
+
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSections/round] (#2-#7,#1) arc (90:0:#7);
+	\fi
+
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSections/round] (#4-#7,0) arc (270:360:#7);
+	\fi
+}
+
+\newcommand{\csChannelFS}[8]{
+	\draw [line width=#6 mm, tikzSections/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSections/straight] (#7,#1) -- (#2-#7,#1) ;
+	
+	\draw [line width=#6 mm, tikzSections/straight] (0,#7) -- (0,{#7 + (#8-0.05)*(#1-2*#7)}) ;
+
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + (#8-0.05)*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) -- (0,{#7 + (#8+0.05)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + (#8+0.05)*(#1-2*#7)}) -- (0,#1-#7) ;
+
+	\draw [line width=#6 mm, tikzSections/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSections/round] (0,#1-#7) arc (180:90:#7);
+
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSections/round] (#2-#7,#1) arc (90:0:#7);
+	\fi
+
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSections/round] (#4-#7,0) arc (270:360:#7);
+	\fi
+}
+
+\newcommand{\csChannelRS}[8]{
+	\draw [line width=#6 mm, tikzSections/straight] (#7,0) -- (#4-#7,0) ;
+	\draw [line width=#6 mm, tikzSections/straight] (#7,#1) -- (#2-#7,#1) ;
+	
+	\draw [line width=#6 mm, tikzSections/straight] (0,#7) -- (0,{#7 + 0.05*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,#1-#7) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
+	
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.05*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] ({0.05*(#1-2*#7)},{#7 + 0.1*(#1-2*#7)}) -- (0,{#7 + 0.15*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.15*(#1-2*#7)}) -- (0,{#7 + (#8-0.05)*(#1-2*#7)}) ;
+	
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + (#8-0.05)*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] ({0.05*(#1-2*#7)},{#7 + (#8)*(#1-2*#7)}) -- (0,{#7 + (#8+0.05)*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + (#8+0.05)*(#1-2*#7)}) -- (0,{#7 + 0.85*(#1-2*#7)}) ;
+	
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.85*(#1-2*#7)}) -- ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] ({0.05*(#1-2*#7)},{#7 + 0.9*(#1-2*#7)}) -- (0,{#7 + 0.95*(#1-2*#7)}) ;
+	\draw [line width=#6 mm, tikzSections/straight] (0,{#7 + 0.95*(#1-2*#7)}) -- (0,#1-2*#7) ;
+	
+	\draw [line width=#6 mm, tikzSections/round] (0,#7) arc (180:270:#7);
+	\draw [line width=#6 mm, tikzSections/round] (0,#1-#7) arc (180:90:#7);
+
+	\ifdim #3 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSections/round] (#2-#7,#1) arc (90:0:#7);
+	\fi
+
+	\ifdim #5 pt > 0pt
+    		\draw [line width=#6 mm, tikzSections/straight] (#4,#7) -- (#4,#5) ;
+		\draw [line width=#6 mm, tikzSections/round] (#4-#7,0) arc (270:360:#7);
+	\fi
+}
+
+%
+% ===== ===== Box
+%
+
+\newcommand{\csBox}[4]{
+	\draw [line width=#3 mm, tikzSections/straight] (#4,0) -- (#2-#4,0) ;
+	\draw [line width=#3 mm, tikzSections/straight] (#4,#1) -- (#2-#4,#1) ;	
+	\draw [line width=#3 mm, tikzSections/straight] (0,#4) -- (0,#1-#4) ;
+	\draw [line width=#3 mm, tikzSections/straight] (#2,#4) -- (#2,#1-#4) ;
+	
+	\draw [line width=#3 mm, tikzSections/round] (0,#4) arc (180:270:#4);
+	\draw [line width=#3 mm, tikzSections/round] (0,#1-#4) arc (180:90:#4);
+
+	\draw [line width=#3 mm, tikzSections/round] (#2-#4,0) arc (270:360:#4);
+	\draw [line width=#3 mm, tikzSections/round] (#2-#4,#1) arc (90:0:#4);
+}
+
+%
+% ===== ===== Zee
+%
+
+\newcommand{\csZee}[7]{
+	\draw [line width=#6 mm, tikzSections/straight] (0,#7) -- (0,#1-#7) ;	
+	\draw [line width=#6 mm, tikzSections/straight] (#7,#1) -- (#2-#7,#1) ;
+	\draw [line width=#6 mm, tikzSections/straight] (-#7,0) -- (#7-#4,0) ;
+
+	\draw [line width=#6 mm, tikzSections/round] (0,#1-#7) arc (180:90:#7);
+	\draw [line width=#6 mm, tikzSections/round] (0,#7) arc (0:-90:#7);
+
+	\ifdim #3 pt > 0pt
+		\draw [line width=#6 mm, tikzSections/straight] (#2,#1-#7) -- (#2,#1-#3) ;
+		\draw [line width=#6 mm, tikzSections/round] (#2-#7,#1) arc (90:0:#7);
+	\fi
+
+	\ifdim #5 pt > 0pt
+		\draw [line width=#6 mm, tikzSections/straight] (-#4,#7) -- (-#4,#5) ;
+		\draw [line width=#6 mm, tikzSections/round] (#7-#4,0) arc (270:180:#7);
+	\fi
+}
+
+%
+% ===== ===== L
+%
+
+\newcommand{\csL}[4]{
+	\draw [line width=#3 mm, tikzSections/straight] (0,#4) -- (0,#1) ;	
+	\draw [line width=#3 mm, tikzSections/straight] (#4,0) -- (#2,0) ;
+
+	\draw [line width=#3 mm, tikzSections/round] (0,#4) arc (180:270:#4);
+
+}
+
+%
+% ===== ===== Tube
+%
+\newcommand{\csTube}[2]{
+	\draw [line width=#2 mm, tikzSections/round] (0,0) arc (0:360:#1);
+}
+
+%
+% ===== ===== CFS public wrappers and additional sections
+%
+
+\newcommand{\csCFSChannel}[4]{
+	\csCFSChannelGeneral{#1}{#2}{0}{#2}{0}{#3}{#4}
+}
+
+\newcommand{\csCFSLippedChannel}[5]{
+	\csCFSChannelGeneral{#1}{#2}{#3}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csCFSChannelGeneral}[7]{
+	\csChannel{#1}{#2}{#3}{#4}{#5}{#6}{#7}
+}
+
+\newcommand{\csCFSEdgeStiffenedChannel}[5]{
+	\csCFSLippedChannel{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csCFSChannelWithOneStiffener}[8]{
+	\csChannelFS{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}
+}
+
+\newcommand{\csCFSChannelWithTwoStiffeners}[7]{
+	\csChannelTS{#1}{#2}{#3}{#4}{#5}{#6}{#7}
+}
+
+\newcommand{\csCFSChannelWithThreeStiffeners}[8]{
+	\csChannelRS{#1}{#2}{#3}{#4}{#5}{#6}{#7}{#8}
+}
+
+\newcommand{\csCFSZee}[4]{
+	\csCFSZeeGeneral{#1}{#2}{0}{#2}{0}{#3}{#4}
+}
+
+\newcommand{\csCFSLippedZee}[5]{
+	\csCFSZeeGeneral{#1}{#2}{#3}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csCFSZeeGeneral}[7]{
+	\csZee{#1}{#2}{#3}{#4}{#5}{#6}{#7}
+}
+
+\newcommand{\csCFSSigma}[7]{
+	\csChannelTS{#1}{#2}{#3}{#4}{#5}{#6}{#7}
+}
+
+\newcommand{\csCFSHat}[6]{
+	\draw [line width=#5 mm, tikzSections/straight] (0,#6) -- (0,#1-#6) ;
+	\draw [line width=#5 mm, tikzSections/straight] (0,#1) -- (#2,#1) ;
+	\draw [line width=#5 mm, tikzSections/straight] (#2,#1-#6) -- (#2,#6) ;
+	\draw [line width=#5 mm, tikzSections/straight] (#2+#6,0) -- (#2+#3-#6,0) ;
+	\draw [line width=#5 mm, tikzSections/straight] (#2+#3,#6) -- (#2+#3,#1-#6) ;
+	\draw [line width=#5 mm, tikzSections/straight] (#2+#3,#1) -- (#2+#3+#4,#1) ;
+
+	\draw [line width=#5 mm, tikzSections/round] (0,#1-#6) arc (180:90:#6);
+	\draw [line width=#5 mm, tikzSections/round] (#2,#1-#6) arc (0:90:#6);
+	\draw [line width=#5 mm, tikzSections/round] (#2,#6) arc (180:270:#6);
+	\draw [line width=#5 mm, tikzSections/round] (#2+#3,#6) arc (0:-90:#6);
+	\draw [line width=#5 mm, tikzSections/round] (#2+#3,#1-#6) arc (180:90:#6);
+}
+
+\newcommand{\csCFSAngle}[4]{
+	\csL{#1}{#2}{#3}{#4}
+}
+
+\newcommand{\csCFSLippedAngle}[5]{
+	\draw [line width=#3 mm, tikzSections/straight] (0,#4) -- (0,#1) ;
+	\draw [line width=#3 mm, tikzSections/straight] (#4,0) -- (#2-#4,0) ;
+	\draw [line width=#3 mm, tikzSections/straight] (#2,#4) -- (#2,#5) ;
+
+	\draw [line width=#3 mm, tikzSections/round] (0,#4) arc (180:270:#4);
+	\draw [line width=#3 mm, tikzSections/round] (#2-#4,0) arc (270:360:#4);
+}
+
+\newcommand{\csCFSBox}[4]{
+	\csBox{#1}{#2}{#3}{#4}
+}
+
+\newcommand{\csCFSRHS}[4]{
+	\csBox{#1}{#2}{#3}{#4}
+}
+
+\newcommand{\csCFSSHS}[3]{
+	\csBox{#1}{#1}{#2}{#3}
+}
+
+\newcommand{\csCFSCHS}[2]{
+	\csTube{#1}{#2}
+}
+
+\newcommand{\csCFSFoldedPlate}[2]{
+	\def\points{#1}
+	\foreach \p [count=\i,remember=\p as \lastp] in \points{
+		\ifnum\i>1\relax
+			\draw [line width=#2 mm, tikzSections/straight] \lastp -- \p;
+		\fi
+	}
+}
+
+%
+% ===== ===== Hot-rolled steel sections
+%
+
+%
+% ===== ===== Welded I
+%
+\newcommand{\csWI}[6]{
+	\draw [line width=#2 mm, tikzSections/straight] (0,-0.5*#1) -- (0,0.5*#1);
+	\draw [line width=#4 mm, tikzSections/round] (-0.5*#3,-0.5*#1) -- (0.5*#3,-0.5*#1);
+	\draw [line width=#6 mm, tikzSections/round] (-0.5*#5,0.5*#1) -- (0.5*#5,0.5*#1);
+}
+
+%
+% ===== ===== Universal beams and columns
+%
+\newcommand{\csUBC}[5]{
+	\draw [line width=1 mm, tikzSections/straight] (0,0) -- (#2,0);
+	\draw [line width=1 mm, tikzSections/straight] (0,#1) -- (#2,#1);
+
+	\draw [line width=1 mm, tikzSections/straight] (0,#3) -- (0.5*#2-0.5*#4-#5,#3);
+	\draw [line width=1 mm, tikzSections/straight] (0.5*#2+0.5*#4+#5,#3) -- (#2,#3);
+
+	\draw [line width=1 mm, tikzSections/straight] (0,#1-#3) -- (0.5*#2-0.5*#4-#5,#1-#3);
+	\draw [line width=1 mm, tikzSections/straight] (0.5*#2+0.5*#4+#5,#1-#3) -- (#2,#1-#3);
+	
+	\draw [line width=1 mm, tikzSections/straight] (0.5*#2-0.5*#4,#3+#5) -- (0.5*#2-0.5*#4,{#1 - (#3+#5)});
+	\draw [line width=1 mm, tikzSections/straight] (0.5*#2+0.5*#4,#3+#5) -- (0.5*#2+0.5*#4,{#1 - (#3+#5)});
+	
+	\draw [line width=1 mm, tikzSections/round] (0.5*#2-0.5*#4-#5,#3) arc (270:360:#5);
+	\draw [line width=1 mm, tikzSections/round] (0.5*#2+0.5*#4+#5,#3) arc (270:180:#5);
+
+	\draw [line width=1 mm, tikzSections/round] (0.5*#2-0.5*#4-#5,#1-#3) arc (90:0:#5);
+	\draw [line width=1 mm, tikzSections/round] (0.5*#2+0.5*#4+#5,#1-#3) arc (90:180:#5);
+	
+	\draw [line width=1 mm, tikzSections/straight] (0,0) -- (0,#3);
+	\draw [line width=1 mm, tikzSections/straight] (#2,0) -- (#2,#3);
+
+	\draw [line width=1 mm, tikzSections/straight] (0,#1-#3) -- (0,#1);
+	\draw [line width=1 mm, tikzSections/straight] (#2,#1-#3) -- (#2,#1);
+}
+
+%
+% ===== ===== Tees cut from universal beams and columns
+%
+\newcommand{\csTU}[5]{
+	\draw [line width=1 mm, tikzSections/straight] (0,#1) -- (#2,#1);
+
+	\draw [line width=1 mm, tikzSections/straight] (0.5*#2-0.5*#4,0) -- (0.5*#2+0.5*#4,0);
+
+	\draw [line width=1 mm, tikzSections/straight] (0,#1-#3) -- (0.5*#2-0.5*#4-#5,#1-#3);
+	\draw [line width=1 mm, tikzSections/straight] (0.5*#2+0.5*#4+#5,#1-#3) -- (#2,#1-#3);
+
+	\draw [line width=1 mm, tikzSections/straight] (0.5*#2-0.5*#4,0) -- (0.5*#2-0.5*#4,{#1 - (#3+#5)});
+	\draw [line width=1 mm, tikzSections/straight] (0.5*#2+0.5*#4,0) -- (0.5*#2+0.5*#4,{#1 - (#3+#5)});
+
+	\draw [line width=1 mm, tikzSections/round] (0.5*#2-0.5*#4-#5,#1-#3) arc (90:0:#5);
+	\draw [line width=1 mm, tikzSections/round] (0.5*#2+0.5*#4+#5,#1-#3) arc (90:180:#5);
+
+	\draw [line width=1 mm, tikzSections/straight] (0,#1-#3) -- (0,#1);
+	\draw [line width=1 mm, tikzSections/straight] (#2,#1-#3) -- (#2,#1);
+}
+
+%
+% ===== ===== HRS Channels
+%
+\newcommand{\csHCH}[5]{
+	\draw [line width=1 mm, tikzSections/straight] (0,0) -- (0,#1);
+	
+	\draw [line width=1 mm, tikzSections/straight] (0,0) -- (#2,0);
+	\draw [line width=1 mm, tikzSections/straight] (0,#1) -- (#2,#1);
+
+	\draw [line width=1 mm, tikzSections/straight] (#4+#5,#3) -- (#2,#3);
+
+	\draw [line width=1 mm, tikzSections/straight] (#4+#5,#1-#3) -- (#2,#1-#3);
+	
+	\draw [line width=1 mm, tikzSections/straight] (#4,#3+#5) -- (#4,{#1 - (#3+#5)});
+	
+	\draw [line width=1 mm, tikzSections/round] (#4+#5,#3) arc (270:180:#5);
+
+	\draw [line width=1 mm, tikzSections/round] (#4+#5,#1-#3) arc (90:180:#5);
+	
+	\draw [line width=1 mm, tikzSections/straight] (#2,0) -- (#2,#3);
+
+	\draw [line width=1 mm, tikzSections/straight] (#2,#1-#3) -- (#2,#1);
+}
+
+%
+% ===== ===== HRS Angles
+%
+\newcommand{\csEA}[5]{
+	\draw [line width=1 mm, tikzSections/straight] (0,0) -- (0,#1);
+	
+	\draw [line width=1 mm, tikzSections/straight] (0,0) -- (#2,0);
+	\draw [line width=1 mm, tikzSections/straight] (0,#1) -- (#4,#1);
+
+	\draw [line width=1 mm, tikzSections/straight] (#4+#5,#3) -- (#2,#3);
+
+	\draw [line width=1 mm, tikzSections/straight] (#4,#3+#5) -- (#4,#1);
+	
+	\draw [line width=1 mm, tikzSections/round] (#4+#5,#3) arc (270:180:#5);
+
+	
+	\draw [line width=1 mm, tikzSections/straight] (#2,0) -- (#2,#3);
+
+}
+
+%
+% ===== ===== HRS public wrappers and additional sections
+%
+
+\newcommand{\csHRSUniversalBeam}[5]{
+	\csUBC{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSUniversalColumn}[5]{
+	\csUBC{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSISection}[5]{
+	\csUBC{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSWeldedI}[6]{
+	\csWI{#1}{#2}{#3}{#4}{#5}{#6}
+}
+
+\newcommand{\csHRSTee}[5]{
+	\csTU{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSChannel}[5]{
+	\csHCH{#1}{#2}{#3}{#4}{#5}
+}
+
+\newcommand{\csHRSEqualAngle}[3]{
+	\csEA{#1}{#1}{#2}{#2}{#3}
+}
+
+\newcommand{\csHRSUnequalAngle}[4]{
+	\csEA{#1}{#2}{#3}{#3}{#4}
+}
+
+\newcommand{\csHRSPlate}[3]{
+	\draw [tikzSections/straight, line width=1 mm] (0,0) rectangle (#1,#2);
+	\ifdim #3 pt > 0pt
+		\draw [tikzSections/hidden, line width=#3 mm] (0,0) -- (#1,0);
+	\fi
+}
+
+\newcommand{\csHRSFlatBar}[3]{
+	\csHRSPlate{#1}{#2}{#3}
+}
+
+\newcommand{\csHRSRoundBar}[2]{
+	\draw [tikzSections/round, line width=#2 mm] (0,0) circle [radius=#1];
+}
+
+\newcommand{\csHRSCHS}[2]{
+	\csTube{#1}{#2}
+}
+
+\newcommand{\csHRSRHS}[4]{
+	\csBox{#1}{#2}{#3}{#4}
+}
+
+\newcommand{\csHRSSHS}[3]{
+	\csBox{#1}{#1}{#2}{#3}
+}
+
+%
+% ===== ===== Key-value public API
+%
+
+\makeatletter
+\newif\iftikzSections@filled
+\newif\iftikzSections@centerline
+\newif\iftikzSections@dimensions
+\newif\iftikzSections@monochrome
+\newif\iftikzSections@tie
+\newif\iftikzSections@topFlangeSet
+\newif\iftikzSections@bottomFlangeSet
+\newif\iftikzSections@topLipSet
+\newif\iftikzSections@bottomLipSet
+
+\pgfkeys{
+	/tikzSections/section/.is family,
+	/tikzSections/section,
+	depth/.store in=\tikzSections@depth,
+	height/.store in=\tikzSections@depth,
+	width/.store in=\tikzSections@width,
+	diameter/.store in=\tikzSections@width,
+	flange/.store in=\tikzSections@flange,
+	top flange/.code={\def\tikzSections@topFlange{#1}\tikzSections@topFlangeSettrue},
+	bottom flange/.code={\def\tikzSections@bottomFlange{#1}\tikzSections@bottomFlangeSettrue},
+	left flange/.store in=\tikzSections@leftFlange,
+	right flange/.store in=\tikzSections@rightFlange,
+	lip/.store in=\tikzSections@lip,
+	top lip/.code={\def\tikzSections@topLip{#1}\tikzSections@topLipSettrue},
+	bottom lip/.code={\def\tikzSections@bottomLip{#1}\tikzSections@bottomLipSettrue},
+	thickness/.store in=\tikzSections@thickness,
+	radius/.store in=\tikzSections@radius,
+	inside radius/.store in=\tikzSections@radius,
+	bend radius/.store in=\tikzSections@radius,
+	root radius/.store in=\tikzSections@radius,
+	position/.store in=\tikzSections@position,
+	stiffener position/.store in=\tikzSections@position,
+	leg/.store in=\tikzSections@leg,
+	vertical leg/.store in=\tikzSections@verticalLeg,
+	horizontal leg/.store in=\tikzSections@horizontalLeg,
+	web depth/.store in=\tikzSections@webDepth,
+	web thickness/.store in=\tikzSections@webThickness,
+	flange thickness/.store in=\tikzSections@flangeThickness,
+	top flange width/.store in=\tikzSections@topFlangeWidth,
+	top flange thickness/.store in=\tikzSections@topFlangeThickness,
+	bottom flange width/.store in=\tikzSections@bottomFlangeWidth,
+	bottom flange thickness/.store in=\tikzSections@bottomFlangeThickness,
+	reference line width/.store in=\tikzSections@referenceLineWidth,
+	line width/.store in=\tikzSections@lineWidth,
+	cover/.store in=\tikzSections@cover,
+	bar diameter/.store in=\tikzSections@barDiameter,
+	top bars/.store in=\tikzSections@topBars,
+	bottom bars/.store in=\tikzSections@bottomBars,
+	left bars/.store in=\tikzSections@leftBars,
+	right bars/.store in=\tikzSections@rightBars,
+	top layers/.store in=\tikzSections@topLayers,
+	bottom layers/.store in=\tikzSections@bottomLayers,
+	side layers/.store in=\tikzSections@sideLayers,
+	layer spacing/.store in=\tikzSections@layerSpacing,
+	perimeter bars/.store in=\tikzSections@perimeterBars,
+	label/.store in=\tikzSections@label,
+	label x/.store in=\tikzSections@labelX,
+	label y/.store in=\tikzSections@labelY,
+	mode/.store in=\tikzSections@mode,
+	simplified/.style={mode=simplified},
+	detailed/.style={mode=detailed},
+	filled/.is if=tikzSections@filled,
+	centerline/.is if=tikzSections@centerline,
+	dimensions/.is if=tikzSections@dimensions,
+	monochrome/.is if=tikzSections@monochrome,
+	tie/.is if=tikzSections@tie,
+	at/.style args={(#1,#2)}{x=#1,y=#2},
+	shift/.style args={(#1,#2)}{x=#1,y=#2},
+	scale/.store in=\tikzSections@scale,
+	xscale/.store in=\tikzSections@xScale,
+	yscale/.store in=\tikzSections@yScale,
+	rotate/.store in=\tikzSections@rotate,
+	x/.store in=\tikzSections@x,
+	y/.store in=\tikzSections@y
+}
+
+\newcommand{\tikzSections@setDefaults}{%
+	\pgfkeys{/tikzSections/section,
+		depth=245,
+		width=75,
+		flange=75,
+		top flange=75,
+		bottom flange=75,
+		left flange=35,
+		right flange=35,
+		lip=20,
+		top lip=20,
+		bottom lip=20,
+		thickness=2.5,
+		radius=5,
+		position=0.5,
+		leg=60,
+		vertical leg=60,
+		horizontal leg=40,
+		web depth=95,
+		web thickness=1,
+		flange thickness=2,
+		top flange width=35,
+		top flange thickness=2,
+		bottom flange width=35,
+		bottom flange thickness=2,
+		reference line width=0,
+		line width=1,
+		cover=40,
+		bar diameter=16,
+		top bars=2,
+		bottom bars=2,
+		left bars=0,
+		right bars=0,
+		top layers=1,
+		bottom layers=1,
+		side layers=1,
+		layer spacing=25,
+		perimeter bars=8,
+		label=,
+		label x=0,
+		label y=0,
+		mode=simplified,
+		filled=false,
+		centerline=false,
+		dimensions=false,
+		monochrome=false,
+		tie=true,
+		scale=1,
+		xscale=1,
+		yscale=1,
+		rotate=0,
+		x=0,
+		y=0}%
+}
+
+\newcommand{\tikzSections@applyKeys}[1]{%
+	\tikzSections@setDefaults
+	\tikzSections@topFlangeSetfalse
+	\tikzSections@bottomFlangeSetfalse
+	\tikzSections@topLipSetfalse
+	\tikzSections@bottomLipSetfalse
+	\pgfkeys{/tikzSections/section,#1}%
+}
+
+\newcommand{\tikzSections@resolveCFSFlangesAndLips}{%
+	\iftikzSections@topFlangeSet\else
+		\let\tikzSections@topFlange\tikzSections@flange
+	\fi
+	\iftikzSections@bottomFlangeSet\else
+		\let\tikzSections@bottomFlange\tikzSections@flange
+	\fi
+	\iftikzSections@topLipSet\else
+		\let\tikzSections@topLip\tikzSections@lip
+	\fi
+	\iftikzSections@bottomLipSet\else
+		\let\tikzSections@bottomLip\tikzSections@lip
+	\fi
+}
+
+\newcommand{\tikzSections@cfsPostDraw}[1]{%
+	\pgfmathsetmacro{\tikzSections@cfsWidth}{max(\tikzSections@topFlange,\tikzSections@bottomFlange)}%
+	\tikzSections@postDraw{#1}{\tikzSections@cfsWidth}%
+}
+
+\newcommand{\tikzSections@scopeBegin}{%
+	\scope[shift={({\tikzSections@x},{\tikzSections@y})}, scale=\tikzSections@scale, xscale=\tikzSections@xScale, yscale=\tikzSections@yScale, rotate=\tikzSections@rotate]%
+	\iftikzSections@monochrome
+		\tikzset{
+			tikzSections/straight/.style={tikzSections/default, black},
+			tikzSections/round/.style={tikzSections/default, black}
+		}%
+	\fi
+}
+
+\newcommand{\tikzSections@scopeEnd}{%
+	\endscope
+}
+
+\newcommand{\tikzSections@postDraw}[2]{%
+	\iftikzSections@centerline
+		\draw [tikzSections/centerline, line width=0.2 mm] (-0.05*#2,0.5*#1) -- (1.05*#2,0.5*#1);
+		\draw [tikzSections/centerline, line width=0.2 mm] (0.5*#2,-0.05*#1) -- (0.5*#2,1.05*#1);
+	\fi
+	\iftikzSections@dimensions
+		\draw [tikzSections/dimension, line width=0.15 mm] (0,-0.1*#1) -- (#2,-0.1*#1);
+		\draw [tikzSections/dimension, line width=0.15 mm] (-0.1*#2,0) -- (-0.1*#2,#1);
+	\fi
+	\ifx\tikzSections@label\@empty
+	\else
+		\node [tikzSections/label] at (\tikzSections@labelX,\tikzSections@labelY) {\tikzSections@label};
+	\fi
+}
+
+\newcommand{\tikzSections@fillRectangle}[2]{%
+	\iftikzSections@filled
+		\fill [tikzSections/fill] (0,0) rectangle (#2,#1);
+	\fi
+}
+
+\newcommand{\tikzSections@fillCircle}[1]{%
+	\iftikzSections@filled
+		\fill [tikzSections/fill] (#1,#1) circle [radius=#1];
+	\fi
+}
+
+\newcommand{\tikzSections@rebar}[2]{%
+	\filldraw [tikzSections/rebar] ({#1},{#2}) circle [radius={0.5*\tikzSections@barDiameter}];
+}
+
+\newcommand{\tikzSections@horizontalRebarLine}[4]{%
+	\ifnum#1>0
+		\ifnum#1=1
+			\tikzSections@rebar{0.5*(#2+#3)}{#4}%
+		\else
+			\foreach \tikzSections@barIndex in {1,...,#1}{%
+				\tikzSections@rebar{#2+(\tikzSections@barIndex-1)*(#3-#2)/(#1-1)}{#4}%
+			}%
+		\fi
+	\fi
+}
+
+\newcommand{\tikzSections@verticalRebarLine}[4]{%
+	\ifnum#1>0
+		\ifnum#1=1
+			\tikzSections@rebar{#2}{0.5*(#3+#4)}%
+		\else
+			\foreach \tikzSections@barIndex in {1,...,#1}{%
+				\tikzSections@rebar{#2}{#3+\tikzSections@barIndex*(#4-#3)/(#1+1)}%
+			}%
+		\fi
+	\fi
+}
+
+\newcommand{\TikZRCRectangular}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\path [tikzSections/concrete] (0,0) rectangle (\tikzSections@width,\tikzSections@depth);
+		\iftikzSections@tie
+			\draw [tikzSections/tie] (\tikzSections@cover,\tikzSections@cover) rectangle ({\tikzSections@width-\tikzSections@cover},{\tikzSections@depth-\tikzSections@cover});
+		\fi
+		\ifnum\tikzSections@topBars>0
+			\foreach \tikzSections@layerIndex in {1,...,\tikzSections@topLayers}{%
+				\tikzSections@horizontalRebarLine{\tikzSections@topBars}{\tikzSections@cover}{\tikzSections@width-\tikzSections@cover}{\tikzSections@depth-\tikzSections@cover-(\tikzSections@layerIndex-1)*\tikzSections@layerSpacing}%
+			}%
+		\fi
+		\ifnum\tikzSections@bottomBars>0
+			\foreach \tikzSections@layerIndex in {1,...,\tikzSections@bottomLayers}{%
+				\tikzSections@horizontalRebarLine{\tikzSections@bottomBars}{\tikzSections@cover}{\tikzSections@width-\tikzSections@cover}{\tikzSections@cover+(\tikzSections@layerIndex-1)*\tikzSections@layerSpacing}%
+			}%
+		\fi
+		\ifnum\tikzSections@leftBars>0
+			\foreach \tikzSections@layerIndex in {1,...,\tikzSections@sideLayers}{%
+				\tikzSections@verticalRebarLine{\tikzSections@leftBars}{\tikzSections@cover+(\tikzSections@layerIndex-1)*\tikzSections@layerSpacing}{\tikzSections@cover}{\tikzSections@depth-\tikzSections@cover}%
+			}%
+		\fi
+		\ifnum\tikzSections@rightBars>0
+			\foreach \tikzSections@layerIndex in {1,...,\tikzSections@sideLayers}{%
+				\tikzSections@verticalRebarLine{\tikzSections@rightBars}{\tikzSections@width-\tikzSections@cover-(\tikzSections@layerIndex-1)*\tikzSections@layerSpacing}{\tikzSections@cover}{\tikzSections@depth-\tikzSections@cover}%
+			}%
+		\fi
+		\tikzSections@postDraw{\tikzSections@depth}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZRCCircular}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\path [tikzSections/concrete] (0.5*\tikzSections@width,0.5*\tikzSections@width) circle [radius=0.5*\tikzSections@width];
+		\iftikzSections@tie
+			\draw [tikzSections/tie] (0.5*\tikzSections@width,0.5*\tikzSections@width) circle [radius=0.5*\tikzSections@width-\tikzSections@cover];
+		\fi
+		\ifnum\tikzSections@perimeterBars>0
+			\foreach \tikzSections@barIndex in {1,...,\tikzSections@perimeterBars}{%
+				\tikzSections@rebar{0.5*\tikzSections@width+(0.5*\tikzSections@width-\tikzSections@cover)*cos(360*(\tikzSections@barIndex-1)/\tikzSections@perimeterBars)}{0.5*\tikzSections@width+(0.5*\tikzSections@width-\tikzSections@cover)*sin(360*(\tikzSections@barIndex-1)/\tikzSections@perimeterBars)}%
+			}%
+		\fi
+		\tikzSections@postDraw{\tikzSections@width}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsSetup}[1]{%
+	\tikzset{#1}%
+}
+
+\newcommand{\TikZSectionsChannel}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@resolveCFSFlangesAndLips
+	\tikzSections@scopeBegin
+		\csCFSChannelGeneral{\tikzSections@depth}{\tikzSections@topFlange}{0}{\tikzSections@bottomFlange}{0}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@cfsPostDraw{\tikzSections@depth}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsLippedChannel}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@resolveCFSFlangesAndLips
+	\tikzSections@scopeBegin
+		\csCFSChannelGeneral{\tikzSections@depth}{\tikzSections@topFlange}{\tikzSections@topLip}{\tikzSections@bottomFlange}{\tikzSections@bottomLip}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@cfsPostDraw{\tikzSections@depth}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsStiffenedChannel}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@resolveCFSFlangesAndLips
+	\tikzSections@scopeBegin
+		\csCFSChannelWithOneStiffener{\tikzSections@depth}{\tikzSections@topFlange}{\tikzSections@topLip}{\tikzSections@bottomFlange}{\tikzSections@bottomLip}{\tikzSections@thickness}{\tikzSections@radius}{\tikzSections@position}%
+		\tikzSections@cfsPostDraw{\tikzSections@depth}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsZee}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@resolveCFSFlangesAndLips
+	\tikzSections@scopeBegin
+		\csCFSZeeGeneral{\tikzSections@depth}{\tikzSections@topFlange}{0}{\tikzSections@bottomFlange}{0}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@cfsPostDraw{\tikzSections@depth}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsLippedZee}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@resolveCFSFlangesAndLips
+	\tikzSections@scopeBegin
+		\csCFSZeeGeneral{\tikzSections@depth}{\tikzSections@topFlange}{\tikzSections@topLip}{\tikzSections@bottomFlange}{\tikzSections@bottomLip}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@cfsPostDraw{\tikzSections@depth}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsSigma}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@resolveCFSFlangesAndLips
+	\tikzSections@scopeBegin
+		\csCFSSigma{\tikzSections@depth}{\tikzSections@topFlange}{\tikzSections@topLip}{\tikzSections@bottomFlange}{\tikzSections@bottomLip}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@cfsPostDraw{\tikzSections@depth}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsHat}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csCFSHat{\tikzSections@depth}{\tikzSections@leftFlange}{\tikzSections@width}{\tikzSections@rightFlange}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@depth}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsAngle}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csCFSAngle{\tikzSections@verticalLeg}{\tikzSections@horizontalLeg}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@verticalLeg}{\tikzSections@horizontalLeg}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsLippedAngle}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csCFSLippedAngle{\tikzSections@verticalLeg}{\tikzSections@horizontalLeg}{\tikzSections@thickness}{\tikzSections@radius}{\tikzSections@lip}%
+		\tikzSections@postDraw{\tikzSections@verticalLeg}{\tikzSections@horizontalLeg}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsRHS}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillRectangle{\tikzSections@depth}{\tikzSections@width}%
+		\csCFSRHS{\tikzSections@depth}{\tikzSections@width}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@depth}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsSHS}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillRectangle{\tikzSections@width}{\tikzSections@width}%
+		\csCFSSHS{\tikzSections@width}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@width}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsCHS}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillCircle{\tikzSections@radius}%
+		\scope[shift={({\tikzSections@radius},{\tikzSections@radius})}]
+			\csCFSCHS{\tikzSections@radius}{\tikzSections@thickness}%
+		\endscope
+		\tikzSections@postDraw{2*\tikzSections@radius}{2*\tikzSections@radius}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsUniversalBeam}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csHRSUniversalBeam{\tikzSections@depth}{\tikzSections@width}{\tikzSections@flangeThickness}{\tikzSections@webThickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@depth}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsUniversalColumn}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csHRSUniversalColumn{\tikzSections@depth}{\tikzSections@width}{\tikzSections@flangeThickness}{\tikzSections@webThickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@depth}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsWeldedI}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csHRSWeldedI{\tikzSections@webDepth}{\tikzSections@webThickness}{\tikzSections@bottomFlangeWidth}{\tikzSections@bottomFlangeThickness}{\tikzSections@topFlangeWidth}{\tikzSections@topFlangeThickness}%
+		\tikzSections@postDraw{\tikzSections@webDepth}{\tikzSections@topFlangeWidth}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsTee}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csHRSTee{\tikzSections@depth}{\tikzSections@width}{\tikzSections@flangeThickness}{\tikzSections@webThickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@depth}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsHRSChannel}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csHRSChannel{\tikzSections@depth}{\tikzSections@width}{\tikzSections@flangeThickness}{\tikzSections@webThickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@depth}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsEqualAngle}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csHRSEqualAngle{\tikzSections@leg}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@leg}{\tikzSections@leg}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsUnequalAngle}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\csHRSUnequalAngle{\tikzSections@verticalLeg}{\tikzSections@horizontalLeg}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@verticalLeg}{\tikzSections@horizontalLeg}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsPlate}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillRectangle{\tikzSections@thickness}{\tikzSections@width}%
+		\csHRSPlate{\tikzSections@width}{\tikzSections@thickness}{\tikzSections@referenceLineWidth}%
+		\tikzSections@postDraw{\tikzSections@thickness}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsFlatBar}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillRectangle{\tikzSections@thickness}{\tikzSections@width}%
+		\csHRSFlatBar{\tikzSections@width}{\tikzSections@thickness}{\tikzSections@referenceLineWidth}%
+		\tikzSections@postDraw{\tikzSections@thickness}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsRoundBar}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillCircle{\tikzSections@radius}%
+		\scope[shift={({\tikzSections@radius},{\tikzSections@radius})}]
+			\csHRSRoundBar{\tikzSections@radius}{\tikzSections@lineWidth}%
+		\endscope
+		\tikzSections@postDraw{2*\tikzSections@radius}{2*\tikzSections@radius}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsHRSCHS}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillCircle{\tikzSections@radius}%
+		\scope[shift={({\tikzSections@radius},{\tikzSections@radius})}]
+			\csHRSCHS{\tikzSections@radius}{\tikzSections@thickness}%
+		\endscope
+		\tikzSections@postDraw{2*\tikzSections@radius}{2*\tikzSections@radius}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsHRSRHS}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillRectangle{\tikzSections@depth}{\tikzSections@width}%
+		\csHRSRHS{\tikzSections@depth}{\tikzSections@width}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@depth}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+
+\newcommand{\TikZSectionsHRSSHS}[1][]{%
+	\tikzSections@applyKeys{#1}%
+	\tikzSections@scopeBegin
+		\tikzSections@fillRectangle{\tikzSections@width}{\tikzSections@width}%
+		\csHRSSHS{\tikzSections@width}{\tikzSections@thickness}{\tikzSections@radius}%
+		\tikzSections@postDraw{\tikzSections@width}{\tikzSections@width}%
+	\tikzSections@scopeEnd
+}
+\makeatother
+
+
+
+%
+% ===== ===== Generic sections
+%
+
+\newcommand{\csARB}[2]{
+	\def\points{#1}
+	\foreach \p [count=\i,remember=\p as \lastp] in \points{
+		\ifnum\i>1\relax
+			\draw [line width=#2 mm, tikzSections/round] \lastp -- \p;
+		\fi
+	}
+}

@@ -1,0 +1,613 @@
+\documentclass[10pt]{article}
+
+\usepackage[a4paper,margin=18mm]{geometry}
+\usepackage{adjustbox}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage{tikz-sections}
+
+\title{TikZ-Sections Manual}
+\author{Parsa Yazdi}
+\date{Version 0.1.2, 2026-05-23}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlist[itemize]{leftmargin=*,topsep=2pt,itemsep=1pt}
+\renewcommand{\arraystretch}{1.15}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\definecolor{CodeBack}{RGB}{246,247,249}
+\definecolor{RuleGray}{RGB}{210,214,220}
+
+\lstdefinestyle{TikZSectionsCode}{
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  breakatwhitespace=false,
+  frame=single,
+  rulecolor=\color{RuleGray},
+  backgroundcolor=\color{CodeBack},
+  xleftmargin=2mm,
+  xrightmargin=2mm,
+  aboveskip=5pt,
+  belowskip=5pt
+}
+
+\lstset{style=TikZSectionsCode}
+
+\newcommand{\command}[1]{\texttt{\textbackslash #1}}
+\newcommand{\smallcommand}[1]{{\scriptsize\texttt{\textbackslash #1}}}
+\newcommand{\keyname}[1]{\texttt{#1}}
+
+\newcommand{\CodeInline}[1]{%
+  \begingroup
+  \ttfamily\scriptsize\raggedright\Urlmuskip=0mu plus 1mu\url{#1}%
+  \endgroup
+}
+
+\newcommand{\ShapePreview}[1]{%
+  \begin{center}
+  \begin{adjustbox}{max width=26mm,max height=22mm}
+    \begin{tikzpicture}
+      #1
+    \end{tikzpicture}
+  \end{adjustbox}
+  \end{center}
+}
+
+\newcommand{\WideShapePreview}[1]{%
+  \begin{center}
+  \begin{adjustbox}{max width=34mm,max height=20mm}
+    \begin{tikzpicture}
+      #1
+    \end{tikzpicture}
+  \end{adjustbox}
+  \end{center}
+}
+
+\newcommand{\ReferenceRow}[6]{%
+  \textbf{\command{#1}}\par
+  #2\par
+  \vspace{2pt}
+  \begin{tabular}{@{}p{0.20\linewidth}p{0.34\linewidth}p{0.38\linewidth}@{}}
+    #6 & \footnotesize #3 & \CodeInline{#4}
+  \end{tabular}
+  \par\vspace{4mm}
+}
+
+\newcommand{\CommandSummary}[4]{%
+  \smallcommand{#1} & #2 & #3 & #4 \\
+}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Purpose and Scope}
+
+TikZ-Sections provides TikZ commands for drawing structural cross-section
+sketches. The current package covers cold-formed steel (CFS), hot-rolled steel
+(HRS), and initial reinforced-concrete (RC) cross-sections.
+
+The package has two command layers:
+
+\begin{itemize}
+  \item Public key-value commands such as \command{TikZSectionsChannel}. These are
+  recommended for new documents because the options are readable and can be
+  omitted when defaults are acceptable.
+  \item Positional helper commands such as \command{csChannel}. These remain
+  available for lower-level drawings.
+\end{itemize}
+
+\section{Installation and Loading}
+
+Place \texttt{tikz-sections.sty} next to your document or in a directory searched by
+your LaTeX installation, then load it in the preamble:
+
+\begin{lstlisting}
+\usepackage{tikz-sections}
+\end{lstlisting}
+
+TikZ-Sections loads TikZ and the TikZ \keyname{calc} library.
+
+\section{Quick Start}
+
+The example below draws a lipped cold-formed channel with a label, centerlines,
+and the current basic dimension overlay.
+
+\begin{center}
+\begin{adjustbox}{max width=45mm,max height=40mm}
+\begin{tikzpicture}
+  \TikZSectionsLippedChannel[
+    depth=245,
+    flange=75,
+    lip=20,
+    thickness=2.5,
+    radius=5,
+    centerline=true,
+    dimensions=true,
+    label=C245,
+    label x=35,
+    label y=130,
+    scale=0.03
+  ]
+\end{tikzpicture}
+\end{adjustbox}
+\end{center}
+
+\begin{lstlisting}
+\begin{tikzpicture}
+  \TikZSectionsLippedChannel[
+    depth=245,
+    flange=75,
+    lip=20,
+    thickness=2.5,
+    radius=5,
+    centerline=true,
+    dimensions=true,
+    label=C245,
+    label x=35,
+    label y=130,
+    scale=0.03
+  ]
+\end{tikzpicture}
+\end{lstlisting}
+
+\section{Key-Value Model}
+
+Every public drawing command accepts a single optional key list:
+
+\begin{lstlisting}
+\TikZSectionsChannel[depth=180, flange=55, thickness=2, radius=4]
+\end{lstlisting}
+
+The keys are reset to package defaults each time a public drawing command is
+called. Use \keyname{at}, \keyname{x}, \keyname{y}, \keyname{scale}, \keyname{xscale}, \keyname{yscale}, and \keyname{rotate} to
+position a section inside a larger \texttt{tikzpicture}.
+
+Public section commands draw into the current \texttt{tikzpicture}; they do not
+create a \texttt{tikzpicture} internally. They may be used inside ordinary TikZ
+\texttt{scope} environments and mixed with commands such as \command{draw},
+\command{fill}, \command{node}, and \command{foreach}.
+
+\subsection{Default Keys}
+
+\begin{longtable}{p{0.22\linewidth}p{0.18\linewidth}p{0.50\linewidth}}
+\toprule
+Key & Default & Meaning \\
+\midrule
+\keyname{depth} & 245 & Section depth or vertical size \\
+\keyname{width} & 75 & Section width, horizontal size, or circular diameter for RC commands \\
+\keyname{diameter} & 75 & Alias stored as the circular width/diameter value \\
+\keyname{flange} & 75 & Common CFS flange width used when top/bottom values are not supplied \\
+\keyname{top flange}, \keyname{bottom flange} & 75 & Independent CFS flange widths overriding \keyname{flange} \\
+\keyname{left flange}, \keyname{right flange} & 35 & Hat-section flange widths \\
+\keyname{lip} & 20 & Common CFS lip length used when top/bottom values are not supplied \\
+\keyname{top lip}, \keyname{bottom lip} & 20 & Independent CFS lip lengths overriding \keyname{lip} \\
+\keyname{thickness} & 2.5 & Steel thickness or drawing line width in millimetres \\
+\keyname{radius}, \keyname{inside radius}, \keyname{bend radius}, \keyname{root radius} & 5 & Bend radius or rolled-section root radius \\
+\keyname{position}, \keyname{stiffener position} & 0.5 & Relative stiffener position along the web \\
+\keyname{leg} & 60 & Equal-angle leg length \\
+\keyname{vertical leg}, \keyname{horizontal leg} & 60, 40 & Unequal-angle leg lengths \\
+\keyname{web depth}, \keyname{web thickness} & 95, 1 & Welded I-section web dimensions \\
+\keyname{flange thickness} & 2 & Rolled flange thickness \\
+\keyname{top flange width}, \keyname{bottom flange width} & 35 & Welded I-section flange widths \\
+\keyname{top flange thickness}, \keyname{bottom flange thickness} & 2 & Welded I-section flange thicknesses \\
+\keyname{reference line width} & 0 & Optional plate/bar reference line width \\
+\keyname{line width} & 1 & Round-bar line width \\
+\keyname{cover} & 40 & RC cover distance used for rebar/tie placement \\
+\keyname{bar diameter} & 16 & RC rebar diameter \\
+\keyname{top bars}, \keyname{bottom bars} & 2 & Rectangular RC bar counts \\
+\keyname{left bars}, \keyname{right bars} & 0 & Rectangular RC side-bar counts \\
+\keyname{top layers}, \keyname{bottom layers}, \keyname{side layers} & 1 & RC reinforcement layer counts \\
+\keyname{layer spacing} & 25 & RC spacing between bar layers \\
+\keyname{perimeter bars} & 8 & Circular RC perimeter bar count \\
+\keyname{label}, \keyname{label x}, \keyname{label y} & empty, 0, 0 & Optional text label and position \\
+\keyname{filled} & false & Fill closed steel/bar shapes before drawing the outline \\
+\keyname{centerline} & false & Draw horizontal and vertical centerlines \\
+\keyname{dimensions} & false & Draw the current basic dimension overlay \\
+\keyname{monochrome} & false & Draw straight and curved steel segments in black \\
+\keyname{tie} & true & Draw RC tie/closed stirrup line \\
+\keyname{at}, \keyname{shift}, \keyname{scale}, \keyname{xscale}, \keyname{yscale}, \keyname{rotate}, \keyname{x}, \keyname{y} & (0,0), (0,0), 1, 1, 1, 0, 0, 0 & Placement and local transform values \\
+\bottomrule
+\end{longtable}
+
+\section{Style Hooks}
+
+The package routes drawing through TikZ styles. This lets users keep the same
+geometry while changing color, line style, or fill appearance.
+
+\begin{longtable}{p{0.28\linewidth}p{0.60\linewidth}}
+\toprule
+Style & Purpose \\
+\midrule
+\keyname{tikzSections/straight} & Straight steel segments \\
+\keyname{tikzSections/round} & Curved/radius steel segments \\
+\keyname{tikzSections/centerline} & Optional centerlines \\
+\keyname{tikzSections/hidden} & Hidden or reference lines \\
+\keyname{tikzSections/dimension} & Current dimension overlay lines \\
+\keyname{tikzSections/label} & Labels drawn with the \keyname{label} key \\
+\keyname{tikzSections/fill} & Fills for closed steel/bar shapes \\
+\keyname{tikzSections/concrete} & RC concrete outline and fill \\
+\keyname{tikzSections/rebar} & RC rebar circles \\
+\keyname{tikzSections/tie} & RC tie/stirrup outline \\
+\bottomrule
+\end{longtable}
+
+\begin{lstlisting}
+\TikZSectionsSetup{
+  tikzSections/straight/.style={tikzSections/default, black},
+  tikzSections/round/.style={tikzSections/default, gray},
+  tikzSections/fill/.style={fill=gray!15}
+}
+\end{lstlisting}
+
+\section{Dimension Overlay}
+
+The \keyname{dimensions=true} key currently draws a generic horizontal and
+vertical dimension guide around the section. It is not a complete engineering
+dimensioning system. It does not yet draw dimension values, extension lines,
+standard offsets, unit formatting, or standard-specific notation.
+
+\section{Cold-Formed Lip Handling}
+
+Cold-formed channel and zee families use one geometry path for lipped and
+unlipped forms. Set \keyname{lip=0}, or set both \keyname{top lip=0} and
+\keyname{bottom lip=0}, to suppress the lips. The named unlipped commands are
+convenience wrappers around the same general channel/zee handlers.
+
+\section{Command Summary}
+
+\begin{footnotesize}
+\begin{longtable}{@{}L{0.32\linewidth}L{0.19\linewidth}L{0.32\linewidth}L{0.05\linewidth}@{}}
+\toprule
+Command & Shape & Main keys & Group \\
+\midrule
+\CommandSummary{TikZSectionsChannel}{Unlipped channel}{\keyname{depth}, \keyname{flange} or top/bottom flanges, \keyname{thickness}, \keyname{radius}}{CFS}
+\CommandSummary{TikZSectionsLippedChannel}{Lipped channel}{\keyname{depth}, \keyname{flange}/top/bottom flanges, \keyname{lip}/top/bottom lips}{CFS}
+\CommandSummary{TikZSectionsStiffenedChannel}{Intermediate-stiffened channel}{\keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}, \keyname{stiffener position}}{CFS}
+\CommandSummary{TikZSectionsZee}{Zee section}{\keyname{depth}, \keyname{flange} or top/bottom flanges, \keyname{thickness}, \keyname{radius}}{CFS}
+\CommandSummary{TikZSectionsLippedZee}{Lipped zee section}{\keyname{depth}, \keyname{flange}/top/bottom flanges, \keyname{lip}/top/bottom lips}{CFS}
+\CommandSummary{TikZSectionsSigma}{Sigma section}{\keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}{CFS}
+\CommandSummary{TikZSectionsHat}{Hat section}{\keyname{depth}, \keyname{width}, \keyname{left flange}, \keyname{right flange}}{CFS}
+\CommandSummary{TikZSectionsAngle}{Cold-formed angle}{\keyname{vertical leg}, \keyname{horizontal leg}, \keyname{thickness}, \keyname{radius}}{CFS}
+\CommandSummary{TikZSectionsLippedAngle}{Lipped angle}{\keyname{vertical leg}, \keyname{horizontal leg}, \keyname{lip}}{CFS}
+\CommandSummary{TikZSectionsRHS}{Rectangular hollow section}{\keyname{depth}, \keyname{width}, \keyname{thickness}, \keyname{radius}}{CFS}
+\CommandSummary{TikZSectionsSHS}{Square hollow section}{\keyname{width}, \keyname{thickness}, \keyname{radius}}{CFS}
+\CommandSummary{TikZSectionsCHS}{Circular hollow section}{\keyname{radius}, \keyname{thickness}}{CFS}
+\CommandSummary{TikZSectionsUniversalBeam}{Universal beam/I-section}{\keyname{depth}, \keyname{width}, \keyname{flange thickness}, \keyname{web thickness}}{HRS}
+\CommandSummary{TikZSectionsUniversalColumn}{Universal column/I-section}{\keyname{depth}, \keyname{width}, \keyname{flange thickness}, \keyname{web thickness}}{HRS}
+\CommandSummary{TikZSectionsWeldedI}{Welded I-section}{\keyname{web depth}, \keyname{top flange width}, \keyname{bottom flange width}}{HRS}
+\CommandSummary{TikZSectionsTee}{Tee section}{\keyname{depth}, \keyname{width}, \keyname{flange thickness}, \keyname{web thickness}}{HRS}
+\CommandSummary{TikZSectionsHRSChannel}{Hot-rolled channel}{\keyname{depth}, \keyname{width}, \keyname{flange thickness}, \keyname{web thickness}}{HRS}
+\CommandSummary{TikZSectionsEqualAngle}{Equal angle}{\keyname{leg}, \keyname{thickness}, \keyname{root radius}}{HRS}
+\CommandSummary{TikZSectionsUnequalAngle}{Unequal angle}{\keyname{vertical leg}, \keyname{horizontal leg}, \keyname{thickness}}{HRS}
+\CommandSummary{TikZSectionsPlate}{Plate}{\keyname{width}, \keyname{thickness}, \keyname{filled}}{HRS}
+\CommandSummary{TikZSectionsFlatBar}{Flat bar}{\keyname{width}, \keyname{thickness}, \keyname{filled}}{HRS}
+\CommandSummary{TikZSectionsRoundBar}{Round bar}{\keyname{radius}, \keyname{line width}, \keyname{filled}}{HRS}
+\CommandSummary{TikZSectionsHRSCHS}{Hot-rolled circular hollow section}{\keyname{radius}, \keyname{thickness}}{HRS}
+\CommandSummary{TikZSectionsHRSRHS}{Hot-rolled rectangular hollow section}{\keyname{depth}, \keyname{width}, \keyname{thickness}, \keyname{root radius}}{HRS}
+\CommandSummary{TikZSectionsHRSSHS}{Hot-rolled square hollow section}{\keyname{width}, \keyname{thickness}, \keyname{root radius}}{HRS}
+\CommandSummary{TikZRCRectangular}{Rectangular RC section}{\keyname{width}, \keyname{depth}, \keyname{cover}, \keyname{bar diameter}, bar counts}{RC}
+\CommandSummary{TikZRCCircular}{Circular RC section}{\keyname{diameter}, \keyname{cover}, \keyname{bar diameter}, \keyname{perimeter bars}}{RC}
+\bottomrule
+\end{longtable}
+\end{footnotesize}
+
+\section{Visual Catalogue}
+
+The previews in this section are deliberately bounded with maximum width and
+height limits. The example code can be pasted into any \texttt{tikzpicture}.
+
+\subsection{Cold-Formed Steel}
+
+\ReferenceRow
+  {TikZSectionsChannel}
+  {Unlipped channel.}
+  {\keyname{depth}, \keyname{flange}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsLippedChannel}
+  {Channel with equal lips at the flange tips.}
+  {\keyname{depth}, \keyname{flange}, \keyname{lip}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsStiffenedChannel}
+  {Channel with one intermediate web stiffener. Use \keyname{stiffener position} from 0 to 1.}
+  {\keyname{depth}, \keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}, \keyname{stiffener position}}
+  {\TikZSectionsStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, stiffener position=0.55, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, stiffener position=0.55, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsZee}
+  {Open zee section.}
+  {\keyname{depth}, \keyname{flange}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsZee[depth=180, flange=55, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsZee[depth=180, flange=55, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsLippedZee}
+  {Zee section with lips.}
+  {\keyname{depth}, \keyname{flange}, \keyname{lip}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsLippedZee[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsLippedZee[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsSigma}
+  {Sigma-style stiffened section with independent top and bottom flange/lip dimensions.}
+  {\keyname{depth}, \keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}
+  {\TikZSectionsSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsHat}
+  {Hat section with independent left and right outward flanges.}
+  {\keyname{depth}, \keyname{width}, \keyname{left flange}, \keyname{right flange}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsHat[depth=100, width=45, left flange=25, right flange=25, thickness=2, radius=4, scale=0.04]}
+  {}
+  {\WideShapePreview{\TikZSectionsHat[depth=100, width=45, left flange=25, right flange=25, thickness=2, radius=4, scale=0.04]}}
+
+\ReferenceRow
+  {TikZSectionsAngle}
+  {Cold-formed angle.}
+  {\keyname{vertical leg}, \keyname{horizontal leg}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsAngle[vertical leg=100, horizontal leg=60, thickness=2, radius=4, scale=0.04]}
+  {}
+  {\ShapePreview{\TikZSectionsAngle[vertical leg=100, horizontal leg=60, thickness=2, radius=4, scale=0.04]}}
+
+\ReferenceRow
+  {TikZSectionsLippedAngle}
+  {Cold-formed angle with a lip at the horizontal leg tip.}
+  {\keyname{vertical leg}, \keyname{horizontal leg}, \keyname{lip}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsLippedAngle[vertical leg=100, horizontal leg=60, lip=20, thickness=2, radius=4, scale=0.04]}
+  {}
+  {\ShapePreview{\TikZSectionsLippedAngle[vertical leg=100, horizontal leg=60, lip=20, thickness=2, radius=4, scale=0.04]}}
+
+\ReferenceRow
+  {TikZSectionsRHS}
+  {Rectangular hollow section. Set \keyname{filled=true} for a grey fill behind the outline.}
+  {\keyname{depth}, \keyname{width}, \keyname{thickness}, \keyname{radius}, \keyname{filled}}
+  {\TikZSectionsRHS[depth=120, width=70, thickness=2, radius=4, filled=true, scale=0.04]}
+  {}
+  {\ShapePreview{\TikZSectionsRHS[depth=120, width=70, thickness=2, radius=4, filled=true, scale=0.04]}}
+
+\ReferenceRow
+  {TikZSectionsSHS}
+  {Square hollow section.}
+  {\keyname{width}, \keyname{thickness}, \keyname{radius}, \keyname{filled}}
+  {\TikZSectionsSHS[width=80, thickness=2, radius=4, filled=true, scale=0.04]}
+  {}
+  {\ShapePreview{\TikZSectionsSHS[width=80, thickness=2, radius=4, filled=true, scale=0.04]}}
+
+\ReferenceRow
+  {TikZSectionsCHS}
+  {Circular hollow section.}
+  {\keyname{radius}, \keyname{thickness}, \keyname{filled}}
+  {\TikZSectionsCHS[radius=35, thickness=2, filled=true, scale=0.04]}
+  {}
+  {\ShapePreview{\TikZSectionsCHS[radius=35, thickness=2, filled=true, scale=0.04]}}
+
+\subsection{Hot-Rolled Steel}
+
+\ReferenceRow
+  {TikZSectionsUniversalBeam}
+  {Rolled I-section/universal beam sketch.}
+  {\keyname{depth}, \keyname{width}, \keyname{flange thickness}, \keyname{web thickness}, \keyname{root radius}}
+  {\TikZSectionsUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}
+  {}
+  {\ShapePreview{\TikZSectionsUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}}
+
+\ReferenceRow
+  {TikZSectionsUniversalColumn}
+  {Rolled I-section/universal column sketch.}
+  {\keyname{depth}, \keyname{width}, \keyname{flange thickness}, \keyname{web thickness}, \keyname{root radius}}
+  {\TikZSectionsUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}
+  {}
+  {\ShapePreview{\TikZSectionsUniversalColumn[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}}
+
+\ReferenceRow
+  {TikZSectionsWeldedI}
+  {Fabricated I-section with independent flange dimensions.}
+  {\keyname{web depth}, \keyname{web thickness}, \keyname{top flange width}, \keyname{top flange thickness}, \keyname{bottom flange width}, \keyname{bottom flange thickness}}
+  {\TikZSectionsWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, scale=0.1]}
+  {}
+  {\ShapePreview{\TikZSectionsWeldedI[web depth=95, web thickness=1, top flange width=35, top flange thickness=2, bottom flange width=35, bottom flange thickness=2, scale=0.1]}}
+
+\ReferenceRow
+  {TikZSectionsTee}
+  {Hot-rolled tee section.}
+  {\keyname{depth}, \keyname{width}, \keyname{flange thickness}, \keyname{web thickness}, \keyname{root radius}}
+  {\TikZSectionsTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.2]}
+  {}
+  {\ShapePreview{\TikZSectionsTee[depth=30.6, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.2]}}
+
+\ReferenceRow
+  {TikZSectionsHRSChannel}
+  {Hot-rolled channel.}
+  {\keyname{depth}, \keyname{width}, \keyname{flange thickness}, \keyname{web thickness}, \keyname{root radius}}
+  {\TikZSectionsHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}
+  {}
+  {\ShapePreview{\TikZSectionsHRSChannel[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, scale=0.16]}}
+
+\ReferenceRow
+  {TikZSectionsEqualAngle}
+  {Hot-rolled equal angle.}
+  {\keyname{leg}, \keyname{thickness}, \keyname{root radius}}
+  {\TikZSectionsEqualAngle[leg=35, thickness=3, root radius=2, scale=0.18]}
+  {}
+  {\ShapePreview{\TikZSectionsEqualAngle[leg=35, thickness=3, root radius=2, scale=0.18]}}
+
+\ReferenceRow
+  {TikZSectionsUnequalAngle}
+  {Hot-rolled unequal angle.}
+  {\keyname{vertical leg}, \keyname{horizontal leg}, \keyname{thickness}, \keyname{root radius}}
+  {\TikZSectionsUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, scale=0.18]}
+  {}
+  {\ShapePreview{\TikZSectionsUnequalAngle[vertical leg=45, horizontal leg=30, thickness=3, root radius=2, scale=0.18]}}
+
+\ReferenceRow
+  {TikZSectionsPlate}
+  {Plate rectangle.}
+  {\keyname{width}, \keyname{thickness}, \keyname{filled}, \keyname{reference line width}}
+  {\TikZSectionsPlate[width=40, thickness=8, filled=true, scale=0.2]}
+  {}
+  {\WideShapePreview{\TikZSectionsPlate[width=40, thickness=8, filled=true, scale=0.2]}}
+
+\ReferenceRow
+  {TikZSectionsFlatBar}
+  {Flat bar.}
+  {\keyname{width}, \keyname{thickness}, \keyname{filled}, \keyname{reference line width}}
+  {\TikZSectionsFlatBar[width=40, thickness=8, filled=true, scale=0.2]}
+  {}
+  {\WideShapePreview{\TikZSectionsFlatBar[width=40, thickness=8, filled=true, scale=0.2]}}
+
+\ReferenceRow
+  {TikZSectionsRoundBar}
+  {Round bar.}
+  {\keyname{radius}, \keyname{line width}, \keyname{filled}}
+  {\TikZSectionsRoundBar[radius=10, line width=1, filled=true, scale=0.2]}
+  {}
+  {\ShapePreview{\TikZSectionsRoundBar[radius=10, line width=1, filled=true, scale=0.2]}}
+
+\ReferenceRow
+  {TikZSectionsHRSCHS}
+  {Hot-rolled circular hollow section.}
+  {\keyname{radius}, \keyname{thickness}, \keyname{filled}}
+  {\TikZSectionsHRSCHS[radius=20, thickness=3, filled=true, scale=0.18]}
+  {}
+  {\ShapePreview{\TikZSectionsHRSCHS[radius=20, thickness=3, filled=true, scale=0.18]}}
+
+\ReferenceRow
+  {TikZSectionsHRSRHS}
+  {Hot-rolled rectangular hollow section.}
+  {\keyname{depth}, \keyname{width}, \keyname{thickness}, \keyname{root radius}, \keyname{filled}}
+  {\TikZSectionsHRSRHS[depth=50, width=35, thickness=3, root radius=4, filled=true, scale=0.18]}
+  {}
+  {\ShapePreview{\TikZSectionsHRSRHS[depth=50, width=35, thickness=3, root radius=4, filled=true, scale=0.18]}}
+
+\ReferenceRow
+  {TikZSectionsHRSSHS}
+  {Hot-rolled square hollow section.}
+  {\keyname{width}, \keyname{thickness}, \keyname{root radius}, \keyname{filled}}
+  {\TikZSectionsHRSSHS[width=40, thickness=3, root radius=4, filled=true, scale=0.18]}
+  {}
+  {\ShapePreview{\TikZSectionsHRSSHS[width=40, thickness=3, root radius=4, filled=true, scale=0.18]}}
+
+\subsection{Reinforced Concrete}
+
+\ReferenceRow
+  {TikZRCRectangular}
+  {Rectangular concrete section with top, bottom, and optional side bars.}
+  {\keyname{width}, \keyname{depth}, \keyname{cover}, \keyname{bar diameter}, \keyname{top bars}, \keyname{bottom bars}, \keyname{left bars}, \keyname{right bars}}
+  {\TikZRCRectangular[width=300, depth=500, cover=40, bar diameter=18, top bars=2, bottom bars=3, bottom layers=2, layer spacing=28, scale=0.025]}
+  {}
+  {\ShapePreview{\TikZRCRectangular[width=300, depth=500, cover=40, bar diameter=18, top bars=2, bottom bars=3, bottom layers=2, layer spacing=28, scale=0.025]}}
+
+\ReferenceRow
+  {TikZRCCircular}
+  {Circular concrete section with perimeter bars.}
+  {\keyname{diameter}, \keyname{cover}, \keyname{bar diameter}, \keyname{perimeter bars}, \keyname{tie}}
+  {\TikZRCCircular[diameter=450, cover=45, bar diameter=20, perimeter bars=10, scale=0.025]}
+  {}
+  {\ShapePreview{\TikZRCCircular[diameter=450, cover=45, bar diameter=20, perimeter bars=10, scale=0.025]}}
+
+\section{Composing Sections With TikZ}
+
+TikZ-Sections focuses on single-section primitives. Built-up assemblies should
+be made with ordinary TikZ scopes and transforms so users can compose any
+combination without package-specific built-up commands.
+
+\begin{lstlisting}
+\begin{tikzpicture}
+  \TikZSectionsLippedChannel[
+    depth=180,
+    flange=55,
+    lip=18,
+    thickness=2,
+    radius=4,
+    scale=0.03
+  ]
+  \begin{scope}[shift={(4,0)}, xscale=-1]
+    \TikZSectionsLippedChannel[
+      depth=180,
+      flange=55,
+      lip=18,
+      thickness=2,
+      radius=4,
+      scale=0.03
+    ]
+  \end{scope}
+\end{tikzpicture}
+\end{lstlisting}
+
+\section{Positional Helper Commands}
+
+The following lower-level helper commands use positional
+arguments and therefore are less self-documenting than the public key-value API.
+
+\begin{footnotesize}
+\begin{longtable}{@{}L{0.39\linewidth}L{0.53\linewidth}@{}}
+\toprule
+Command & Positional arguments \\
+\midrule
+\smallcommand{csCFSChannel} & depth, flange, thickness, radius \\
+\smallcommand{csCFSLippedChannel} & depth, flange, lip, thickness, radius \\
+\smallcommand{csCFSChannelGeneral} & depth, top flange, top lip, bottom flange, bottom lip, thickness, radius \\
+\smallcommand{csCFSEdgeStiffenedChannel} & depth, flange, lip, thickness, radius \\
+\smallcommand{csCFSChannelWithOneStiffener} & depth, top flange, top lip, bottom flange, bottom lip, thickness, radius, position \\
+\smallcommand{csCFSChannelWithTwoStiffeners} & depth, top flange, top lip, bottom flange, bottom lip, thickness, radius \\
+\smallcommand{csCFSChannelWithThreeStiffeners} & depth, top flange, top lip, bottom flange, bottom lip, thickness, radius, position \\
+\smallcommand{csCFSZee} & depth, flange, thickness, radius \\
+\smallcommand{csCFSLippedZee} & depth, flange, lip, thickness, radius \\
+\smallcommand{csCFSZeeGeneral} & depth, top flange, top lip, bottom flange, bottom lip, thickness, radius \\
+\smallcommand{csCFSSigma} & depth, top flange, top lip, bottom flange, bottom lip, thickness, radius \\
+\smallcommand{csCFSHat} & depth, left flange, width, right flange, thickness, radius \\
+\smallcommand{csCFSAngle} & vertical leg, horizontal leg, thickness, radius \\
+\smallcommand{csCFSLippedAngle} & vertical leg, horizontal leg, thickness, radius, lip \\
+\smallcommand{csCFSBox}, \smallcommand{csCFSRHS} & depth, width, thickness, radius \\
+\smallcommand{csCFSSHS} & width, thickness, radius \\
+\smallcommand{csCFSCHS} & radius, thickness \\
+\smallcommand{csCFSFoldedPlate} & point list, thickness \\
+\smallcommand{csHRSUniversalBeam}, \smallcommand{csHRSUniversalColumn}, \smallcommand{csHRSISection} & depth, width, flange thickness, web thickness, root radius \\
+\smallcommand{csHRSWeldedI} & web depth, web thickness, bottom flange width, bottom flange thickness, top flange width, top flange thickness \\
+\smallcommand{csHRSTee}, \smallcommand{csHRSChannel} & depth, width, flange thickness, web thickness, root radius \\
+\smallcommand{csHRSEqualAngle} & leg, thickness, root radius \\
+\smallcommand{csHRSUnequalAngle} & vertical leg, horizontal leg, thickness, root radius \\
+\smallcommand{csHRSPlate}, \smallcommand{csHRSFlatBar} & width, thickness, reference line width \\
+\smallcommand{csHRSRoundBar}, \smallcommand{csHRSCHS} & radius, thickness or line width \\
+\smallcommand{csHRSRHS} & depth, width, thickness, root radius \\
+\smallcommand{csHRSSHS} & width, thickness, root radius \\
+\bottomrule
+\end{longtable}
+\end{footnotesize}
+
+\section{Current Limitations}
+
+\begin{itemize}
+  \item The \keyname{dimensions=true} overlay is a placeholder, not a
+  standard-based engineering dimensioning system.
+  \item The \keyname{simplified} and \keyname{detailed} mode keys are accepted
+  for API stability, but detailed rolled-radius behavior is still future work.
+  \item Generated figures are schematic cross-section sketches. They are not
+  section-property calculators and do not validate engineering dimensions.
+\end{itemize}
+
+\end{document}

@@ -2,7 +2,7 @@
 
 \usepackage[a4paper,landscape,margin=14mm]{geometry}
 \usepackage{array}
-\usepackage{tikzSteel}
+\usepackage{tikz-sections}
 
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
@@ -23,26 +23,26 @@
 
 \begin{document}
 
-\TikZSteelSetup{
-  tikzSteel/straight/.style={tikzSteel/default, black},
-  tikzSteel/round/.style={tikzSteel/default, gray},
-  tikzSteel/dimension/.style={tikzSteel/default, gray, <->},
-  tikzSteel/label/.style={font=\small}
+\TikZSectionsSetup{
+  tikzSections/straight/.style={tikzSections/default, black},
+  tikzSections/round/.style={tikzSections/default, gray},
+  tikzSections/dimension/.style={tikzSections/default, gray, <->},
+  tikzSections/label/.style={font=\small}
 }
 
 \ExampleRow
   {Lipped channel with centerlines, dimensions, and label}
-  {\TikZSteelLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, label x=30, label y=95, scale=0.025]}
-  {\TikZSteelLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, label x=30, label y=95, scale=0.025]}
+  {\TikZSectionsLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, label x=30, label y=95, scale=0.025]}
+  {\TikZSectionsLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, label x=30, label y=95, scale=0.025]}
 
 \ExampleRow
   {Monochrome universal beam with label}
-  {\TikZSteelUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, monochrome=true, label=UB, label x=12, label y=68, scale=0.12]}
-  {\TikZSteelUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, monochrome=true, label=UB, label x=12, label y=68, scale=0.12]}
+  {\TikZSectionsUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, monochrome=true, label=UB, label x=12, label y=68, scale=0.12]}
+  {\TikZSectionsUniversalBeam[depth=61.2, width=22.9, flange thickness=1.96, web thickness=1.19, root radius=1.4, monochrome=true, label=UB, label x=12, label y=68, scale=0.12]}
 
 \ExampleRow
   {Filled rectangular hollow section}
-  {\TikZSteelRHS[depth=80, width=50, thickness=3, radius=5, filled=true, scale=0.04]}
-  {\TikZSteelRHS[depth=80, width=50, thickness=3, radius=5, filled=true, scale=0.04]}
+  {\TikZSectionsRHS[depth=80, width=50, thickness=3, radius=5, filled=true, scale=0.04]}
+  {\TikZSectionsRHS[depth=80, width=50, thickness=3, radius=5, filled=true, scale=0.04]}
 
 \end{document}
