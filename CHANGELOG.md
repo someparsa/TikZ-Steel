@@ -18,6 +18,9 @@ All notable development changes for TikZ-Sections are recorded here.
 - Standardized CFS channel and zee handling so public commands accept common
   `flange`/`lip` values while also supporting independent `top flange`,
   `bottom flange`, `top lip`, and `bottom lip` overrides.
+- Consolidated public CFS channel and zee variants into `\TikZSectionsChannel`
+  and `\TikZSectionsZee`; lipped and unlipped forms are selected by lip
+  parameters rather than separate public lipped-channel/lipped-zee commands.
 - Documented and tested `lip=0` as the unlipped form for CFS channel and zee
   geometry.
 - Normalized public circular section wrappers so their local drawing extent

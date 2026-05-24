@@ -605,9 +605,9 @@
 		bottom flange=75,
 		left flange=35,
 		right flange=35,
-		lip=20,
-		top lip=20,
-		bottom lip=20,
+		lip=0,
+		top lip=0,
+		bottom lip=0,
 		thickness=2.5,
 		radius=5,
 		position=0.5,
@@ -804,15 +804,6 @@
 	\tikzSections@applyKeys{#1}%
 	\tikzSections@resolveCFSFlangesAndLips
 	\tikzSections@scopeBegin
-		\csCFSChannelGeneral{\tikzSections@depth}{\tikzSections@topFlange}{0}{\tikzSections@bottomFlange}{0}{\tikzSections@thickness}{\tikzSections@radius}%
-		\tikzSections@cfsPostDraw{\tikzSections@depth}%
-	\tikzSections@scopeEnd
-}
-
-\newcommand{\TikZSectionsLippedChannel}[1][]{%
-	\tikzSections@applyKeys{#1}%
-	\tikzSections@resolveCFSFlangesAndLips
-	\tikzSections@scopeBegin
 		\csCFSChannelGeneral{\tikzSections@depth}{\tikzSections@topFlange}{\tikzSections@topLip}{\tikzSections@bottomFlange}{\tikzSections@bottomLip}{\tikzSections@thickness}{\tikzSections@radius}%
 		\tikzSections@cfsPostDraw{\tikzSections@depth}%
 	\tikzSections@scopeEnd
@@ -828,15 +819,6 @@
 }
 
 \newcommand{\TikZSectionsZee}[1][]{%
-	\tikzSections@applyKeys{#1}%
-	\tikzSections@resolveCFSFlangesAndLips
-	\tikzSections@scopeBegin
-		\csCFSZeeGeneral{\tikzSections@depth}{\tikzSections@topFlange}{0}{\tikzSections@bottomFlange}{0}{\tikzSections@thickness}{\tikzSections@radius}%
-		\tikzSections@cfsPostDraw{\tikzSections@depth}%
-	\tikzSections@scopeEnd
-}
-
-\newcommand{\TikZSectionsLippedZee}[1][]{%
 	\tikzSections@applyKeys{#1}%
 	\tikzSections@resolveCFSFlangesAndLips
 	\tikzSections@scopeBegin

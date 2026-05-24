@@ -126,7 +126,7 @@ and the current basic dimension overlay.
 \begin{center}
 \begin{adjustbox}{max width=45mm,max height=40mm}
 \begin{tikzpicture}
-  \TikZSectionsLippedChannel[
+  \TikZSectionsChannel[
     depth=245,
     flange=75,
     lip=20,
@@ -145,7 +145,7 @@ and the current basic dimension overlay.
 
 \begin{lstlisting}
 \begin{tikzpicture}
-  \TikZSectionsLippedChannel[
+  \TikZSectionsChannel[
     depth=245,
     flange=75,
     lip=20,
@@ -190,8 +190,8 @@ Key & Default & Meaning \\
 \keyname{flange} & 75 & Common CFS flange width used when top/bottom values are not supplied \\
 \keyname{top flange}, \keyname{bottom flange} & 75 & Independent CFS flange widths overriding \keyname{flange} \\
 \keyname{left flange}, \keyname{right flange} & 35 & Hat-section flange widths \\
-\keyname{lip} & 20 & Common CFS lip length used when top/bottom values are not supplied \\
-\keyname{top lip}, \keyname{bottom lip} & 20 & Independent CFS lip lengths overriding \keyname{lip} \\
+\keyname{lip} & 0 & Common CFS lip length used when top/bottom values are not supplied \\
+\keyname{top lip}, \keyname{bottom lip} & 0 & Independent CFS lip lengths overriding \keyname{lip} \\
 \keyname{thickness} & 2.5 & Steel thickness or drawing line width in millimetres \\
 \keyname{radius}, \keyname{inside radius}, \keyname{bend radius}, \keyname{root radius} & 5 & Bend radius or rolled-section root radius \\
 \keyname{position}, \keyname{stiffener position} & 0.5 & Relative stiffener position along the web \\
@@ -261,8 +261,30 @@ standard offsets, unit formatting, or standard-specific notation.
 
 Cold-formed channel and zee families use one geometry path for lipped and
 unlipped forms. Set \keyname{lip=0}, or set both \keyname{top lip=0} and
-\keyname{bottom lip=0}, to suppress the lips. The named unlipped commands are
-convenience wrappers around the same general channel/zee handlers.
+\keyname{bottom lip=0}, to suppress the lips. This is also the default.
+
+For equal top and bottom geometry, use \keyname{flange} and \keyname{lip}. For
+asymmetric geometry, use \keyname{top flange}, \keyname{bottom flange},
+\keyname{top lip}, and \keyname{bottom lip}. The current CFS public API covers
+single-section primitives; built-up assemblies are intended to be composed with
+ordinary TikZ scopes and transforms.
+
+\begin{lstlisting}
+% Equal flange/lip values
+\TikZSectionsChannel[depth=180, flange=55, lip=18]
+
+% Independent top and bottom values
+\TikZSectionsChannel[
+  depth=180,
+  top flange=55,
+  top lip=18,
+  bottom flange=60,
+  bottom lip=20
+]
+
+% Unlipped form through the same channel family
+\TikZSectionsChannel[depth=180, flange=55, lip=0]
+\end{lstlisting}
 
 \section{Command Summary}
 
@@ -271,11 +293,9 @@ convenience wrappers around the same general channel/zee handlers.
 \toprule
 Command & Shape & Main keys & Group \\
 \midrule
-\CommandSummary{TikZSectionsChannel}{Unlipped channel}{\keyname{depth}, \keyname{flange} or top/bottom flanges, \keyname{thickness}, \keyname{radius}}{CFS}
-\CommandSummary{TikZSectionsLippedChannel}{Lipped channel}{\keyname{depth}, \keyname{flange}/top/bottom flanges, \keyname{lip}/top/bottom lips}{CFS}
+\CommandSummary{TikZSectionsChannel}{Channel family}{\keyname{depth}, \keyname{flange}/top/bottom flanges, \keyname{lip}/top/bottom lips, \keyname{thickness}, \keyname{radius}}{CFS}
 \CommandSummary{TikZSectionsStiffenedChannel}{Intermediate-stiffened channel}{\keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}, \keyname{stiffener position}}{CFS}
-\CommandSummary{TikZSectionsZee}{Zee section}{\keyname{depth}, \keyname{flange} or top/bottom flanges, \keyname{thickness}, \keyname{radius}}{CFS}
-\CommandSummary{TikZSectionsLippedZee}{Lipped zee section}{\keyname{depth}, \keyname{flange}/top/bottom flanges, \keyname{lip}/top/bottom lips}{CFS}
+\CommandSummary{TikZSectionsZee}{Zee family}{\keyname{depth}, \keyname{flange}/top/bottom flanges, \keyname{lip}/top/bottom lips, \keyname{thickness}, \keyname{radius}}{CFS}
 \CommandSummary{TikZSectionsSigma}{Sigma section}{\keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}{CFS}
 \CommandSummary{TikZSectionsHat}{Hat section}{\keyname{depth}, \keyname{width}, \keyname{left flange}, \keyname{right flange}}{CFS}
 \CommandSummary{TikZSectionsAngle}{Cold-formed angle}{\keyname{vertical leg}, \keyname{horizontal leg}, \keyname{thickness}, \keyname{radius}}{CFS}
@@ -311,19 +331,35 @@ height limits. The example code can be pasted into any \texttt{tikzpicture}.
 
 \ReferenceRow
   {TikZSectionsChannel}
-  {Unlipped channel.}
-  {\keyname{depth}, \keyname{flange}, \keyname{thickness}, \keyname{radius}}
+  {Channel family with the default unlipped form.}
+  {\keyname{depth}, \keyname{flange}, \keyname{lip=0}, \keyname{thickness}, \keyname{radius}}
   {\TikZSectionsChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.03]}
   {}
   {\ShapePreview{\TikZSectionsChannel[depth=180, flange=55, thickness=2, radius=4, scale=0.03]}}
 
 \ReferenceRow
-  {TikZSectionsLippedChannel}
-  {Channel with equal lips at the flange tips.}
+  {TikZSectionsChannel}
+  {Channel with equal lips at the flange tips. Use \keyname{flange} and \keyname{lip} for equal top/bottom values.}
   {\keyname{depth}, \keyname{flange}, \keyname{lip}, \keyname{thickness}, \keyname{radius}}
-  {\TikZSectionsLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}
+  {\TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}
   {}
-  {\ShapePreview{\TikZSectionsLippedChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}}
+  {\ShapePreview{\TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsChannel}
+  {Asymmetric lipped channel using independent top and bottom flange/lip dimensions.}
+  {\keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}
+  {\TikZSectionsChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsChannel}
+  {Explicit unlipped channel by setting \keyname{lip=0}.}
+  {\keyname{depth}, \keyname{flange}, \keyname{lip=0}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsChannel[depth=180, flange=55, lip=0, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsChannel[depth=180, flange=55, lip=0, thickness=2, radius=4, scale=0.03]}}
 
 \ReferenceRow
   {TikZSectionsStiffenedChannel}
@@ -335,19 +371,35 @@ height limits. The example code can be pasted into any \texttt{tikzpicture}.
 
 \ReferenceRow
   {TikZSectionsZee}
-  {Open zee section.}
-  {\keyname{depth}, \keyname{flange}, \keyname{thickness}, \keyname{radius}}
+  {Zee family with the default unlipped form.}
+  {\keyname{depth}, \keyname{flange}, \keyname{lip=0}, \keyname{thickness}, \keyname{radius}}
   {\TikZSectionsZee[depth=180, flange=55, thickness=2, radius=4, scale=0.03]}
   {}
   {\ShapePreview{\TikZSectionsZee[depth=180, flange=55, thickness=2, radius=4, scale=0.03]}}
 
 \ReferenceRow
-  {TikZSectionsLippedZee}
-  {Zee section with lips.}
+  {TikZSectionsZee}
+  {Zee section with equal lips. Use independent top/bottom keys for asymmetric geometry.}
   {\keyname{depth}, \keyname{flange}, \keyname{lip}, \keyname{thickness}, \keyname{radius}}
-  {\TikZSectionsLippedZee[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}
+  {\TikZSectionsZee[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}
   {}
-  {\ShapePreview{\TikZSectionsLippedZee[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}}
+  {\ShapePreview{\TikZSectionsZee[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsZee}
+  {Asymmetric lipped zee using independent top and bottom flange/lip dimensions.}
+  {\keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}
+  {\TikZSectionsZee[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsZee[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
+
+\ReferenceRow
+  {TikZSectionsZee}
+  {Explicit unlipped zee by setting \keyname{lip=0}.}
+  {\keyname{depth}, \keyname{flange}, \keyname{lip=0}, \keyname{thickness}, \keyname{radius}}
+  {\TikZSectionsZee[depth=180, flange=55, lip=0, thickness=2, radius=4, scale=0.03]}
+  {}
+  {\ShapePreview{\TikZSectionsZee[depth=180, flange=55, lip=0, thickness=2, radius=4, scale=0.03]}}
 
 \ReferenceRow
   {TikZSectionsSigma}
@@ -537,7 +589,7 @@ combination without package-specific built-up commands.
 
 \begin{lstlisting}
 \begin{tikzpicture}
-  \TikZSectionsLippedChannel[
+  \TikZSectionsChannel[
     depth=180,
     flange=55,
     lip=18,
@@ -546,7 +598,7 @@ combination without package-specific built-up commands.
     scale=0.03
   ]
   \begin{scope}[shift={(4,0)}, xscale=-1]
-    \TikZSectionsLippedChannel[
+    \TikZSectionsChannel[
       depth=180,
       flange=55,
       lip=18,

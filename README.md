@@ -45,7 +45,7 @@ Put the `.sty` file in the directory where you save your LaTeX file. Then import
 
 \begin{document}
 \begin{tikzpicture}
-  \TikZSectionsLippedChannel[
+  \TikZSectionsChannel[
     depth=245,
     flange=75,
     lip=20,
@@ -59,7 +59,7 @@ Put the `.sty` file in the directory where you save your LaTeX file. Then import
 The command above draws a lipped cold-formed channel using:
 
 ```text
-\TikZSectionsLippedChannel[depth=..., flange=..., lip=..., thickness=..., radius=...]
+\TikZSectionsChannel[depth=..., flange=..., lip=..., thickness=..., radius=...]
 ```
 
 Use `flange` and `lip` for equal top/bottom values, or override them with
@@ -100,6 +100,8 @@ Recent development work has focused on making the package CTAN-facing as
 - Standardized CFS channel and zee inputs so `flange` and `lip` are common
   defaults, with `top flange`, `bottom flange`, `top lip`, and `bottom lip`
   available as independent overrides.
+- Consolidated lipped and unlipped public channel/zee variants into
+  `\TikZSectionsChannel` and `\TikZSectionsZee`.
 - Documented and tested `lip=0` as the unlipped channel/zee form.
 - Added general lower-level CFS handlers for asymmetric channel and zee
   geometry.
@@ -214,10 +216,8 @@ documentation style until the dimensioning system is developed further.
 Current key-value commands:
 
 - `\TikZSectionsChannel`
-- `\TikZSectionsLippedChannel`
 - `\TikZSectionsStiffenedChannel`
 - `\TikZSectionsZee`
-- `\TikZSectionsLippedZee`
 - `\TikZSectionsSigma`
 - `\TikZSectionsHat`
 - `\TikZSectionsAngle`
@@ -256,6 +256,44 @@ Use `at={(x,y)}` or `shift={(x,y)}` for placement. The older `x=...` and
 also respect any surrounding TikZ transform.
 
 ## Cold-formed steel commands
+
+The current CFS API covers single-section primitives. Channel and zee families
+can be drawn with equal flange/lip values or with independent top and bottom
+values from the same public command. Use `lip=0`, or both `top lip=0` and `bottom lip=0`, for unlipped
+variants through the same geometry path. Built-up CFS assemblies are composed
+with ordinary TikZ scopes rather than package-specific built-up commands.
+
+Public CFS key-value commands currently available:
+
+- `\TikZSectionsChannel`
+- `\TikZSectionsStiffenedChannel`
+- `\TikZSectionsZee`
+- `\TikZSectionsSigma`
+- `\TikZSectionsHat`
+- `\TikZSectionsAngle`
+- `\TikZSectionsLippedAngle`
+- `\TikZSectionsRHS`
+- `\TikZSectionsSHS`
+- `\TikZSectionsCHS`
+
+Useful CFS input patterns:
+
+```tex
+% Equal flanges and lips
+\TikZSectionsChannel[depth=180, flange=55, lip=18]
+
+% Independent top/bottom flanges and lips
+\TikZSectionsChannel[
+  depth=180,
+  top flange=55,
+  top lip=18,
+  bottom flange=60,
+  bottom lip=20
+]
+
+% Unlipped form through the same channel command
+\TikZSectionsChannel[depth=180, flange=55, lip=0]
+```
 
 Single open sections:
 
@@ -320,7 +358,7 @@ should be composed with ordinary TikZ scopes and transforms:
 
 ```tex
 \begin{tikzpicture}
-  \TikZSectionsLippedChannel[
+  \TikZSectionsChannel[
     depth=180,
     flange=55,
     lip=18,
@@ -329,7 +367,7 @@ should be composed with ordinary TikZ scopes and transforms:
     scale=0.025
   ]
   \begin{scope}[shift={(4,0)}, xscale=-1]
-    \TikZSectionsLippedChannel[
+    \TikZSectionsChannel[
       depth=180,
       flange=55,
       lip=18,
