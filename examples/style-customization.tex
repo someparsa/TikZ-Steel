@@ -27,13 +27,14 @@
   tikzSections/straight/.style={tikzSections/default, black},
   tikzSections/round/.style={tikzSections/default, gray},
   tikzSections/dimension/.style={tikzSections/default, gray, <->},
+  tikzSections/dimension legend/.style={draw=gray, fill=white, inner sep=2pt, align=left},
   tikzSections/label/.style={font=\small}
 }
 
 \ExampleRow
-  {Lipped channel with centerlines, dimensions, and label}
-  {\TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, label x=30, label y=95, scale=0.025]}
-  {\TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, label x=30, label y=95, scale=0.025]}
+  {Lipped channel with centerlines, dimension legend, and label}
+  {\TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, scale=0.025]}
+  {\TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, centerline=true, dimensions=true, label=CFS, scale=0.025]}
 
 \ExampleRow
   {Monochrome universal beam with label}

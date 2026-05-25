@@ -7,12 +7,17 @@ summarized in [README.md](README.md), with release-level notes in
 ## Near-Term Polish
 
 - [ ] Continue refactoring repeated geometry into internal helper macros:
-  - straight segment helpers
-  - rounded corner helpers
+  - straight segment helpers started for channel and zee
+  - rounded corner helpers started for channel and zee
   - lip and stiffener helpers
-  - hollow and closed-outline helpers
+  - hollow and closed-outline helpers started through the shared box helper
   - mirrored or reversed section helpers
-- [ ] Define the behavior of `simplified` and `detailed` drawing modes.
+- [ ] Continue defining the behavior of `simplified` and `detailed` input modes:
+  - CFS channel, stiffened channel, zee, and sigma now use simplified mode for
+    nominal symmetric `flange`/`lip` input
+  - those commands use detailed mode to honor independent top/bottom flange and
+    lip dimensions
+  - remaining section families still need mode-specific input contracts
 - [ ] Decide what detailed mode means for:
   - CFS bends
   - HRS rolled radii
@@ -57,12 +62,12 @@ summarized in [README.md](README.md), with release-level notes in
 ## Built-Up Sections As TikZ Composition
 
 - [ ] Expand documentation examples for user-composed built-up sections:
-  - back-to-back channels
-  - toe-to-toe channels
-  - nested channels
-  - boxed channels
-  - double angles
-  - built-up sections with fasteners
+  - back-to-back channels started in the rendered manual examples
+  - toe-to-toe channels started in the rendered manual examples
+  - nested channels started in the rendered manual examples
+  - boxed channels started in the rendered manual examples
+  - double angles started in the rendered manual examples
+  - built-up sections with fasteners started in the rendered manual examples
 - [ ] Show fasteners and welds as ordinary TikZ additions where practical.
 - [ ] Keep built-up command families out of the public API unless a future
   command provides clear value beyond normal TikZ composition.
@@ -92,8 +97,10 @@ summarized in [README.md](README.md), with release-level notes in
 
 ## CTAN Submission
 
-- [ ] Delay CTAN submission until parameter names, coordinate conventions,
-  documentation, and examples are stable.
+- [ ] Use staged version 0.2.0 as the baseline for the first CTAN submission
+  candidate.
+- [ ] Review parameter names, coordinate conventions, documentation, and examples
+  against CTAN-readiness before upload.
 - [ ] Before submission, choose CTAN topic/category metadata.
 - [ ] Confirm maintainer, license, summary, package description, file layout,
   documentation, and upload archive contents.
@@ -107,6 +114,10 @@ summarized in [README.md](README.md), with release-level notes in
   - ribbed decking profiles
   - custom folded roof sheet profiles
 - [ ] Expand concrete drawing features:
+  - cross-section stirrup placement around the outside edge of the longitudinal
+    bar envelope is now shown for rectangular and circular RC sections
+  - default RC styling now uses blue longitudinal bars, red stirrups/ties, and a
+    heavier concrete outline
   - beam elevations
   - column elevations
   - slabs
@@ -115,6 +126,8 @@ summarized in [README.md](README.md), with release-level notes in
   - stirrup/tie spacing along member length
 - [ ] Expand the current `dimensions=true` placeholder into a real
   dimensioning subsystem:
+  - channel and zee now use boxed parameter legends for web, flange, lip,
+    thickness, and radius labels
   - dimension value labels
   - extension lines and configurable offsets
   - unit formatting

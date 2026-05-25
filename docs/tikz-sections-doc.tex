@@ -13,7 +13,7 @@
 
 \title{TikZ-Sections Manual}
 \author{Parsa Yazdi}
-\date{Version 0.1.2, 2026-05-23}
+\date{Version 0.2.0, 2026-05-25}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{5pt}
@@ -121,7 +121,7 @@ TikZ-Sections loads TikZ and the TikZ \keyname{calc} library.
 \section{Quick Start}
 
 The example below draws a lipped cold-formed channel with a label, centerlines,
-and the current basic dimension overlay.
+and a basic dimension legend.
 
 \begin{center}
 \begin{adjustbox}{max width=45mm,max height=40mm}
@@ -135,8 +135,6 @@ and the current basic dimension overlay.
     centerline=true,
     dimensions=true,
     label=C245,
-    label x=35,
-    label y=130,
     scale=0.03
   ]
 \end{tikzpicture}
@@ -154,8 +152,6 @@ and the current basic dimension overlay.
     centerline=true,
     dimensions=true,
     label=C245,
-    label x=35,
-    label y=130,
     scale=0.03
   ]
 \end{tikzpicture}
@@ -188,10 +184,10 @@ Key & Default & Meaning \\
 \keyname{width} & 75 & Section width, horizontal size, or circular diameter for RC commands \\
 \keyname{diameter} & 75 & Alias stored as the circular width/diameter value \\
 \keyname{flange} & 75 & Common CFS flange width used when top/bottom values are not supplied \\
-\keyname{top flange}, \keyname{bottom flange} & 75 & Independent CFS flange widths overriding \keyname{flange} \\
+\keyname{top flange}, \keyname{bottom flange} & 75 & Independent CFS flange widths honored in \keyname{detailed} mode \\
 \keyname{left flange}, \keyname{right flange} & 35 & Hat-section flange widths \\
 \keyname{lip} & 0 & Common CFS lip length used when top/bottom values are not supplied \\
-\keyname{top lip}, \keyname{bottom lip} & 0 & Independent CFS lip lengths overriding \keyname{lip} \\
+\keyname{top lip}, \keyname{bottom lip} & 0 & Independent CFS lip lengths honored in \keyname{detailed} mode \\
 \keyname{thickness} & 2.5 & Steel thickness or drawing line width in millimetres \\
 \keyname{radius}, \keyname{inside radius}, \keyname{bend radius}, \keyname{root radius} & 5 & Bend radius or rolled-section root radius \\
 \keyname{position}, \keyname{stiffener position} & 0.5 & Relative stiffener position along the web \\
@@ -203,17 +199,19 @@ Key & Default & Meaning \\
 \keyname{top flange thickness}, \keyname{bottom flange thickness} & 2 & Welded I-section flange thicknesses \\
 \keyname{reference line width} & 0 & Optional plate/bar reference line width \\
 \keyname{line width} & 1 & Round-bar line width \\
-\keyname{cover} & 40 & RC cover distance used for rebar/tie placement \\
+\keyname{cover} & 40 & RC cover distance to the longitudinal bar centerline. Stirrups are drawn around the outside edge of the longitudinal bar envelope \\
 \keyname{bar diameter} & 16 & RC rebar diameter \\
 \keyname{top bars}, \keyname{bottom bars} & 2 & Rectangular RC bar counts \\
 \keyname{left bars}, \keyname{right bars} & 0 & Rectangular RC side-bar counts \\
 \keyname{top layers}, \keyname{bottom layers}, \keyname{side layers} & 1 & RC reinforcement layer counts \\
 \keyname{layer spacing} & 25 & RC spacing between bar layers \\
 \keyname{perimeter bars} & 8 & Circular RC perimeter bar count \\
-\keyname{label}, \keyname{label x}, \keyname{label y} & empty, 0, 0 & Optional text label and position \\
+\keyname{label}, \keyname{label x}, \keyname{label y} & empty, 0, 0 & Optional text label. Without explicit coordinates, labels are placed above the top-left of the section with the local scale in brackets \\
+\keyname{mode} & simplified & Input mode. \keyname{simplified} uses nominal symmetric dimensions; \keyname{detailed} honors independent detailed dimensions where available \\
+\keyname{simplified}, \keyname{detailed} & -- & Convenience styles for \keyname{mode=simplified} and \keyname{mode=detailed} \\
 \keyname{filled} & false & Fill closed steel/bar shapes before drawing the outline \\
 \keyname{centerline} & false & Draw horizontal and vertical centerlines \\
-\keyname{dimensions} & false & Draw the current basic dimension overlay \\
+\keyname{dimensions} & false & Draw dimension assistance. Channel and zee commands use a boxed dimension legend; other families currently use the older guide overlay \\
 \keyname{monochrome} & false & Draw straight and curved steel segments in black \\
 \keyname{tie} & true & Draw RC tie/closed stirrup line \\
 \keyname{at}, \keyname{shift}, \keyname{scale}, \keyname{xscale}, \keyname{yscale}, \keyname{rotate}, \keyname{x}, \keyname{y} & (0,0), (0,0), 1, 1, 1, 0, 0, 0 & Placement and local transform values \\
@@ -234,11 +232,14 @@ Style & Purpose \\
 \keyname{tikzSections/centerline} & Optional centerlines \\
 \keyname{tikzSections/hidden} & Hidden or reference lines \\
 \keyname{tikzSections/dimension} & Current dimension overlay lines \\
+\keyname{tikzSections/callout} & Reserved for future arrow-style annotations \\
+\keyname{tikzSections/dimension legend} & Box style used by channel and zee dimension legends \\
 \keyname{tikzSections/label} & Labels drawn with the \keyname{label} key \\
 \keyname{tikzSections/fill} & Fills for closed steel/bar shapes \\
-\keyname{tikzSections/concrete} & RC concrete outline and fill \\
-\keyname{tikzSections/rebar} & RC rebar circles \\
-\keyname{tikzSections/tie} & RC tie/stirrup outline \\
+\keyname{tikzSections/concrete} & RC concrete fill \\
+\keyname{tikzSections/concrete edge} & RC concrete edge. The default line is heavier than reinforcement lines \\
+\keyname{tikzSections/rebar} & RC longitudinal rebar circles. The default fill is blue \\
+\keyname{tikzSections/tie} & RC tie/stirrup outline. The default line is red \\
 \bottomrule
 \end{longtable}
 
@@ -250,12 +251,64 @@ Style & Purpose \\
 }
 \end{lstlisting}
 
-\section{Dimension Overlay}
+\section{Input Modes}
 
-The \keyname{dimensions=true} key currently draws a generic horizontal and
-vertical dimension guide around the section. It is not a complete engineering
-dimensioning system. It does not yet draw dimension values, extension lines,
-standard offsets, unit formatting, or standard-specific notation.
+The public key-value API supports two input modes. The default is
+\keyname{mode=simplified}.
+
+\keyname{simplified} mode is the nominal engineering-sketch interface. For CFS
+channel and zee sections, use the main dimensions:
+
+\begin{lstlisting}
+\TikZSectionsChannel[
+  depth=180,
+  flange=55,
+  lip=18,
+  thickness=2,
+  radius=4
+]
+\end{lstlisting}
+
+In simplified mode, \keyname{flange} is used for both top and bottom flanges,
+and \keyname{lip} is used for both lips. Independent top/bottom keys are not
+part of the simplified contract.
+
+\keyname{detailed} mode is the explicit geometry interface. It honors
+independent dimensions where the section command supports them:
+
+\begin{lstlisting}
+\TikZSectionsChannel[
+  detailed=true,
+  depth=180,
+  top flange=55,
+  bottom flange=60,
+  top lip=18,
+  bottom lip=20,
+  thickness=2,
+  radius=4
+]
+\end{lstlisting}
+
+Detailed mode is intended for asymmetric dimensions and future
+section-specific options such as independent radii, stiffener geometry, or
+rolled-shape details.
+
+\section{Dimension Assistance}
+
+The \keyname{dimensions=true} key currently provides dimension assistance rather
+than a full traditional engineering dimensioning system. For
+\command{TikZSectionsChannel} and \command{TikZSectionsZee}, it draws a compact
+boxed legend for the web depth, flange, lip, thickness, and bend radius where
+those values are present. The current notation is \(b_w\) for web depth, \(b_f\)
+for flange width, \(b_l\) for lip length, \(t\) for thickness, and \(r\) for
+bend radius. Detailed asymmetric dimensions use \(b_{ft}\), \(b_{fb}\),
+\(b_{lt}\), and \(b_{lb}\). Other section families still draw the older generic
+horizontal and vertical dimension guide overlay.
+
+The legend direction is deliberate: it avoids misleading arrow placement until
+traditional dimension lines with extension lines, standardized offsets,
+collision avoidance, and notation presets are implemented. Traditional
+engineering dimension lines remain future work.
 
 \section{Cold-Formed Lip Handling}
 
@@ -264,10 +317,10 @@ unlipped forms. Set \keyname{lip=0}, or set both \keyname{top lip=0} and
 \keyname{bottom lip=0}, to suppress the lips. This is also the default.
 
 For equal top and bottom geometry, use \keyname{flange} and \keyname{lip}. For
-asymmetric geometry, use \keyname{top flange}, \keyname{bottom flange},
-\keyname{top lip}, and \keyname{bottom lip}. The current CFS public API covers
-single-section primitives; built-up assemblies are intended to be composed with
-ordinary TikZ scopes and transforms.
+asymmetric geometry, use \keyname{detailed=true} with \keyname{top flange},
+\keyname{bottom flange}, \keyname{top lip}, and \keyname{bottom lip}. The
+current CFS public API covers single-section primitives; built-up assemblies are
+intended to be composed with ordinary TikZ scopes and transforms.
 
 \begin{lstlisting}
 % Equal flange/lip values
@@ -275,6 +328,7 @@ ordinary TikZ scopes and transforms.
 
 % Independent top and bottom values
 \TikZSectionsChannel[
+  detailed=true,
   depth=180,
   top flange=55,
   top lip=18,
@@ -348,10 +402,10 @@ height limits. The example code can be pasted into any \texttt{tikzpicture}.
 \ReferenceRow
   {TikZSectionsChannel}
   {Asymmetric lipped channel using independent top and bottom flange/lip dimensions.}
-  {\keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}
-  {\TikZSectionsChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
+  {\keyname{detailed}, \keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}
+  {\TikZSectionsChannel[detailed=true, depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
   {}
-  {\ShapePreview{\TikZSectionsChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
+  {\ShapePreview{\TikZSectionsChannel[detailed=true, depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
 
 \ReferenceRow
   {TikZSectionsChannel}
@@ -365,9 +419,9 @@ height limits. The example code can be pasted into any \texttt{tikzpicture}.
   {TikZSectionsStiffenedChannel}
   {Channel with one intermediate web stiffener. Use \keyname{stiffener position} from 0 to 1.}
   {\keyname{depth}, \keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}, \keyname{stiffener position}}
-  {\TikZSectionsStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, stiffener position=0.55, thickness=2, radius=4, scale=0.03]}
+  {\TikZSectionsStiffenedChannel[detailed=true, depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, stiffener position=0.55, thickness=2, radius=4, scale=0.03]}
   {}
-  {\ShapePreview{\TikZSectionsStiffenedChannel[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, stiffener position=0.55, thickness=2, radius=4, scale=0.03]}}
+  {\ShapePreview{\TikZSectionsStiffenedChannel[detailed=true, depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, stiffener position=0.55, thickness=2, radius=4, scale=0.03]}}
 
 \ReferenceRow
   {TikZSectionsZee}
@@ -388,10 +442,10 @@ height limits. The example code can be pasted into any \texttt{tikzpicture}.
 \ReferenceRow
   {TikZSectionsZee}
   {Asymmetric lipped zee using independent top and bottom flange/lip dimensions.}
-  {\keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}
-  {\TikZSectionsZee[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
+  {\keyname{detailed}, \keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}
+  {\TikZSectionsZee[detailed=true, depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
   {}
-  {\ShapePreview{\TikZSectionsZee[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
+  {\ShapePreview{\TikZSectionsZee[detailed=true, depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
 
 \ReferenceRow
   {TikZSectionsZee}
@@ -405,9 +459,9 @@ height limits. The example code can be pasted into any \texttt{tikzpicture}.
   {TikZSectionsSigma}
   {Sigma-style stiffened section with independent top and bottom flange/lip dimensions.}
   {\keyname{depth}, \keyname{top flange}, \keyname{top lip}, \keyname{bottom flange}, \keyname{bottom lip}}
-  {\TikZSectionsSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
+  {\TikZSectionsSigma[detailed=true, depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}
   {}
-  {\ShapePreview{\TikZSectionsSigma[depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
+  {\ShapePreview{\TikZSectionsSigma[detailed=true, depth=180, top flange=55, top lip=18, bottom flange=60, bottom lip=20, thickness=2, radius=4, scale=0.03]}}
 
 \ReferenceRow
   {TikZSectionsHat}
@@ -587,6 +641,82 @@ TikZ-Sections focuses on single-section primitives. Built-up assemblies should
 be made with ordinary TikZ scopes and transforms so users can compose any
 combination without package-specific built-up commands.
 
+\begin{center}
+\begin{tabular}{@{}ccc@{}}
+\begin{adjustbox}{max width=42mm,max height=30mm}
+\begin{tikzpicture}
+  \TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]
+  \begin{scope}[shift={(3.6,0)}, xscale=-1]
+    \TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]
+  \end{scope}
+  \node [tikzSections/label] at (1.8,-0.7) {Back-to-back channels};
+\end{tikzpicture}
+\end{adjustbox}
+&
+\begin{adjustbox}{max width=42mm,max height=30mm}
+\begin{tikzpicture}
+  \TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]
+  \begin{scope}[shift={(6.8,0)}]
+    \TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]
+  \end{scope}
+  \draw [tikzSections/hidden] (3.2,0.5) -- (3.6,0.5);
+  \draw [tikzSections/hidden] (3.2,4.9) -- (3.6,4.9);
+  \node [tikzSections/label] at (3.4,-0.7) {Boxed channels};
+\end{tikzpicture}
+\end{adjustbox}
+&
+\begin{adjustbox}{max width=42mm,max height=30mm}
+\begin{tikzpicture}
+  \TikZSectionsAngle[vertical leg=90, horizontal leg=55, thickness=2, radius=4, scale=0.04]
+  \begin{scope}[shift={(4.8,0)}, xscale=-1]
+    \TikZSectionsAngle[vertical leg=90, horizontal leg=55, thickness=2, radius=4, scale=0.04]
+  \end{scope}
+  \fill (2.2,1.2) circle [radius=0.08];
+  \fill (2.2,2.4) circle [radius=0.08];
+  \node [tikzSections/label] at (2.4,-0.7) {Double angles};
+\end{tikzpicture}
+\end{adjustbox}
+\end{tabular}
+\par\vspace{5mm}
+\begin{tabular}{@{}ccc@{}}
+\begin{adjustbox}{max width=42mm,max height=30mm}
+\begin{tikzpicture}
+  \TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]
+  \begin{scope}[shift={(3.3,0)}]
+    \TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]
+  \end{scope}
+  \fill (3.1,1.1) circle [radius=0.07];
+  \fill (3.1,4.3) circle [radius=0.07];
+  \node [tikzSections/label] at (3.1,-0.7) {Toe-to-toe channels};
+\end{tikzpicture}
+\end{adjustbox}
+&
+\begin{adjustbox}{max width=42mm,max height=30mm}
+\begin{tikzpicture}
+  \TikZSectionsChannel[depth=180, flange=65, lip=18, thickness=2, radius=4, scale=0.03]
+  \begin{scope}[shift={(1.1,0.45)}, xscale=-1, scale=0.85]
+    \TikZSectionsChannel[depth=180, flange=50, lip=14, thickness=2, radius=4, scale=0.03]
+  \end{scope}
+  \node [tikzSections/label] at (1.9,-0.7) {Nested channels};
+\end{tikzpicture}
+\end{adjustbox}
+&
+\begin{adjustbox}{max width=42mm,max height=30mm}
+\begin{tikzpicture}
+  \TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]
+  \begin{scope}[shift={(3.6,0)}, xscale=-1]
+    \TikZSectionsChannel[depth=180, flange=55, lip=18, thickness=2, radius=4, scale=0.03]
+  \end{scope}
+  \draw [tikzSections/hidden, line width=0.35mm] (1.3,1.2) -- (2.3,1.2);
+  \draw [tikzSections/hidden, line width=0.35mm] (1.3,4.2) -- (2.3,4.2);
+  \fill (1.8,1.2) circle [radius=0.08];
+  \fill (1.8,4.2) circle [radius=0.08];
+  \node [tikzSections/label] at (1.8,-0.7) {Channels with bolts};
+\end{tikzpicture}
+\end{adjustbox}
+\end{tabular}
+\end{center}
+
 \begin{lstlisting}
 \begin{tikzpicture}
   \TikZSectionsChannel[
@@ -609,6 +739,11 @@ combination without package-specific built-up commands.
   \end{scope}
 \end{tikzpicture}
 \end{lstlisting}
+
+The same composition pattern can be used for toe-to-toe channels, nested
+channels, bolts, weld marks, or plates. TikZ additions are drawn in the same
+picture as the section commands, so the package does not need a separate
+built-up command family for each assembly.
 
 \section{Positional Helper Commands}
 
@@ -654,10 +789,17 @@ Command & Positional arguments \\
 \section{Current Limitations}
 
 \begin{itemize}
-  \item The \keyname{dimensions=true} overlay is a placeholder, not a
-  standard-based engineering dimensioning system.
-  \item The \keyname{simplified} and \keyname{detailed} mode keys are accepted
-  for API stability, but detailed rolled-radius behavior is still future work.
+  \item The \keyname{dimensions=true} feature is currently a mix of
+  section-specific legends for channel and zee commands and the older generic
+  overlay for other families. It is not yet a standard-based engineering
+  dimensioning system.
+  \item RC cross-sections are schematic. Stirrups are drawn around the outside
+  edge of the longitudinal bar envelope, but beam elevations, column elevations,
+  slab/wall detailing, and reinforcement spacing along member length remain
+  future work.
+  \item The \keyname{simplified} and \keyname{detailed} mode contract is defined
+  first for CFS channel, stiffened-channel, zee, and sigma inputs. Detailed
+  rolled-radius behavior is still future work.
   \item Generated figures are schematic cross-section sketches. They are not
   section-property calculators and do not validate engineering dimensions.
 \end{itemize}

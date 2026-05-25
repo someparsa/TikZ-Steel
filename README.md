@@ -4,7 +4,7 @@ A TikZ-LaTeX package for drawing structural cross-sections.
 
 ## Package information
 
-- Version: 0.1.2
+- Version: 0.2.0
 - Author: Parsa Yazdi
 - Maintainer: Parsa Yazdi
 - License: LaTeX Project Public License 1.3c or later
@@ -64,7 +64,8 @@ The command above draws a lipped cold-formed channel using:
 
 Use `flange` and `lip` for equal top/bottom values, or override them with
 `top flange`, `bottom flange`, `top lip`, and `bottom lip` when the section is
-asymmetric.
+asymmetric. Asymmetric channel and zee dimensions are part of the detailed input
+mode, so use `detailed=true` with those independent keys.
 
 Set `lip=0` or set both `top lip=0` and `bottom lip=0` to draw the unlipped
 form through the same channel/zee geometry path.
@@ -72,7 +73,8 @@ form through the same channel/zee geometry path.
 ## Current status
 
 The package is being refactored gradually toward a documented CTAN-ready
-release. Version 0.1.2 includes:
+release. Version 0.2.0 is the staged baseline for the first CTAN submission
+candidate and includes:
 
 - Package metadata and package-safe TikZ dependency loading.
 - Configurable TikZ styles for straight segments, curved segments, labels,
@@ -100,8 +102,13 @@ Recent development work has focused on making the package CTAN-facing as
 - Standardized CFS channel and zee inputs so `flange` and `lip` are common
   defaults, with `top flange`, `bottom flange`, `top lip`, and `bottom lip`
   available as independent overrides.
+- Defined simplified CFS input as the nominal symmetric mode and detailed CFS
+  input as the mode that honors independent top/bottom flange and lip values.
 - Consolidated lipped and unlipped public channel/zee variants into
   `\TikZSectionsChannel` and `\TikZSectionsZee`.
+- Changed channel and zee `dimensions=true` from generic dimension guide lines
+  to a compact dimension legend for web depth, flange, lip, thickness, and
+  radius.
 - Documented and tested `lip=0` as the unlipped channel/zee form.
 - Added general lower-level CFS handlers for asymmetric channel and zee
   geometry.
@@ -126,8 +133,6 @@ readable option names and provide defaults for omitted values:
   centerline=true,
   dimensions=true,
   label=C245,
-  label x=35,
-  label y=130,
   at={(0,0)},
   scale=0.2,
   xscale=1,
@@ -203,15 +208,48 @@ Common keys include:
 
 ### Current dimension overlay
 
-The `dimensions=true` key currently enables a basic visual overlay using the
-`tikzSections/dimension` style. It is intended as an early placeholder for showing
-generic horizontal and vertical dimension guide lines around a section.
+The `dimensions=true` key currently enables basic visual dimension assistance.
+For `\TikZSectionsChannel` and `\TikZSectionsZee`, it draws a compact boxed
+legend near the section using labels such as `b_w=180 mm`, `b_f=55 mm`,
+`b_l=18 mm`, `t=2 mm`, and `r=4 mm`. Other section families still use the older
+generic horizontal and vertical dimension guide overlay until they receive
+section-specific dimension displays.
 
 This is not yet a full engineering dimensioning system. It does not currently
-place dimension values, extension lines, standard offsets, unit formatting, or
-standard-specific notation. The current example galleries intentionally show the
-actual command parameters beside each sketch, which is the preferred
-documentation style until the dimensioning system is developed further.
+draw traditional engineering dimension lines, extension lines, standard offsets,
+unit formatting controls, or standard-specific notation. The current direction is
+to use robust parameter legends first, then keep traditional dimension lines as a
+later subsystem.
+
+When `label=...` is supplied without `label x` and `label y`, the label is
+placed above the top-left of the section and includes the local drawing scale in
+brackets, for example `C245 (scale 0.03)`.
+
+### Simplified and detailed input modes
+
+The default public mode is `simplified`. For CFS channel and zee commands,
+simplified mode uses the nominal symmetric inputs:
+
+```tex
+\TikZSectionsChannel[depth=180, flange=55, lip=18]
+```
+
+In simplified mode, `flange` is applied to both top and bottom flanges, and
+`lip` is applied to both lips. Independent top/bottom values are intentionally
+ignored in this mode.
+
+Use `detailed=true` or `mode=detailed` when the section geometry is asymmetric:
+
+```tex
+\TikZSectionsChannel[
+  detailed=true,
+  depth=180,
+  top flange=55,
+  bottom flange=60,
+  top lip=18,
+  bottom lip=20
+]
+```
 
 Current key-value commands:
 
@@ -259,9 +297,11 @@ also respect any surrounding TikZ transform.
 
 The current CFS API covers single-section primitives. Channel and zee families
 can be drawn with equal flange/lip values or with independent top and bottom
-values from the same public command. Use `lip=0`, or both `top lip=0` and `bottom lip=0`, for unlipped
-variants through the same geometry path. Built-up CFS assemblies are composed
-with ordinary TikZ scopes rather than package-specific built-up commands.
+values from the same public command. Equal values are the simplified default;
+independent top and bottom values require `detailed=true`. Use `lip=0`, or both
+`top lip=0` and `bottom lip=0`, for unlipped variants through the same geometry
+path. Built-up CFS assemblies are composed with ordinary TikZ scopes rather than
+package-specific built-up commands.
 
 Public CFS key-value commands currently available:
 
@@ -284,6 +324,7 @@ Useful CFS input patterns:
 
 % Independent top/bottom flanges and lips
 \TikZSectionsChannel[
+  detailed=true,
   depth=180,
   top flange=55,
   top lip=18,
@@ -382,9 +423,11 @@ should be composed with ordinary TikZ scopes and transforms:
 ## Reinforced concrete commands
 
 The initial reinforced-concrete API focuses on simple cross-section sketches.
-Rebars are drawn as filled circles and `cover` is currently interpreted as the
-distance from the concrete face to the rebar centerline or tie centerline used
-for the sketch.
+Longitudinal bars are drawn as blue filled circles, stirrups/ties are drawn in
+red, and the concrete outline uses a heavier line weight. `cover` is interpreted
+as the distance from the concrete face to the longitudinal bar centerline; the
+stirrup/tie is placed around the outside edge of the longitudinal bar envelope
+so it confines the bars.
 
 ```tex
 \TikZRCRectangular[
@@ -454,12 +497,18 @@ Available style hooks include:
 - `tikzSections/label`
 - `tikzSections/fill`
 - `tikzSections/concrete`
+- `tikzSections/concrete edge`
 - `tikzSections/rebar`
 - `tikzSections/tie`
 
+The default RC styles are deliberately distinct from the steel styles: concrete
+uses a light fill plus a heavier black edge, longitudinal bars are blue, and
+stirrups/ties are red. They can be overridden with the same
+`\TikZSectionsSetup` mechanism.
+
 ## Testing
 
-Version 0.1.2 has been checked with MacTeX using:
+Version 0.2.0 has been checked with MacTeX using:
 
 ```sh
 /Library/TeX/texbin/pdflatex -interaction=nonstopmode -halt-on-error tikz-sections.tex
@@ -504,6 +553,17 @@ or later. See [LICENSE](LICENSE) for the full license text.
 
 Active work is tracked in [ROADMAP.md](ROADMAP.md). Detailed release-level
 changes are tracked in [CHANGELOG.md](CHANGELOG.md).
+
+### v0.2.0
+
+- Staged the current public API and documentation as the baseline for the first
+  CTAN submission candidate.
+- Standardized the public package surface around `tikz-sections`,
+  `\TikZSections...`, and `tikzSections/...` names.
+- Improved CFS channel/zee simplified and detailed input behavior, dimension
+  legends, labels, and built-up composition examples.
+- Updated RC cross-section styling and stirrup/tie placement.
+- Continued internal helper refactoring for repeated drawing geometry.
 
 ### v0.1.2
 

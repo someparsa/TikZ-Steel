@@ -4,6 +4,10 @@ All notable development changes for TikZ-Sections are recorded here.
 
 ## Unreleased
 
+No unreleased changes yet.
+
+## v0.2.0 - 2026-05-25
+
 ### Changed
 
 - Renamed the main package surface to `tikz-sections`, with public commands now
@@ -27,6 +31,28 @@ All notable development changes for TikZ-Sections are recorded here.
   starts from the south-west origin instead of being centered on the origin.
 - Standardized radius aliases by accepting `inside radius`, `bend radius`, and
   `root radius` as readable names for the current radius parameter.
+- Defined the first simplified/detailed input-mode behavior for CFS channel,
+  stiffened-channel, zee, and sigma commands: simplified mode uses nominal
+  `flange`/`lip` values, while detailed mode honors independent top/bottom
+  flange and lip keys.
+- Added basic channel and zee dimension legends for `dimensions=true`, using a
+  boxed parameter list instead of the older generic guide-line overlay for those
+  commands.
+- Revised channel and zee dimension labels to use `b_w`, `b_f`, `b_l`, `t`, and
+  `r` notation, with top/bottom variants for detailed asymmetric dimensions.
+- Moved automatic labels to the top-left of each section, including the local
+  drawing scale in brackets when explicit label coordinates are not supplied.
+- Added rendered built-up section examples to the manual while keeping built-up
+  sections as ordinary TikZ composition.
+- Expanded the built-up section documentation examples with toe-to-toe channels,
+  nested channels, and bolted channel assemblies.
+- Updated RC cross-section styling so longitudinal bars are blue, stirrups/ties
+  are red, concrete outlines are heavier, and stirrups are drawn around the
+  outside edge of the longitudinal bar envelope.
+- Routed channel and zee straight segments and bends through shared internal
+  drawing helpers as the first step in reducing repeated low-level TikZ code.
+- Routed box, L-section, and circular tube helper geometry through the same
+  shared internal straight-segment and arc helpers.
 
 ## v0.1.2 - 2026-05-23
 
@@ -56,6 +82,7 @@ All notable development changes for TikZ-Sections are recorded here.
   - `tikzSections/label`
   - `tikzSections/fill`
   - `tikzSections/concrete`
+  - `tikzSections/concrete edge`
   - `tikzSections/rebar`
   - `tikzSections/tie`
 - Added initial internal drawing helper macros.
